@@ -3,6 +3,9 @@
     "scheme": "acme",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
+    "experimental": {
+      "typedRoutes": true
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,6 +20,12 @@
         "expo-router",
         {
           "origin": "https://n"
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
         }
       ]
     ],

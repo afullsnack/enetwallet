@@ -27,7 +27,7 @@ export const SheetModal = forwardRef<Ref, ISheetModal>(({ children }, ref) => {
         animatedPosition={animatedPosition}
       />
     ),
-    []
+    [],
   );
 
   return (
@@ -36,6 +36,12 @@ export const SheetModal = forwardRef<Ref, ISheetModal>(({ children }, ref) => {
       snapPoints={snapPoints}
       index={0}
       backdropComponent={renderBackdrop}
+      style={{ backgroundColor: "#0C0C12" }}
+      handleStyle={{
+        backgroundColor: "#0C0C12",
+        borderWidth: 0,
+        borderColor: "transparent",
+      }}
       enablePanDownToClose
       // handleIndicatorStyle={}
       // backgroundStyle={}

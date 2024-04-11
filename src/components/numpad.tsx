@@ -3,7 +3,7 @@ import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export const Numpad = () => {
+export const Numpad = ({ onConfirmPressed, onPinChange }: any) => {
   const [code, setCode] = useState<number[]>([]);
 
   useEffect(() => {
@@ -15,11 +15,13 @@ export const Numpad = () => {
   const onNumberPress = async (number: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCode([...code, number]);
+    onPinChange([...code, number].join(""));
   };
 
   const numberBackspace = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCode(code.slice(0, -1));
+    onPinChange(code.slice(0, -1).join(""));
   };
 
   return (
@@ -116,7 +118,7 @@ export const Numpad = () => {
           <EvilIcons name="close" size={25} color="#ADB5BF" />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => numberBackspace()}
+          onPress={onConfirmPressed}
           style={{
             width: "100%",
             minHeight: 170,

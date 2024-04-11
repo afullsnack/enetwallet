@@ -24,7 +24,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>(
         {children ? children : <Text style={styles.buttonText}>{title}</Text>}
       </TouchableOpacity>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: "black",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",

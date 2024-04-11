@@ -1,6 +1,7 @@
 import { Container } from "@/components/Container";
 import { Numpad } from "@/components/numpad";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
@@ -56,7 +57,12 @@ export default function PinPage() {
         {/* <View className="flex-1" /> */}
 
         <View className="flex w-full flex-1 flex-row items-center justify-center">
-          <Numpad />
+          <Numpad
+            onConfirmPressed={() => {
+              router.push("(backup)/upload");
+            }}
+            onPinChange={(pin) => setText(pin)}
+          />
         </View>
       </View>
     </Container>

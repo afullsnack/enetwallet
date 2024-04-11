@@ -126,7 +126,7 @@ function PasswordValidation({ password }: { password: string }) {
 
       <View>
         <Text className="text-white">Rules:</Text>
-        <Text className="text-[#3A4452]">
+        <Text className="text-[#3A4452]" style={{ color: "#3A4452" }}>
           Password should <Text className="text-red-600">NOT</Text> be the same
           with your registration password
         </Text>
@@ -139,25 +139,31 @@ function PasswordValidation({ password }: { password: string }) {
             className="flex flex-row items-center justify-start gap-2"
           >
             <View
-              className={`h-2 w-2 rounded-full border`}
               style={{
+                width: 8,
+                height: 8,
+                borderRadius: 999,
+                borderWidth: 1,
                 borderColor:
                   index == 0 && password.length >= 8
                     ? "#18EAFF"
                     : index == 1 && /\d/.test(password)
-                    ? "#18EAFF"
-                    : index == 2 && /[!@#$%^&*]/.test(password)
-                    ? "#18EAFF"
-                    : "#F80F0F",
+                      ? "#18EAFF"
+                      : index == 2 && /[!@#$%^&*]/.test(password)
+                        ? "#18EAFF"
+                        : "#F80F0F",
               }}
             ></View>
 
-            <Text className="text-[#3A4452] font-light">
+            <Text
+              style={{ color: "#3A4452" }}
+              className="text-[#3A4452] font-light"
+            >
               {index === 0
                 ? "Not shorter than 8 characters"
                 : index === 1
-                ? "Should include 1 number"
-                : "Should include 1 special character"}
+                  ? "Should include 1 number"
+                  : "Should include 1 special character"}
             </Text>
           </View>
         ))}

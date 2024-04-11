@@ -10,6 +10,7 @@ export default function AuthLayout() {
         <Stack.Screen name="(login)" options={{ headerShown: false }} />
         <Stack.Screen name="(register)" options={{ headerShown: false }} />
         <Stack.Screen name="(backup)" options={{ headerShown: false }} />
+        <Stack.Screen name="(wallet)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar
         style="auto"

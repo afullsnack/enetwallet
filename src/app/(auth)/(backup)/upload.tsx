@@ -3,8 +3,9 @@ import { Button } from "@/components/button";
 import { SheetModal } from "@/components/modal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
+import { Stack, router } from "expo-router";
 import { useRef } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export default function BackupPage() {
   const sheetRef = useRef<BottomSheetModal>(null);
@@ -12,8 +13,28 @@ export default function BackupPage() {
   return (
     <>
       <Container>
-        <View className="w-full h-full px-6 flex flex-col items-center justify-center">
-          <View style={{ marginBottom: 10 }}>
+        <Stack.Screen
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: "#0C0C12",
+            },
+            headerTitleStyle: { color: "white" },
+            title: "",
+            headerLeft(props) {
+              return (
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Image
+                    source={require("../../../../assets/arrow-left-img.png")}
+                    style={{ width: 24, height: 24 }}
+                  />
+                </TouchableOpacity>
+              );
+            },
+          }}
+        />
+        <View className="w-full h-full px-6 gap-4 flex flex-col items-center justify-center">
+          <View style={{ marginBottom: 10, marginVertical: 100 }}>
             <Image
               source={require("../../../../assets/upload-key.png")}
               style={{
@@ -38,6 +59,7 @@ export default function BackupPage() {
                 fontSize: 13,
                 fontWeight: "400",
                 color: "white",
+                textAlign: "center",
               }}
             >
               Uploading your key to cloud will enable you to recover your
@@ -46,19 +68,24 @@ export default function BackupPage() {
           </View>
           <View style={{ flex: 1 }} />
           <Button
+            style={{ width: "100%" }}
             title="Upload"
-            onPress={() => sheetRef.current.snapToIndex(1)}
+            onPress={() => sheetRef.current.present()}
           />
         </View>
       </Container>
       <SheetModal ref={sheetRef}>
-        <View className="w-full h-full flex flex-col items-center justify-center gap-4">
+        <View
+          className="w-full h-full flex flex-col items-center justify-between p-6 gap-4"
+          style={{ backgroundColor: "#0C0C12" }}
+        >
           <Text
             style={{
               fontSize: 15,
               fontWeight: "500",
               color: "white",
               textAlign: "center",
+              maxWidth: 200,
             }}
           >
             Would you like to encrypt your key details in a QR Code?
@@ -84,11 +111,15 @@ export default function BackupPage() {
           </Text>
 
           <Button
-            onPress={() => {}}
+            onPress={() => {
+              sheetRef.current.dismiss();
+              router.push("(backup)/encrypt");
+            }}
             style={{
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
+              width: "100%",
             }}
           >
             <Text
@@ -112,13 +143,14 @@ export default function BackupPage() {
               />
             </View>
           </Button>
-          <Button title="Skip" onPress={() => {}} />
+          <Button title="Skip" style={{ width: "60%" }} onPress={() => {}} />
           <Text
             style={{
               fontSize: 9,
               fontWeight: "400",
               color: "#3A4452",
               textAlign: "center",
+              maxWidth: 250,
             }}
           >
             We recommend encrypting your login details, as it is necessary for

@@ -35,7 +35,7 @@ export default function EncryptDetails() {
           },
         }}
       />
-      <View className="w-full flex flex-col h-full pb-6 bg-[#0C0C12] px-6 md:px-8">
+      <View className="w-full flex flex-col items-center gap-4 h-full pb-6 bg-[#0C0C12] px-6 md:px-8">
         <View className="flex flex-col gap-4 items-center justify-center">
           <View className="rounded-full border border-[#2C1C40] bg-white p-3">
             <Image
@@ -127,7 +127,7 @@ export default function EncryptDetails() {
         </Text>
 
         <Button
-          onPress={() => router.push("/qrcode")}
+          onPress={() => router.push("(backup)/qrcode")}
           style={{ width: "100%" }}
         >
           <Text>Continue</Text>

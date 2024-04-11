@@ -12,6 +12,9 @@ export default function HomeScreen() {
           headerStyle: {
             backgroundColor: "#0C0C12",
             borderColor: "#0C0C12",
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
           },
           title: "",
           headerLeft(props) {

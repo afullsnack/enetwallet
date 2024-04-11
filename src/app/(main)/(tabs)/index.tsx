@@ -1,7 +1,7 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Image } from "expo-image";
-import { Tabs } from "expo-router";
+import { Tabs, router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
@@ -123,7 +123,10 @@ export default function HomeScreen() {
       </View>
 
       <View className="flex flex-row items-center justify-between mt-20">
-        <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
+        <TouchableOpacity
+          className="flex flex-col items-center justify-center gap-1"
+          onPress={() => router.push("/(main)/(send)/entry")}
+        >
           <Image
             source={require("../../../../assets/icons/dashboard/actions/send.png")}
             style={{

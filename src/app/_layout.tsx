@@ -13,6 +13,10 @@ export default function Layout() {
           <Stack screenOptions={{ headerShown: false }}>
             {/* <Stack.Screen name="/" options={{ headerShown: false }} /> */}
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(main)/(tabs)"
+              options={{ headerShown: false }}
+            />
           </Stack>
           <StatusBar
             style="auto"

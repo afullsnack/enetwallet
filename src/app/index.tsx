@@ -16,6 +16,10 @@ export default function RootIndexPage() {
             onPress={() => sheetRef.current.present()}
             title="Show modal"
           />
+          <Button
+            onPress={() => router.push("/(main)/(tabs)/")}
+            title="Jump to dashboard"
+          />
 
           <SheetModal ref={sheetRef}>
             <View

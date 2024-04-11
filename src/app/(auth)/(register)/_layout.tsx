@@ -28,6 +28,7 @@ export default function RegisterLayout() {
         name="username"
         options={{
           headerShown: true,
+          animation: "none",
         }}
       />
       <Stack.Screen
@@ -51,7 +52,7 @@ export default function RegisterLayout() {
       <Stack.Screen
         name="code"
         options={{
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen

@@ -39,6 +39,7 @@ export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#0C0C12",
     // padding: 24,
   },
 });

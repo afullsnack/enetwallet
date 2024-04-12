@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "org.enetwallet.enet",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
     "experimental": {
@@ -30,6 +30,25 @@
       ]
     ],
     "name": "enetwallet",
-    "slug": "enetwallet"
+    "slug": "enetwallet",
+    "android": {
+      "package": "org.enetwallet.enet"
+    },
+    "ios": {
+      "bundleIdentifier": "org.enetwallet.enet",
+      "supportsTablet": false
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "owner": "fullsnack_mimi",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "a26b4804-aade-45d1-b362-6369527cfdfd"
+      }
+    }
   }
 }

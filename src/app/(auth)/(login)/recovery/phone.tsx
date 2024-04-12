@@ -1,74 +1,121 @@
+import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
-import Input from "@/components/input";
+import { Input } from "@/components/input";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { Image } from "expo-image";
+import { Stack, router } from "expo-router";
 import { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, TouchableOpacity, View } from "react-native";
 
-export default function LoginPage() {
-  const [text, setText] = useState("");
+export default function PhonePage() {
+  const [phone, setPhone] = useState("");
 
   return (
-    <SafeAreaView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "padding"}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="w-ful container min-h-screen bg-[#0C0C12] px-6 md:px-8">
-            <View className="flex flex-col gap-2">
-              <Text className="text-2xl font-medium text-white">
-                Enter Phone number
-              </Text>
-              <Text className="text-sm font-medium text-white/70">
+    <Container>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0C0C12",
+          },
+          headerTitleStyle: { color: "white" },
+          title: "",
+          headerLeft(props) {
+            return (
+              <TouchableOpacity {...props} onPress={() => router.back()}>
+                <Image
+                  source={require("../../../../../assets/arrow-left-img.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+              </TouchableOpacity>
+            );
+          },
+          // headerRight(props) {
+          //   return (
+          //     <TouchableOpacity
+          //       {...props}
+          //       onPress={() => {
+          //         router.push("/code");
+          //       }}
+          //     >
+          //       <Text className="text-[#BEE9E5]">Skip</Text>
+          //     </TouchableOpacity>
+          //   );
+          // },
+        }}
+      />
+      <View className="container min-h-screen h-screen pb-24 w-full flex-1 bg-[#0C0C12] px-6 ">
+        <View className="flex flex-col gap-2">
+          <Text className="text-2xl font-medium text-white">
+            Enter Phone number
+          </Text>
+          {/* <Text className="text-sm font-medium text-white/70">
                 The number must match with the Phone number your registered your
                 wallet
-              </Text>
-              <Input
-                prefix={<Text className="text-white">+234</Text>}
-                props={{
-                  value: text,
-                  placeholder: "Phone number",
-                  onChangeText: setText,
-                  style: { color: "white" },
-                  keyboardType: "default",
+              </Text> */}
+          <Input
+            outline={false}
+            prefix={
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 17,
+                  fontWeight: "700",
+                  marginRight: 5,
                 }}
-              />
-            </View>
-            <View className="flex-1" />
-            <View className="flex w-full flex-1">
-              <TouchableOpacity className="flex w-full flex-row items-center justify-between rounded-xl bg-slate-600/30 p-4">
-                <Text className="text-white">
-                  Import log in details using QR Codee
-                </Text>
-                <View className="rounded-full bg-white p-2">
-                  <MaterialCommunityIcons
-                    name="line-scan"
-                    size={20}
-                    color="black"
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View className="flex w-full flex-1 items-end">
-              <View className="grid w-1/2">
-                <Button onPress={() => router.push("/recovery/code")}>
-                  <Text>Continue</Text>
-                </Button>
-              </View>
-            </View>
+              >
+                🇳🇬 +234
+              </Text>
+            }
+            style={{
+              color: "#01EAD4",
+              // textDecorationColor: "#01EAD4",
+              fontSize: 17,
+              fontWeight: "500",
+              height: 45,
+            }}
+            cursorColor="white"
+            defaultValue={phone}
+            inputMode="numeric"
+            onChangeText={(text) => setPhone(text)}
+            keyboardType="number-pad"
+          />
+        </View>
+        <View className="flex-1" />
+
+        <Button
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: 8,
+            backgroundColor: "rgba(18, 19, 27, 1)",
+            padding: 10,
+            paddingHorizontal: 20,
+            marginVertical: 160,
+          }}
+        >
+          <Text className="text-white">
+            Import log in details using QR Code
+          </Text>
+          <View className="rounded-full bg-white p-2 border border-slate-700">
+            <MaterialCommunityIcons name="line-scan" size={20} color="black" />
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </Button>
+
+        <View className="flex w-full items-end">
+          <View className="grid w-1/2">
+            <Button
+              onPress={() => {
+                router.push(`(login)/recovery/code`);
+              }}
+            >
+              <Text>Continue</Text>
+            </Button>
+          </View>
+        </View>
+      </View>
+    </Container>
   );
 }

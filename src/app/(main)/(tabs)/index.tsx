@@ -1,18 +1,19 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Image } from "expo-image";
-import { Tabs, router } from "expo-router";
+import { Stack, Tabs, router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
   return (
     <Container style={{ padding: 24, borderColor: "#0C0C12" }}>
-      <Tabs.Screen
+      <Stack.Screen
         options={{
+          animation: "fade",
           headerStyle: {
-            backgroundColor: "#0C0C12",
-            borderColor: "#0C0C12",
             elevation: 0,
+            backgroundColor: "#0C0C12",
+            // borderColor: "#0C0C12",
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
@@ -144,7 +145,10 @@ export default function HomeScreen() {
             Send
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
+        <TouchableOpacity
+          className="flex flex-col items-center justify-center gap-1"
+          onPress={() => router.push({ pathname: "/(main)/(receive)/entry" })}
+        >
           <Image
             source={require("../../../../assets/icons/dashboard/actions/receive.png")}
             style={{

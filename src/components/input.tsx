@@ -1,4 +1,5 @@
 import * as React from "react";
+import { StyleProp, TextStyle } from "react-native";
 import {
   StyleSheet,
   Text,
@@ -14,10 +15,23 @@ type InputProps = {
   suffix?: React.ReactNode | string;
   prefix?: React.ReactNode | string;
   outline?: boolean;
+  containerStyle?: StyleProp<TextStyle>;
 } & TextInputProps;
 
 export const Input = React.forwardRef<TextInput, InputProps>(
-  ({ label, onChangeText, outline, style, prefix, suffix, ...props }, ref) => {
+  (
+    {
+      label,
+      onChangeText,
+      outline,
+      style,
+      prefix,
+      containerStyle,
+      suffix,
+      ...props
+    },
+    ref,
+  ) => {
     const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
     console.log(isFocused, ":::IS focused");
@@ -27,6 +41,7 @@ export const Input = React.forwardRef<TextInput, InputProps>(
         {label && <Text style={styles.label}>{label}</Text>}
         <View
           style={[
+            containerStyle,
             styles.inputView,
             outline &&
               (isFocused ? styles.inputViewFocus : styles.inputViewNormal),
@@ -45,7 +60,7 @@ export const Input = React.forwardRef<TextInput, InputProps>(
         </View>
       </View>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
@@ -63,7 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 14,
+    borderRadius: 6,
     paddingHorizontal: 10,
   },
   input: {

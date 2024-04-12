@@ -2,18 +2,31 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { SheetModal } from "@/components/modal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Switch, Text, TouchableOpacity, View } from "react-native";
+import {
+  Keyboard,
+  Switch,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import Animated, { useSharedValue } from "react-native-reanimated";
+import { ScrollView } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
 
 export default function Send() {
   const [receipientAddress, setReceipientAddress] = useState<string>();
   const [amount, setAmount] = useState<string>();
   const [addBeneficiary, setAddBeneficiary] = useState<boolean>(true);
   const [memo, setMemo] = useState<string>();
+
+  // Search
+  const [tokenSearch, setTokenSearch] = useState<string>();
 
   const tokenSheetRef = useRef<BottomSheetModal>(null);
   const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
@@ -433,15 +446,149 @@ export default function Send() {
           backgroundColor: "#18EAFF",
         }}
       >
-        <View
-          style={{
-            backgroundColor: "#0C0C12",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <Text>Sheet</Text>
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View
+            style={{
+              backgroundColor: "#0C0C12",
+              width: "100%",
+              height: "100%",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "700",
+                color: "white",
+                lineHeight: 19,
+                textAlign: "center",
+              }}
+            >
+              Select token to send
+            </Text>
+            <Input
+              outline={false}
+              containerStyle={{
+                borderRadius: 15,
+                borderColor: "#171925",
+                width: "100%",
+                minHeight: 35,
+                marginTop: 10,
+                backgroundColor: "#12131B",
+              }}
+              style={{ paddingHorizontal: 10 }}
+              placeholderTextColor="#49515D"
+              placeholder="Search Token"
+              prefix={<Feather name="search" size={18} color="#49515D" />}
+              defaultValue={tokenSearch}
+              onChangeText={setTokenSearch}
+            />
+            <ScrollView
+              style={{ width: "100%", flex: 1 }}
+              nestedScrollEnabled
+              scrollEnabled
+            >
+              <FlashList
+                style={{ width: "100%", backgroundColor: "transparent" }}
+                scrollEnabled
+                nestedScrollEnabled
+                data={[...Array.from({ length: 15 })]}
+                estimatedItemSize={200}
+                renderItem={({ item, index }) => {
+                  return (
+                    <Button
+                      onPress={() => {}}
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: "transparent",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 10,
+                      }}
+                    >
+                      <View className="relative p-1">
+                        <Image
+                          source={require("../../../../../assets/icons/dashboard/dai.png")}
+                          style={{ width: 35, height: 35 }}
+                          contentFit="contain"
+                        />
+
+                        <Image
+                          source={require("../../../../../assets/icons/dashboard/eth.png")}
+                          style={{
+                            width: 15,
+                            height: 15,
+                            position: "absolute",
+                            bottom: 2,
+                            right: 2,
+                          }}
+                          contentFit="contain"
+                        />
+                      </View>
+                      <View className="flex flex-row flex-1 items-center justify-between">
+                        <View className="flex flex-col">
+                          <View className="flex flex-row items-center gap-1">
+                            <Text
+                              style={{
+                                fontSize: 15,
+                                fontWeight: "400",
+                                color: "white",
+                              }}
+                            >
+                              BNB
+                            </Text>
+
+                            {/* <Image
+                              source={require("../../../../../assets/icons/carret.png")}
+                              style={{ width: 20, height: 20 }}
+                              contentFit="contain"
+                            /> */}
+                          </View>
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              fontWeight: "400",
+                              color: "#49515D",
+                            }}
+                          >
+                            BNB Chain
+                          </Text>
+                        </View>
+                        <View className="flex flex-col items-end">
+                          <View>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                fontWeight: "400",
+                                color: "#49515D",
+                              }}
+                            >
+                              0.00
+                            </Text>
+                          </View>
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              fontWeight: "400",
+                              color: "white",
+                            }}
+                          >
+                            $0.00
+                            {/* <Text style={{ color: "#49515D" }}>{"  "} DAI</Text> */}
+                          </Text>
+                        </View>
+                      </View>
+                    </Button>
+                  );
+                }}
+              />
+            </ScrollView>
+          </View>
+        </TouchableWithoutFeedback>
       </SheetModal>
       <SheetModal
         ref={recurringSheetRef}

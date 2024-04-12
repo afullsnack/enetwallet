@@ -1,9 +1,14 @@
 import { EvilIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export const Numpad = ({ onConfirmPressed, onPinChange }: any) => {
+export const Numpad = ({
+  onConfirmPressed,
+  onPinChange,
+  type = "register",
+}: any) => {
   const [code, setCode] = useState<number[]>([]);
 
   useEffect(() => {
@@ -96,9 +101,24 @@ export const Numpad = ({ onConfirmPressed, onPinChange }: any) => {
             width: "100%",
           }}
         >
-          <TouchableOpacity onPress={() => {}} style={{ padding: 20 }}>
-            <Text style={styles.number}>{"."}</Text>
-          </TouchableOpacity>
+          {type === "register" && (
+            <TouchableOpacity onPress={() => {}} style={{ padding: 20 }}>
+              <Text style={styles.number}>{"."}</Text>
+            </TouchableOpacity>
+          )}
+
+          {type === "recovery" && (
+            <TouchableOpacity onPress={() => {}} style={{ padding: 20 }}>
+              <Image
+                source={require("../../assets/wallet/face_id.png")}
+                style={{
+                  width: 20,
+                  height: 20,
+                }}
+                contentFit="contain"
+              />
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
             onPress={() => onNumberPress(0)}
@@ -107,16 +127,44 @@ export const Numpad = ({ onConfirmPressed, onPinChange }: any) => {
             <Text style={styles.number}>{0}</Text>
           </TouchableOpacity>
 
-          <View style={{ minWidth: 40 }} />
+          {type === "recovery" && (
+            <TouchableOpacity
+              onPress={() => numberBackspace()}
+              style={{ paddingVertical: 20, paddingHorizontal: 10 }}
+            >
+              <EvilIcons name="close" size={25} color="#ADB5BF" />
+            </TouchableOpacity>
+          )}
+          {type === "register" && <View style={{ minWidth: 40 }} />}
         </View>
       </View>
       <View style={{ flexDirection: "column", gap: 60 }}>
-        <TouchableOpacity
-          onPress={() => numberBackspace()}
-          style={{ padding: 20 }}
-        >
-          <EvilIcons name="close" size={25} color="#ADB5BF" />
-        </TouchableOpacity>
+        {type === "register" && (
+          <TouchableOpacity
+            onPress={() => numberBackspace()}
+            style={{ padding: 20 }}
+          >
+            <EvilIcons name="close" size={25} color="#ADB5BF" />
+          </TouchableOpacity>
+        )}
+
+        {type === "recovery" && (
+          <TouchableOpacity
+            onPress={() => numberBackspace()}
+            style={{ padding: 20, marginTop: 5 }}
+          >
+            <Text
+              style={{
+                color: "rgba(173, 181, 191, 1)",
+                fontSize: 12,
+                fontWeight: "500",
+              }}
+            >
+              Forgot
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           onPress={onConfirmPressed}
           style={{

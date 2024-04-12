@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 
-export default function PinPage() {
+export default function CodeScreen() {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
 

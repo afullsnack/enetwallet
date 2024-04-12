@@ -52,7 +52,7 @@ export default function Password() {
             }}
             cursorColor="white"
             defaultValue={password}
-            inputMode="email"
+            // inputMode="email"
             textContentType="password"
             onChangeText={(text) => setPassword(text)}
             keyboardType="default"

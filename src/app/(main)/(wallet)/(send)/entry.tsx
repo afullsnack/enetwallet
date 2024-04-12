@@ -38,6 +38,7 @@ export default function Send() {
       <Container>
         <Stack.Screen
           options={{
+            animation: "slide_from_right",
             headerShown: true,
             headerStyle: {
               backgroundColor: "#0C0C12",
@@ -690,7 +691,7 @@ export default function Send() {
   );
 }
 
-export const SelectNetworkTrigger = ({
+const SelectNetworkTrigger = ({
   onPress,
   network,
   tokenSymbol,

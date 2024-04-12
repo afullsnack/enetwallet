@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
 import { TouchableOpacity, View, Text } from "react-native";
 
-export default function ConifrmSpend() {
+export default function SpendDetails() {
   return (
     <Container>
       <Stack.Screen
@@ -17,16 +17,27 @@ export default function ConifrmSpend() {
           },
           headerTitleStyle: { color: "white" },
           headerTitleAlign: "center",
-          title: "Confirm order",
+          title: "Details",
           headerRight(props) {
+            return (
+              <TouchableOpacity {...props} onPress={() => {}}>
+                <Image
+                  source={require("../../../../../assets/icons/dashboard/spend/send-2.png")}
+                  style={{
+                    width: 17,
+                    height: 17,
+                  }}
+                  contentFit="contain"
+                />
+              </TouchableOpacity>
+            );
+          },
+          headerLeft(props) {
             return (
               <TouchableOpacity {...props} onPress={() => router.back()}>
                 <EvilIcons name="close" size={24} color="white" />
               </TouchableOpacity>
             );
-          },
-          headerLeft(props) {
-            return <View />;
           },
         }}
       />
@@ -39,17 +50,9 @@ export default function ConifrmSpend() {
               color: "white",
             }}
           >
-            Thomas Fred
+            Transfered
           </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "500",
-              color: "#49515D",
-            }}
-          >
-            Will receive
-          </Text>
+
           <Text
             style={{
               fontSize: 20,
@@ -57,7 +60,7 @@ export default function ConifrmSpend() {
               color: "#FFFFFF",
             }}
           >
-            200,000,678
+            -200,000,678
             <Text
               style={{
                 fontSize: 17,
@@ -68,6 +71,25 @@ export default function ConifrmSpend() {
               {"  "}USDT
             </Text>
           </Text>
+          <View className="flex flex-row gap-2 items-center justify-center">
+            <Image
+              source={require("../../../../../assets/icons/dashboard/spend/tick_square.png")}
+              style={{
+                width: 15,
+                height: 15,
+              }}
+              contentFit="contain"
+            />
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "500",
+                color: "#18EAFF",
+              }}
+            >
+              Completed
+            </Text>
+          </View>
         </View>
         <View
           className="w-full"
@@ -169,16 +191,17 @@ export default function ConifrmSpend() {
                 color: "#49515D",
               }}
             >
-              Amount
+              TxId
             </Text>
             <Text
               style={{
                 fontSize: 12,
                 fontWeight: "400",
                 color: "#FFFFFF",
+                maxWidth: 150,
               }}
             >
-              200,000,976 USDT
+              0x63802792790427902huhkfjkhjfhjf063802792790427902hukfjkhjfhjf
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -211,9 +234,29 @@ export default function ConifrmSpend() {
               5.50 GWEI
             </Text>
           </View>
+          <View className="flex flex-row w-full items-center justify-between">
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: "400",
+                color: "#49515D",
+              }}
+            >
+              Date & Time
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: "400",
+                color: "#FFFFFF",
+              }}
+            >
+              2023-01-11 18:32:59
+            </Text>
+          </View>
         </View>
 
-        <View
+        {/* <View
           className="px-6 flex flex-row items-center justify-center gap-4"
           style={{
             marginTop: 40,
@@ -239,7 +282,7 @@ export default function ConifrmSpend() {
             Ensure that the contact/address is correct and the network
             corresponds with the receiving contact/address.
           </Text>
-        </View>
+        </View> */}
 
         <View className="flex-1" />
 
@@ -259,7 +302,7 @@ export default function ConifrmSpend() {
               width: "100%",
               backgroundColor: "transparent",
             }}
-            onPress={() => router.push("(send)/verification")}
+            onPress={() => router.replace("(main)/(tabs)/")}
           >
             <Text
               style={{
@@ -268,7 +311,7 @@ export default function ConifrmSpend() {
                 color: "#18EAFF",
               }}
             >
-              Confirm
+              Exit
             </Text>
           </Button>
         </View>

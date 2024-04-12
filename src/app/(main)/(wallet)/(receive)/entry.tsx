@@ -268,7 +268,7 @@ export default function Receive() {
               scrollEnabled
             >
               <FlashList
-                style={{ width: "100%", backgroundColor: "transparent" }}
+                // style={{ width: "100%", backgroundColor: "transparent" }}
                 scrollEnabled
                 nestedScrollEnabled
                 data={[...Array.from({ length: 15 })]}

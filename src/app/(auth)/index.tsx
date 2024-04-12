@@ -47,6 +47,7 @@ function Content({
     >
       {Array.from({ length: dotsLength }).map((dot, index) => (
         <View
+          key={index}
           style={[
             {
               width: 10,
@@ -203,7 +204,7 @@ function Slider() {
           "Over 10,000+ Coins in your pocket Send, Receive, Pay, Exchange different currencies Anytime, Anywhere",
       },
     ],
-    []
+    [],
   );
 
   const carouselRef = useRef(null);

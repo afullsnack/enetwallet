@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     padding: 16,
-    shadowColor: "#000",
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   height: 2,
+    //   width: 0,
+    // },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },

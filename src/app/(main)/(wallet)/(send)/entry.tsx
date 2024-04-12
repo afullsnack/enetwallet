@@ -431,7 +431,12 @@ export default function Send() {
             </View>
           </View>
 
-          <Button onPress={() => {}} style={{ width: "100%" }}>
+          <Button
+            onPress={() => {
+              router.push("(send)/confirm");
+            }}
+            style={{ width: "100%" }}
+          >
             <Text>Swipe to confirm transaction</Text>
           </Button>
         </View>

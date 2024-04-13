@@ -14,7 +14,7 @@ export default function CodeScreen() {
     <Container>
       <Stack.Screen
         options={{
-          animation: "fade",
+          animation: "slide_from_right",
           headerShown: false,
           headerStyle: {
             backgroundColor: "#0C0C12",

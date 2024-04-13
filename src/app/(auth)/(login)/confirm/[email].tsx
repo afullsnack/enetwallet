@@ -10,6 +10,7 @@ export default function ConfirmEmailPage() {
     <Container style={{ backgroundColor: "#0C0C12" }}>
       <Stack.Screen
         options={{
+          animation: "slide_from_right",
           headerShown: true,
           headerStyle: {
             backgroundColor: "#0C0C12",

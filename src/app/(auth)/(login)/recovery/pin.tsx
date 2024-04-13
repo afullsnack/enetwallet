@@ -14,7 +14,7 @@ export default function PinPage() {
     <Container>
       <Stack.Screen
         options={{
-          animation: "fade",
+          animation: "slide_from_right",
           headerShown: true,
           headerStyle: {
             backgroundColor: "#0C0C12",

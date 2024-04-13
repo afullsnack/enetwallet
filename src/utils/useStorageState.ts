@@ -58,7 +58,7 @@ export function useStorageState(key: string): UseStateHook<string> {
       }
     } else {
       const value = secureStorage.getString(key);
-      setState(JSON.parse(value));
+      setState(value);
     }
   }, [key]);
 

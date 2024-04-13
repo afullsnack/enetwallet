@@ -13,6 +13,7 @@ export default function EnableFaceId() {
     <Container>
       <Stack.Screen
         options={{
+          animation: "slide_from_right",
           headerShown: false,
           headerStyle: {
             backgroundColor: "#0C0C12",
@@ -68,7 +69,7 @@ export default function EnableFaceId() {
 
         <Button
           onPress={() => {
-            router.push("/(main)/(tabs)/");
+            router.replace("/(main)/(tabs)/");
           }}
           style={{
             width: "100%",
@@ -83,7 +84,7 @@ export default function EnableFaceId() {
         </Button>
         <Button
           onPress={() => {
-            router.push("/(main)/(tabs)/");
+            router.replace("/(main)/(tabs)/");
           }}
           style={{
             width: "100%",

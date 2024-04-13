@@ -1,38 +1,39 @@
-import { SheetModal } from "@/components/modal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { router } from "expo-router";
-import { useRef } from "react";
-import { Button, Text, View } from "react-native";
+import { Container } from "@/components/Container";
+import { useSession } from "@/contexts/session";
+import { Redirect, router } from "expo-router";
+import { ActivityIndicator, Button, Text, View } from "react-native";
 
 export default function RootIndexPage() {
-  const sheetRef = useRef<BottomSheetModal>(null);
+  const { session, isLoading } = useSession();
 
-  return (
-    <View className="min-h-screen h-screen w-full flex-1">
-      <View className="min-h-screen bg-[#0C0C12]  py-0 dark:bg-[#0C0C12] dark:text-white">
-        <View className="container flex flex-col items-center justify-center px-4 py-20">
-          <Button onPress={() => router.push("/(auth)/")} title="Go to auth" />
-          <Button
-            onPress={() => sheetRef.current.present()}
-            title="Show modal"
-          />
-          <Button
-            onPress={() => router.push("/(main)/(tabs)/")}
-            title="Jump to dashboard"
-          />
+  console.log(session, isLoading, ":::Session and loading state");
 
-          <SheetModal ref={sheetRef}>
-            <View
-              style={{
-                flex: 1,
-                width: "100%",
-              }}
-            >
-              <Text>Inside of a reusable modal sheet</Text>
-            </View>
-          </SheetModal>
+  // Loading Indicator for initial route
+  if (isLoading && !session) {
+    return (
+      <Container>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#0C0C12",
+            flex: 1,
+          }}
+        >
+          <ActivityIndicator size="large" color="#18EAFF" />
+          <Text>Loading...</Text>
         </View>
-      </View>
-    </View>
-  );
+      </Container>
+    );
+  }
+
+  // Redirect to auth if no session
+  if (!session && !isLoading) {
+    return <Redirect href="/(auth)/" />;
+  }
+
+  return <Redirect href="/(main)/(tabs)/" />;
 }

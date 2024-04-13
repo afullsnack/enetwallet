@@ -13,6 +13,7 @@ export default function WalletFinish() {
     <Container>
       <Stack.Screen
         options={{
+          animation: "slide_from_right",
           headerShown: false,
           headerStyle: {
             backgroundColor: "#0C0C12",

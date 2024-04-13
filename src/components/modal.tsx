@@ -45,6 +45,12 @@ export const SheetModal = forwardRef<Ref, ISheetModal>(
         index={0}
         backdropComponent={renderBackdrop}
         style={[style, { backgroundColor: "#0C0C12" }]}
+        backgroundStyle={
+          props?.backgroundStyle ?? { backgroundColor: "#0C0C12" }
+        }
+        handleIndicatorStyle={
+          props?.handleIndicatorStyle ?? { backgroundColor: "#0C0C12" }
+        }
         handleStyle={
           props?.handleStyle ?? {
             backgroundColor: "#0C0C12",

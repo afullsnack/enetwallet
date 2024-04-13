@@ -1,9 +1,10 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import { router } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image";
 
 export default function EmailPage() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,27 @@ export default function EmailPage() {
 
   return (
     <Container>
+      <Stack.Screen
+        options={{
+          animation: "slide_from_right",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0C0C12",
+          },
+          headerTitleStyle: { color: "white" },
+          title: "",
+          headerLeft(props) {
+            return (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Image
+                  source={require("../../../../assets/arrow-left-img.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
       <View className="w-full grid min-h-screen bg-[#0C0C12] px-6 md:px-8">
         <View className="flex flex-col gap-2">
           <Text className="text-2xl font-medium text-white">

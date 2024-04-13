@@ -4,17 +4,22 @@ import { SheetModal } from "@/components/modal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function BackupPage() {
   const sheetRef = useRef<BottomSheetModal>(null);
+  const { top } = useSafeAreaInsets();
+
+  const snapPoints = useMemo(() => ["75%"], []);
 
   return (
     <>
       <Container>
         <Stack.Screen
           options={{
+            animation: "slide_from_right",
             headerShown: true,
             headerStyle: {
               backgroundColor: "#0C0C12",
@@ -74,7 +79,16 @@ export default function BackupPage() {
           />
         </View>
       </Container>
-      <SheetModal ref={sheetRef}>
+      <SheetModal
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        backgroundStyle={{
+          backgroundColor: "#0C0C12",
+        }}
+        handleIndicatorStyle={{
+          backgroundColor: "#18EAFF",
+        }}
+      >
         <View
           className="w-full h-full flex flex-col items-center justify-between p-6 gap-4"
           style={{ backgroundColor: "#0C0C12" }}
@@ -120,6 +134,8 @@ export default function BackupPage() {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
+              height: 46,
+              borderRadius: 8,
             }}
           >
             <Text

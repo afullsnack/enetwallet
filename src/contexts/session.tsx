@@ -3,8 +3,8 @@ import { useStorageState } from "@/utils/useStorageState";
 
 // Create the auth context
 const AuthContext = React.createContext<{
-  signIn: () => void;
-  signOut: () => void;
+  signIn: () => Promise<void>;
+  signOut: () => Promise<void>;
   session?: string | null;
   isLoading: boolean;
 }>({
@@ -32,11 +32,12 @@ export function SessionProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => {
+        signIn: async () => {
           // Perform sign-in logic here
           setSession("xxx");
         },
-        signOut: () => {
+        signOut: async () => {
+          // revoke logic for any OAuth2 accounts
           setSession(null);
         },
         session,

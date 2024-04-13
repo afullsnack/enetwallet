@@ -1,10 +1,15 @@
 import { Container } from "@/components/Container";
-import { View, Text, useWindowDimensions } from "react-native";
+import {
+  View,
+  Text,
+  useWindowDimensions,
+  TouchableOpacity,
+} from "react-native";
 import { Image } from "expo-image";
 import Carousel from "react-native-reanimated-carousel";
 import { useRef } from "react";
 import { Button } from "@/components/button";
-import { router } from "expo-router";
+import { Stack, router } from "expo-router";
 
 export default function WalletSlider() {
   const { width } = useWindowDimensions();
@@ -12,6 +17,27 @@ export default function WalletSlider() {
 
   return (
     <Container>
+      <Stack.Screen
+        options={{
+          animation: "slide_from_right",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0C0C12",
+          },
+          headerTitleStyle: { color: "white" },
+          title: "",
+          headerLeft(props) {
+            return (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Image
+                  source={require("../../../../assets/arrow-left-img.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
       <View className="w-full">
         <Carousel
           ref={carouselRef}

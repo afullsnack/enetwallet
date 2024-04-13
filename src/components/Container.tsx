@@ -10,6 +10,8 @@ import {
 import {
   SafeAreaView,
   SafeAreaViewProps,
+  useSafeAreaFrame,
+  useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
 interface ISafeAreaViewProps {
@@ -19,6 +21,8 @@ interface ISafeAreaViewProps {
 type Ref = SafeAreaViewProps;
 export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
   ({ children, style }, ref) => {
+    const { top, bottom } = useSafeAreaInsets();
+    const { height } = useSafeAreaFrame();
     return (
       <SafeAreaView
         style={[styles.container, style]}
@@ -28,12 +32,20 @@ export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
           behavior={Platform.OS === "android" ? "height" : "position"}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>{children}</View>
+            <View
+              style={{
+                marginTop: top,
+                marginBottom: bottom,
+                maxHeight: height,
+              }}
+            >
+              {children}
+            </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </SafeAreaView>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

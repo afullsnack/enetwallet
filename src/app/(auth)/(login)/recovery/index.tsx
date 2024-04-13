@@ -11,7 +11,6 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RecoveryPage() {
   return (
@@ -19,7 +18,7 @@ export default function RecoveryPage() {
       <View className="container grid min-h-screen w-full bg-[#0C0C12] px-6 md:px-8">
         <Stack.Screen
           options={{
-            animation: "fade",
+            animation: "slide_from_right",
             headerShown: true,
             headerStyle: {
               backgroundColor: "#0C0C12",
@@ -38,7 +37,7 @@ export default function RecoveryPage() {
             },
           }}
         />
-        <View className="flex h-full flex-col items-center justify-center gap-2 pb-20">
+        <View className="flex h-full flex-col items-center justify-center gap-2 pb-28">
           <View className="my-10 items-center gap-8" style={{ marginTop: 100 }}>
             <Image
               source={require("../../../../../assets/recovery.png")}

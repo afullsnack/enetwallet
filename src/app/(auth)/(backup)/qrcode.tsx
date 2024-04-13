@@ -14,6 +14,7 @@ export default function QRCode() {
     <Container>
       <Stack.Screen
         options={{
+          animation: "slide_from_right",
           headerShown: true,
           headerStyle: {
             backgroundColor: "#0C0C12",

@@ -1,18 +1,45 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { Link, Stack, router } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
+import { Image } from "expo-image";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function CodeScreen() {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
+  const { height } = useSafeAreaFrame();
 
   return (
     <Container>
-      <View className="w-ful container grid min-h-screen bg-[#0C0C12] px-6 md:px-8 py-6">
+      <Stack.Screen
+        options={{
+          animation: "slide_from_right",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0C0C12",
+          },
+          headerTitleStyle: { color: "white" },
+          title: "",
+          headerLeft(props) {
+            return (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Image
+                  source={require("../../../../assets/arrow-left-img.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
+      <View
+        className="w-full flex flex-col min-h-screen h-screen bg-[#0C0C12] px-6 pb-28"
+        style={{ height }}
+      >
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-2xl font-medium text-white">

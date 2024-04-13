@@ -1,9 +1,9 @@
 import { Container } from "@/components/Container";
 import { Numpad } from "@/components/numpad";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 
 export default function PinPage() {
@@ -12,6 +12,27 @@ export default function PinPage() {
 
   return (
     <Container>
+      <Stack.Screen
+        options={{
+          animation: "slide_from_right",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0C0C12",
+          },
+          headerTitleStyle: { color: "white" },
+          title: "",
+          headerLeft(props) {
+            return (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Image
+                  source={require("../../../../assets/arrow-left-img.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
       <View className="w-ful container grid min-h-screen bg-[#0C0C12] px-6">
         <View className="flex flex-col items-center justify-center gap-2">
           {/* <Text className="text-2xl font-medium text-white">

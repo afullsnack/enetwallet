@@ -49,7 +49,7 @@ export default function Send() {
               return (
                 <TouchableOpacity onPress={() => router.back()}>
                   <Image
-                    source={require("../../../../../assets/arrow-left-img.png")}
+                    source={require("../../../../../assets/back-arrow.png")}
                     style={{ width: 24, height: 24 }}
                   />
                 </TouchableOpacity>

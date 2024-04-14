@@ -1,5 +1,4 @@
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";

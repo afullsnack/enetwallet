@@ -39,7 +39,7 @@ export default function RecoveryEmail() {
                 style={{ marginHorizontal: 10 }}
               >
                 <Image
-                  source={require("../../../../../assets/arrow-left-img.png")}
+                  source={require("../../../../../assets/back-arrow.png")}
                   style={{ width: 24, height: 24 }}
                 />
               </TouchableOpacity>

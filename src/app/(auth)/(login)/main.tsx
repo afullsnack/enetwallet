@@ -14,10 +14,6 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
 
 export default function LoginIndexPage() {
   // const { top } = useSafeAreaInsets();

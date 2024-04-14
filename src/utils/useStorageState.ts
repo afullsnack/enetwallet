@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 
 export const secureStorage = new MMKV({
   id: "enetwallet-app",
-  encryptionKey: process.env.LOCAL_STORE_ENC_KEY,
+  // encryptionKey: process.env.LOCAL_STORE_ENC_KEY,
 });
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];

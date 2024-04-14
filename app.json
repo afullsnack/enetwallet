@@ -3,14 +3,12 @@
     "scheme": "org.enetwallet.enet",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
-    "experimental": {
-      "typedRoutes": true
-    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#0B0B0E"
     },
+    "backgroundColor": "#0C0C12",
     "web": {
       "output": "static",
       "bundler": "metro"

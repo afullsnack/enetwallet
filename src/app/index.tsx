@@ -20,7 +20,6 @@ export default function RootIndexPage() {
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#0C0C12",
-            flex: 1,
           }}
         >
           <ActivityIndicator size="large" color="#18EAFF" />
@@ -30,7 +29,7 @@ export default function RootIndexPage() {
     );
   }
 
-  // Redirect to auth if no session
+  // // Redirect to auth if no session
   if (!session && !isLoading) {
     return <Redirect href="/(auth)/" />;
   }

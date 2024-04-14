@@ -33,7 +33,7 @@ export default function EmailPage() {
           },
         }}
       />
-      <View className="w-full grid min-h-screen bg-[#0C0C12] px-6 md:px-8">
+      <View className="w-full grid min-h-screen h-screen bg-[#0C0C12] px-6">
         <View className="flex flex-col gap-2">
           <Text className="text-2xl font-medium text-white">
             Enter your Email

@@ -12,6 +12,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   SafeAreaView,
@@ -81,7 +82,13 @@ export default function LoginIndexPage() {
           />
           <Button
             onPress={() => {
-              console.log(identifier, password, ":::PAssword");
+              if (!identifier || !password) {
+                return Alert.alert(
+                  "Identifier and password values must be set",
+                );
+              }
+
+              console.log(identifier, password, ":::Password");
             }}
             style={{
               width: "100%",

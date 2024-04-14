@@ -140,7 +140,10 @@ function Content({
             <GetStartedSection />
           )}
 
-          <View className="my-1 flex flex-row place-items-center items-center justify-center">
+          <View
+            style={{ marginTop: 20 }}
+            className="flex flex-row place-items-center items-center justify-center"
+          >
             <Text className="text-white">
               I have an account?{" "}
               <Link href="/(auth)/(login)/main" className="text-[#18EAFF]">

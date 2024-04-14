@@ -34,7 +34,7 @@ export const Input = React.forwardRef<TextInput, InputProps>(
   ) => {
     const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
-    console.log(isFocused, ":::IS focused");
+    // console.log(isFocused, ":::IS focused");
 
     return (
       <View style={[styles.containerView]}>

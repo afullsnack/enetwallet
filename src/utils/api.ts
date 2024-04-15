@@ -4,6 +4,37 @@ type ApiFunction<P, R extends Record<string, any>> = (args: P) => R;
 
 // Auth API functions
 export namespace Auth {
+  interface IRegister {
+    email: string;
+    data: Record<string, any>;
+  }
+  export const register: ApiFunction<IRegister, Record<string, any>> = async (
+    args,
+  ) => {
+    try {
+      const options = {
+        method: "POST",
+        body: JSON.stringify({ email: args.email, ...args.data }),
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/user/register-mobile`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_Register");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_Register");
+      throw new Error(err);
+    }
+  };
+
   interface IEmailPasswordAuth {
     email: string;
     password: string;

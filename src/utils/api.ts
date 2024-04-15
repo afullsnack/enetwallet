@@ -420,9 +420,12 @@ export namespace Wallet {
 
   interface ITransactionInit {
     user_token: string;
-    toAddress: string;
-    transfer_type: string;
-    amount: string;
+    data: {
+      toAddress: string;
+      amount: string;
+      transfer_type?: string | undefined;
+      token_address?: string | undefined;
+    };
   }
   export const transactionInit: ApiFunction<
     ITransactionInit,
@@ -431,6 +434,7 @@ export namespace Wallet {
     try {
       const options = {
         method: "POST",
+        body: JSON.stringify(args.data),
         headers: {
           "Content-type": "application/json",
           "x-auth-token": args.user_token,
@@ -445,6 +449,160 @@ export namespace Wallet {
       return json;
     } catch (err: any) {
       console.log(err, ":::Error_WalletTransfer");
+      throw new Error(err);
+    }
+  };
+
+  interface IGetBalance {
+    user_token: string;
+  }
+  export const getBalance: ApiFunction<
+    IGetBalance,
+    Record<string, any>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(`${API_BASE_URL}/wallet/get`, options);
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_WalletBalance");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_WalletBalance");
+      throw new Error(err);
+    }
+  };
+
+  interface IGetAddress {
+    user_token: string;
+  }
+  export const getAddress: ApiFunction<
+    IGetAddress,
+    Record<string, any>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(`${API_BASE_URL}/wallet/get`, options);
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_WalletAddress");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_WalletAddress");
+      throw new Error(err);
+    }
+  };
+
+  // Beneficiaries
+  interface IGetBeneficiaries {
+    user_token: string;
+  }
+  export const getBeneficiaries: ApiFunction<
+    IGetBeneficiaries,
+    Record<string, any>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/wallet/get-beneficiaries`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_WalletGetBeneficiaries");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_WalletGetBeneficiaries");
+      throw new Error(err);
+    }
+  };
+
+  interface IDeleteBeneficiary {
+    user_token: string;
+    data: { wallet_address: string };
+  }
+  export const deleteBeneficiary: ApiFunction<
+    IDeleteBeneficiary,
+    Record<string, any>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "DELETE",
+        body: JSON.stringify(args.data),
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/wallet/delete-beneficiaries`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_WalletDeleteBeneficiaries");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_WalletDeleteBeneficiaries");
+      throw new Error(err);
+    }
+  };
+
+  interface ICreateBeneficiary {
+    user_token: string;
+    data: { recipient_address: string };
+  }
+  export const createBeneficiary: ApiFunction<
+    ICreateBeneficiary,
+    Record<string, any>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "POST",
+        body: JSON.stringify(args.data),
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/wallet/create-beneficiaries`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_WalletCreateBeneficiaries");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_WalletCreateBeneficiaries");
       throw new Error(err);
     }
   };

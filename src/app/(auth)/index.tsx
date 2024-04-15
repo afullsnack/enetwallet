@@ -245,7 +245,10 @@ function Slider() {
 function GetStartedSection() {
   return (
     <View className="flex flex-row items-center justify-between">
-      <View className="flex flex-row place-items-center items-center justify-center">
+      <TouchableOpacity
+        onPress={() => router.push("/(main)/")}
+        className="flex flex-row place-items-center items-center justify-center"
+      >
         <Image
           source={require("../../../assets/arrow-left-img.png")}
           style={{ width: 50, height: 50 }}
@@ -257,7 +260,7 @@ function GetStartedSection() {
           contentPosition="center"
           style={{ width: 40, height: 40 }}
         />
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={async () => {
           const result = await authenticate();

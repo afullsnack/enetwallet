@@ -35,7 +35,7 @@ export default function Password() {
           },
         }}
       />
-      <View className="w-full flex flex-col h-full pb-6 bg-[#0C0C12] px-6 md:px-8">
+      <View className="w-full flex flex-col h-full pb-28 bg-[#0C0C12] px-6">
         <View className="flex flex-col gap-4">
           <Text style={{ fontSize: 13, fontWeight: "400", color: "#F3F4F8" }}>
             We will generate a QR code that contains your encrypted key The QR

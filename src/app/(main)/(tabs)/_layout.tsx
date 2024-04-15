@@ -35,17 +35,29 @@ export default function DashboardTabLayout() {
               backgroundColor: "#0C0C12",
             },
             title: "Home",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color, focused }) => (
               <View className="flex flex-col items-center justify-center gap-1">
-                <Image
-                  source={require("../../../../assets/icons/tab/tab_home.png")}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    margin: 4,
-                    // color: color
-                  }}
-                />
+                {focused ? (
+                  <Image
+                    source={require("../../../../assets/icons/tab/home_active.png")}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      margin: 4,
+                      // color: color
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={require("../../../../assets/icons/tab/home.png")}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      margin: 4,
+                      // color: color
+                    }}
+                  />
+                )}
                 <Text style={{ color: color }}>Home</Text>
               </View>
             ),
@@ -58,17 +70,29 @@ export default function DashboardTabLayout() {
               backgroundColor: "#0C0C12",
             },
             title: "Wallet",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color, focused }) => (
               <View className="flex flex-col items-center justify-center gap-1">
-                <Image
-                  source={require("../../../../assets/icons/tab/tab_wallet.png")}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    margin: 4,
-                    // color: color
-                  }}
-                />
+                {focused ? (
+                  <Image
+                    source={require("../../../../assets/icons/tab/wallet_active.png")}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      margin: 4,
+                      // color: color
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={require("../../../../assets/icons/tab/wallet.png")}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      margin: 4,
+                      // color: color
+                    }}
+                  />
+                )}
                 <Text style={{ color: color }}>Wallet</Text>
               </View>
             ),

@@ -7,13 +7,16 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export const Numpad = ({
   onConfirmPressed,
   onPinChange,
+  onEntryComplete,
   type = "register",
+  codeLength = 6,
+  code,
+  setCode,
 }: any) => {
-  const [code, setCode] = useState<number[]>([]);
-
   useEffect(() => {
-    if (code.length === 6) {
+    if (code.length === codeLength) {
       //TODO: call return code input
+      onEntryComplete(code);
     }
   }, [code]);
 

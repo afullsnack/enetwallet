@@ -6,9 +6,13 @@ import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 
+const CODE_LENGTH = 6;
+
 export default function PinPage() {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
+  const [code, setCode] = useState<number[]>([]);
+  const condeLength = Array(CODE_LENGTH).fill(0);
 
   return (
     <Container>
@@ -49,27 +53,29 @@ export default function PinPage() {
               You will need this pin to login and confirm transactions Make sure
               it is difficult for others to guess and easy for you to remember
             </Text>
-            <OtpInput
-              numberOfDigits={6}
-              focusColor="#18EAFF"
-              focusStickBlinkingDuration={500}
-              onTextChange={(text) => console.log(text)}
-              onFilled={(text) => console.log(`OTP is ${text}`)}
-              theme={{
-                containerStyle: { justifyContent: "center" },
-                inputsContainerStyle: { justifyContent: "center", gap: 8 },
-                pinCodeContainerStyle: {
-                  width: 12,
-                  height: 12,
-                  overflow: "hidden",
-                  padding: 0,
-                  // marginHorizontal: 2,
-                },
-                pinCodeTextStyle: { color: "#18EAFF" },
-                focusStickStyle: { width: 4, height: 4 },
-                // focusedPinCodeContainerStyle: styles.activePinCodeContainer
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                maxWidth: 300,
               }}
-            />
+            >
+              {condeLength.map((_, index) => (
+                <View
+                  key={index}
+                  style={{
+                    backgroundColor: code[index] ? "#18EAFF" : "transparent",
+                    borderWidth: 1,
+                    borderColor: code[index] ? "#18EAFF" : "#3A4452",
+                    width: 8,
+                    height: 8,
+                    borderRadius: 8,
+                    marginHorizontal: 5,
+                  }}
+                />
+              ))}
+            </View>
             <Text className="mb-4 text-center text-sm font-medium text-white/70">
               Enter a 6-digit pin
             </Text>
@@ -83,6 +89,9 @@ export default function PinPage() {
               router.push("(backup)/upload");
             }}
             onPinChange={(pin) => setText(pin)}
+            onEntryComplete={(pin) => console.log(pin, ":::Complete pin digit")}
+            code={code}
+            setCode={setCode}
           />
         </View>
       </View>

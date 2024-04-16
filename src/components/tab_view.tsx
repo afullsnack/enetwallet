@@ -17,8 +17,12 @@ const TabView: React.FC<{
             <TouchableOpacity
               className="flex items-center justify-center rounded-full px-4 py-1"
               style={{
-                backgroundColor:
-                  activeIndex === index ? "#18EAFF" : "transparent",
+                // backgroundColor:
+                //   activeIndex === index ? "#18EAFF" : "transparent",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
               }}
               onPress={() => {
                 console.log(index, "Index");
@@ -32,6 +36,15 @@ const TabView: React.FC<{
               >
                 {item}
               </Text>
+              <View
+                style={{
+                  height: 2.2,
+                  width: "75%",
+                  borderRadius: 9999,
+                  backgroundColor:
+                    activeIndex === index ? "#18EAFF" : "transparent",
+                }}
+              />
             </TouchableOpacity>
           )}
           horizontal

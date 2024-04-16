@@ -69,6 +69,7 @@ export default function DashboardTabLayout() {
             headerStyle: {
               backgroundColor: "#0C0C12",
             },
+            headerShown: false,
             title: "Wallet",
             tabBarIcon: ({ color, focused }) => (
               <View className="flex flex-col items-center justify-center gap-1">
@@ -99,7 +100,13 @@ export default function DashboardTabLayout() {
           }}
         />
       </Tabs>
-      <StatusBar networkActivityIndicatorVisible translucent style="auto" />
+      <StatusBar
+        networkActivityIndicatorVisible={true}
+        translucent
+        hidden={false}
+        backgroundColor="#0C0C12"
+        style="auto"
+      />
     </>
   );
 }

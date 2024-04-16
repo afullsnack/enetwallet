@@ -7,7 +7,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 export default function ConfirmEmailPage() {
   const { email } = useLocalSearchParams();
   return (
-    <Container style={{ backgroundColor: "#0C0C12" }}>
+    <Container>
       <Stack.Screen
         options={{
           animation: "slide_from_right",
@@ -29,7 +29,7 @@ export default function ConfirmEmailPage() {
           },
         }}
       />
-      <View className="w-full h-full px-6 pb-10">
+      <View className="w-full h-full px-6">
         <View
           style={{ marginVertical: 115 }}
           className="flex flex-col items-center justify-center gap-8"
@@ -49,9 +49,9 @@ export default function ConfirmEmailPage() {
           </View>
         </View>
 
-        <View style={{ flex: 1 }} className="flex-1" />
+        <View className="flex-1" />
 
-        <View className="flex w-full flex-col items-end gap-4">
+        <View className="flex w-full mb-10 flex-col items-end gap-4">
           <Button
             onPress={() => router.push("/(login)/recovery/phone")}
             style={{ width: "100%" }}

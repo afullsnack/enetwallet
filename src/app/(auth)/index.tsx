@@ -80,80 +80,76 @@ function Content({
   );
 
   return (
-    <View className="h-full w-full">
-      {/* <View> */}
-      <View className="flex flex-col items-center justify-between gap-2 w-full">
-        <HeroImage imagePath={imagePath} activeSlide={activeSlide} />
-        <View className="px-4 w-full items-center">
-          <Text
-            role="heading"
+    <View className="grid items-center justify-between gap-2 w-full">
+      <HeroImage imagePath={imagePath} activeSlide={activeSlide} />
+      <View className="w-full items-center">
+        <Text
+          role="heading"
+          style={{
+            fontSize: 40,
+            fontWeight: "800",
+            color: "white",
+            letterSpacing: 2,
+            marginBottom: 2,
+          }}
+          className="max-w-sm text-center tracking-tighter"
+        >
+          {title}
+        </Text>
+        <Text className="mx-auto max-w-[270px] text-center text-lg text-gray-400 dark:text-gray-400">
+          {subText}
+        </Text>
+      </View>
+      <Pagination dotsLength={entriesCount} activeDotIndex={activeSlide} />
+      <View className="flex-1" />
+
+      {activeSlide >= 1 ? (
+        <View className="flex flex-col items-center justify-center gap-3 w-full">
+          <Button
             style={{
-              fontSize: 40,
-              fontWeight: "800",
-              color: "white",
-              letterSpacing: 2,
-              marginBottom: 2,
+              gap: 8,
+              width: "100%",
             }}
-            className="max-w-sm text-center tracking-tighter"
           >
-            {title}
-          </Text>
-          <Text className="mx-auto max-w-[270px] text-center text-lg text-gray-400 dark:text-gray-400">
-            {subText}
-          </Text>
-
-          <Pagination dotsLength={entriesCount} activeDotIndex={activeSlide} />
-
-          {activeSlide >= 1 ? (
-            <View className="flex flex-col items-center justify-center gap-3 w-full">
-              <Button
-                style={{
-                  gap: 8,
-                  width: "100%",
-                }}
-              >
-                <Image
-                  source={require("../../../assets/icons/apple-icon.png")}
-                  style={{ width: 20, height: 20 }}
-                  contentFit="contain"
-                />
-                <Text className="text-xl font-medium">Continue with Apple</Text>
-              </Button>
-              <View className="flex flex-row items-center justify-center gap-4 mt-2">
-                <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2">
-                  <Image
-                    source={require("../../../assets/socials-1.png")}
-                    style={{ width: 20, height: 20 }}
-                    className="bg-contain"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2">
-                  <Image
-                    source={require("../../../assets/socials-2.png")}
-                    style={{ width: 20, height: 20 }}
-                    className="bg-contain"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <GetStartedSection />
-          )}
-
-          <View
-            style={{ marginTop: 20 }}
-            className="flex flex-row place-items-center items-center justify-center"
-          >
-            <Text className="text-white">
-              I have an account?{" "}
-              <Link href="/(auth)/(login)/main" className="text-[#18EAFF]">
-                Login
-              </Link>
-            </Text>
+            <Image
+              source={require("../../../assets/icons/apple-icon.png")}
+              style={{ width: 20, height: 20 }}
+              contentFit="contain"
+            />
+            <Text className="text-xl font-medium">Continue with Apple</Text>
+          </Button>
+          <View className="flex flex-row items-center justify-center gap-4 mt-2">
+            <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2">
+              <Image
+                source={require("../../../assets/socials-1.png")}
+                style={{ width: 20, height: 20 }}
+                className="bg-contain"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2">
+              <Image
+                source={require("../../../assets/socials-2.png")}
+                style={{ width: 20, height: 20 }}
+                className="bg-contain"
+              />
+            </TouchableOpacity>
           </View>
         </View>
+      ) : (
+        <GetStartedSection />
+      )}
+
+      <View
+        style={{ marginTop: 20 }}
+        className="flex flex-row place-items-center items-center justify-center"
+      >
+        <Text className="text-white">
+          I have an account?{" "}
+          <Link href="/(auth)/(login)/main" className="text-[#18EAFF]">
+            Login
+          </Link>
+        </Text>
       </View>
-      {/* </View> */}
     </View>
   );
 }
@@ -166,14 +162,10 @@ const HeroImage: React.FC<IHeroImageProps> = ({ imagePath, activeSlide }) => {
   const { top } = useSafeAreaInsets();
   const { width } = useSafeAreaFrame();
   return (
-    <View style={{ paddingTop: top }}>
+    <View style={{ paddingTop: top, maxHeight: 300 }}>
       <Image
         source={imagePath}
-        style={
-          activeSlide === 0
-            ? { width: 290, height: 376 }
-            : { width, height: 376 }
-        }
+        style={activeSlide === 0 ? { flex: 1, width: 290 } : { width, flex: 1 }}
         contentFit="contain"
       />
     </View>
@@ -263,7 +255,7 @@ function GetStartedSection() {
           source={require("../../../assets/face-id.png")}
           contentFit="cover"
           contentPosition="center"
-          style={{ width: 40, height: 40 }}
+          style={{ width: 25, height: 25 }}
         />
         <Text className="text-white">Sign in</Text>
       </TouchableOpacity>

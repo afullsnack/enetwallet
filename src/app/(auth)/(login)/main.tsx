@@ -14,9 +14,9 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginIndexPage() {
-  // const { top } = useSafeAreaInsets();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 

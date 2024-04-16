@@ -12,7 +12,7 @@ export default function PinPage() {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
   const [code, setCode] = useState<number[]>([]);
-  const condeLength = Array(CODE_LENGTH).fill(0);
+  const codeLength = Array(CODE_LENGTH).fill(0);
 
   return (
     <Container>
@@ -61,7 +61,7 @@ export default function PinPage() {
                 maxWidth: 300,
               }}
             >
-              {condeLength.map((_, index) => (
+              {codeLength.map((_, index) => (
                 <View
                   key={index}
                   style={{

@@ -100,108 +100,110 @@ export default function HomeScreen() {
         }}
       />
 
-      <View className="flex flex-row items-center justify-between">
-        <Balance balance={90000} />
+      <View className="w-full h-full">
+        <View className="flex flex-row items-center justify-between">
+          <Balance balance={90000} />
 
-        <Button
-          style={{
-            paddingVertical: 5,
-            paddingHorizontal: 20,
-            backgroundColor: "#15BDCF",
-            opacity: 0.7,
-          }}
-        >
-          <Text>Menu</Text>
-          <Image
-            source={require("../../../../assets/icons/dashboard/menu.png")}
+          <Button
             style={{
-              width: 20,
-              height: 20,
-              margin: 4,
+              paddingVertical: 5,
+              paddingHorizontal: 20,
+              backgroundColor: "#15BDCF",
+              opacity: 0.7,
             }}
-          />
-        </Button>
-      </View>
+          >
+            <Text>Menu</Text>
+            <Image
+              source={require("../../../../assets/icons/dashboard/menu.png")}
+              style={{
+                width: 20,
+                height: 20,
+                margin: 4,
+              }}
+            />
+          </Button>
+        </View>
 
-      <View className="flex flex-row items-center justify-between mt-20">
-        <TouchableOpacity
-          className="flex flex-col items-center justify-center gap-1"
-          onPress={() => router.push("/(main)/(send)/entry")}
-        >
-          <Image
-            source={require("../../../../assets/icons/dashboard/actions/send.png")}
-            style={{
-              width: 55,
-              height: 55,
-            }}
-          />
-          <Text
-            style={{
-              color: "#49515D",
-              fontSize: 10.7,
-              fontWeight: "500",
-            }}
+        <View className="flex flex-row items-center justify-between mt-20">
+          <TouchableOpacity
+            className="flex flex-col items-center justify-center gap-1"
+            onPress={() => router.push("/(main)/(send)/entry")}
           >
-            Send
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex flex-col items-center justify-center gap-1"
-          onPress={() => router.push({ pathname: "/(main)/(receive)/entry" })}
-        >
-          <Image
-            source={require("../../../../assets/icons/dashboard/actions/receive.png")}
-            style={{
-              width: 55,
-              height: 55,
-            }}
-          />
-          <Text
-            style={{
-              color: "#49515D",
-              fontSize: 10.7,
-              fontWeight: "500",
-            }}
+            <Image
+              source={require("../../../../assets/icons/dashboard/actions/send.png")}
+              style={{
+                width: 55,
+                height: 55,
+              }}
+            />
+            <Text
+              style={{
+                color: "#49515D",
+                fontSize: 10.7,
+                fontWeight: "500",
+              }}
+            >
+              Send
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex flex-col items-center justify-center gap-1"
+            onPress={() => router.push({ pathname: "/(main)/(receive)/entry" })}
           >
-            Receive
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
-          <Image
-            source={require("../../../../assets/icons/dashboard/actions/swap.png")}
-            style={{
-              width: 55,
-              height: 55,
-            }}
-          />
-          <Text
-            style={{
-              color: "#49515D",
-              fontSize: 10.7,
-              fontWeight: "500",
-            }}
-          >
-            Swap
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
-          <Image
-            source={require("../../../../assets/icons/dashboard/actions/trade.png")}
-            style={{
-              width: 55,
-              height: 55,
-            }}
-          />
-          <Text
-            style={{
-              color: "#49515D",
-              fontSize: 10.7,
-              fontWeight: "500",
-            }}
-          >
-            Trade
-          </Text>
-        </TouchableOpacity>
+            <Image
+              source={require("../../../../assets/icons/dashboard/actions/receive.png")}
+              style={{
+                width: 55,
+                height: 55,
+              }}
+            />
+            <Text
+              style={{
+                color: "#49515D",
+                fontSize: 10.7,
+                fontWeight: "500",
+              }}
+            >
+              Receive
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
+            <Image
+              source={require("../../../../assets/icons/dashboard/actions/swap.png")}
+              style={{
+                width: 55,
+                height: 55,
+              }}
+            />
+            <Text
+              style={{
+                color: "#49515D",
+                fontSize: 10.7,
+                fontWeight: "500",
+              }}
+            >
+              Swap
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
+            <Image
+              source={require("../../../../assets/icons/dashboard/actions/trade.png")}
+              style={{
+                width: 55,
+                height: 55,
+              }}
+            />
+            <Text
+              style={{
+                color: "#49515D",
+                fontSize: 10.7,
+                fontWeight: "500",
+              }}
+            >
+              Trade
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Container>
   );

@@ -45,15 +45,12 @@ export default function PhonePage() {
           // },
         }}
       />
-      <View className="container min-h-screen h-screen pb-24 w-full flex-1 bg-[#0C0C12] px-6 ">
+      <View className="w-full h-full px-6">
         <View className="flex flex-col gap-2">
           <Text className="text-2xl font-medium text-white">
             Enter Phone number
           </Text>
-          {/* <Text className="text-sm font-medium text-white/70">
-                The number must match with the Phone number your registered your
-                wallet
-              </Text> */}
+
           <Input
             outline={false}
             prefix={
@@ -105,7 +102,7 @@ export default function PhonePage() {
           </View>
         </Button>
 
-        <View className="flex w-full items-end">
+        <View className="flex w-full items-end mb-10">
           <View className="grid w-1/2">
             <Button
               onPress={() => {

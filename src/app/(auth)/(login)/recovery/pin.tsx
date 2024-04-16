@@ -6,9 +6,13 @@ import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 
+const CODE_LENGTH = 6;
+
 export default function PinPage() {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
+  const [code, setCode] = useState<number[]>([]);
+  const codeLength = Array(CODE_LENGTH).fill(0);
 
   return (
     <Container>
@@ -34,7 +38,7 @@ export default function PinPage() {
           },
         }}
       />
-      <View className="w-ful container grid min-h-screen h-screen">
+      <View className="w-full h-full">
         <View className="flex flex-col items-center justify-center px-6 gap-2">
           <View className="mt-10 flex w-full flex-col items-center justify-center gap-3">
             <Image
@@ -51,28 +55,33 @@ export default function PinPage() {
             >
               @Johcee
             </Text>
-            <OtpInput
-              numberOfDigits={6}
-              focusColor="#18EAFF"
-              focusStickBlinkingDuration={500}
-              onTextChange={(text) => console.log(text)}
-              onFilled={(text) => console.log(`OTP is ${text}`)}
-              theme={{
-                containerStyle: { justifyContent: "center" },
-                inputsContainerStyle: { justifyContent: "center", gap: 8 },
-                pinCodeContainerStyle: {
-                  width: 12,
-                  height: 12,
-                  overflow: "hidden",
-                  padding: 0,
-                  marginTop: 80,
-                  marginBottom: 30,
-                },
-                pinCodeTextStyle: { color: "#18EAFF" },
-                focusStickStyle: { width: 4, height: 4 },
-                // focusedPinCodeContainerStyle: styles.activePinCodeContainer
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                maxWidth: 300,
               }}
-            />
+            >
+              {codeLength.map((_, index) => (
+                <View
+                  key={index}
+                  style={{
+                    backgroundColor:
+                      code[index] || code[index] === 0
+                        ? "#18EAFF"
+                        : "transparent",
+                    borderWidth: 1,
+                    borderColor:
+                      code[index] || code[index] === 0 ? "#18EAFF" : "#3A4452",
+                    width: 8,
+                    height: 8,
+                    borderRadius: 8,
+                    marginHorizontal: 5,
+                  }}
+                />
+              ))}
+            </View>
             <Text
               style={{
                 fontSize: 13,
@@ -90,9 +99,12 @@ export default function PinPage() {
           <Numpad
             type="recovery"
             onConfirmPressed={() => {
-              router.push("(main)/(tabs)/");
+              router.push("/(main)/(tabs)/");
             }}
             onPinChange={(pin) => setText(pin)}
+            onEntryComplete={(pin) => console.log(pin, ":::Complete pin digit")}
+            code={code}
+            setCode={setCode}
           />
         </View>
       </View>

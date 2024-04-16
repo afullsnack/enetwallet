@@ -21,7 +21,7 @@ interface ISafeAreaViewProps {
 type Ref = SafeAreaViewProps;
 export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
   ({ children, style }, ref) => {
-    // const { top, bottom } = useSafeAreaInsets();
+    const { top, bottom } = useSafeAreaInsets();
     // const { height } = useSafeAreaFrame();
 
     return (
@@ -30,7 +30,11 @@ export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <SafeAreaView
-            style={[styles.container, style]}
+            style={[
+              styles.container,
+              style,
+              { paddingTop: top, paddingBottom: bottom },
+            ]}
             edges={["right", "left", "bottom"]}
           >
             {children}
@@ -43,7 +47,6 @@ export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: "#0C0C12",
     // padding: 24,
   },

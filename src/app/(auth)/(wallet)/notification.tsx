@@ -30,13 +30,13 @@ export default function EnableNotification() {
           },
         }}
       />
-      <View className="w-full flex flex-col gap-8 items-center justify-center h-full pb-6 bg-[#0C0C12] px-6 md:px-8">
+      <View className="w-full flex flex-col gap-8 items-center justify-center min-h-screen px-6">
         <Image
           source={require("../../../../assets/wallet/notification_speaker.png")}
           style={{
             width: 104,
             height: 102,
-            marginTop: 150,
+            marginVertical: 150,
           }}
           contentFit="contain"
         />
@@ -64,7 +64,7 @@ export default function EnableNotification() {
           Get notified about important events and actions on your wallet
         </Text>
 
-        <View className="flex-1" />
+        <View style={{ flex: 1 }} />
 
         <Button
           onPress={() => {

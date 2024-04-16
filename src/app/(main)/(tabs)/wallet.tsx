@@ -1,10 +1,12 @@
 import { Container } from "@/components/Container";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function WalletScreen() {
   return (
     <Container>
-      <Text>Wallet screen</Text>
+      <View className="w-full h-full">
+        <Text>Wallet screen</Text>
+      </View>
     </Container>
   );
 }

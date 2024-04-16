@@ -159,7 +159,14 @@ export default function BackupPage() {
               />
             </View>
           </Button>
-          <Button title="Skip" style={{ width: "60%" }} onPress={() => {}} />
+          <Button
+            title="Skip"
+            style={{ width: "60%" }}
+            onPress={() => {
+              sheetRef.current.dismiss();
+              router.push("/(wallet)/slider");
+            }}
+          />
           <Text
             style={{
               fontSize: 9,

@@ -33,7 +33,7 @@ export default function CodeScreen() {
           },
         }}
       />
-      <View className="w-ful container grid min-h-screen bg-[#0C0C12] px-6 md:px-8 py-6">
+      <View className="w-full h-full px-6">
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-2xl font-medium text-white">

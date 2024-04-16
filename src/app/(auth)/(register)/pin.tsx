@@ -65,9 +65,13 @@ export default function PinPage() {
                 <View
                   key={index}
                   style={{
-                    backgroundColor: code[index] ? "#18EAFF" : "transparent",
+                    backgroundColor:
+                      code[index] || code[index] === 0
+                        ? "#18EAFF"
+                        : "transparent",
                     borderWidth: 1,
-                    borderColor: code[index] ? "#18EAFF" : "#3A4452",
+                    borderColor:
+                      code[index] || code[index] === 0 ? "#18EAFF" : "#3A4452",
                     width: 8,
                     height: 8,
                     borderRadius: 8,

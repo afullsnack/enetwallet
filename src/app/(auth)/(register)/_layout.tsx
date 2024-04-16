@@ -6,7 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RegisterLayout() {
   return (
-    <SafeAreaProvider>
+    <>
       <Stack
         screenOptions={{
           headerShown: true,
@@ -64,14 +64,19 @@ export default function RegisterLayout() {
             headerShown: true,
           }}
         />
+        <Stack.Screen
+          name="confirm/[email]"
+          options={{
+            headerShown: true,
+          }}
+        />
       </Stack>
       <StatusBar
         style="auto"
-        backgroundColor="#0C0C12"
         translucent
-        networkActivityIndicatorVisible={true}
+        // networkActivityIndicatorVisible={true}
         hidden={false}
       />
-    </SafeAreaProvider>
+    </>
   );
 }

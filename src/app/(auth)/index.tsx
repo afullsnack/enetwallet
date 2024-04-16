@@ -94,7 +94,7 @@ function Content({
               letterSpacing: 2,
               marginBottom: 2,
             }}
-            className="max-w-[170px] text-center tracking-tighter"
+            className="max-w-sm text-center tracking-tighter"
           >
             {title}
           </Text>
@@ -151,16 +151,6 @@ function Content({
               </Link>
             </Text>
           </View>
-
-          {/* <View className="gap-4">
-              <Link
-                suppressHighlighting
-                className="web:focus-visible:outline-none web:focus-visible:ring-1 flex h-9 items-center justify-center overflow-hidden rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:ring-gray-950 active:bg-gray-400/90 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-                href="#"
-              >
-                Explore
-              </Link>
-            </View> */}
         </View>
       </View>
       {/* </View> */}
@@ -196,13 +186,13 @@ function Slider() {
     () => [
       {
         imagePath: require("../../../assets/onboarding-1.png"),
-        title: "Crypto at your Fingertips",
+        title: "Crypto \n at your \n Fingertips",
         subText:
           "Over 10,000+ Coins in your pocket Send, Receive, Pay, Exchange different currencies Anytime, Anywhere",
       },
       {
         imagePath: require("../../../assets/onboarding-2.png"),
-        title: "Crypto at your Fingertips",
+        title: "Crypto \n at your \n Fingertips",
         subText:
           "Over 10,000+ Coins in your pocket Send, Receive, Pay, Exchange different currencies Anytime, Anywhere",
       },

@@ -4,7 +4,7 @@ import { Input } from "@/components/input";
 import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Animated, { useSharedValue } from "react-native-reanimated";
 
 export default function EncryptDetails() {
@@ -36,8 +36,11 @@ export default function EncryptDetails() {
           },
         }}
       />
-      <View className="w-full flex flex-col items-center gap-4 h-full pb-6 bg-[#0C0C12] px-6 md:px-8">
-        <View className="flex flex-col gap-4 items-center justify-center">
+      <ScrollView className="w-full flex flex-col items-center gap-4 min-h-screen pb-6 px-6">
+        <View
+          className="flex flex-col gap-4 items-center justify-center"
+          style={{ alignItems: "flex-start" }}
+        >
           <View className="rounded-full border border-[#2C1C40] bg-white p-3">
             <Image
               source={require("../../../../assets/icons/scan.png")}
@@ -133,7 +136,7 @@ export default function EncryptDetails() {
         >
           <Text>Continue</Text>
         </Button>
-      </View>
+      </ScrollView>
     </Container>
   );
 }

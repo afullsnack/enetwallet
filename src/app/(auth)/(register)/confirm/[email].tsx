@@ -3,11 +3,12 @@ import { Button } from "@/components/button";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ConfirmEmailPage() {
   const { email } = useLocalSearchParams();
   return (
-    <Container style={{ backgroundColor: "#0C0C12" }}>
+    <Container>
       <Stack.Screen
         options={{
           animation: "slide_from_right",
@@ -29,9 +30,9 @@ export default function ConfirmEmailPage() {
           },
         }}
       />
-      <View className="w-full h-full px-6 pb-20">
+      <View className="w-full grid min-h-screen h-screen px-6">
         <View
-          style={{ marginVertical: 115 }}
+          style={{ paddingVertical: 60, marginBottom: "35%" }}
           className="flex flex-col items-center justify-center gap-8"
         >
           <Image
@@ -49,9 +50,9 @@ export default function ConfirmEmailPage() {
           </View>
         </View>
 
-        <View style={{ flex: 1 }} className="flex-1" />
+        {/* <View className="flex-1" /> */}
 
-        <View className="flex w-full flex-col items-end gap-4">
+        <View className="flex flex-col w-full gap-4 items-center h-auto">
           <Button
             onPress={() => router.push("/(register)/password")}
             style={{ width: "100%" }}
@@ -59,7 +60,12 @@ export default function ConfirmEmailPage() {
             <Text>Open email</Text>
           </Button>
           <Button
-            style={{ width: "100%", backgroundColor: "transparent" }}
+            style={{
+              width: "100%",
+              backgroundColor: "transparent",
+              shadowOpacity: 0,
+              shadowRadius: 0,
+            }}
             onPress={() => router.push("/(register)/phone")}
           >
             <Text className="text-[#18EAFF]">Not received email?</Text>

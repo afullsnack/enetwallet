@@ -124,7 +124,7 @@ export const Numpad = ({
           )}
 
           <TouchableOpacity
-            onPress={() => onNumberPress(0)}
+            onPress={() => onNumberPress(Number(0))}
             style={{ padding: 20 }}
           >
             <Text style={styles.number}>{0}</Text>

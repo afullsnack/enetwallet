@@ -35,7 +35,7 @@ export default function UsernamePage() {
           },
         }}
       />
-      <View className="w-ful container grid min-h-screen bg-[#0C0C12] px-6 md:px-8">
+      <View className="w-full grid min-h-screen h-screen px-6">
         <View className="flex flex-col gap-1">
           <Text className="text-2xl font-medium text-white">
             Choose a username

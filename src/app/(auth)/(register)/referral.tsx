@@ -33,7 +33,7 @@ export default function ReferralPage() {
           },
         }}
       />
-      <View className="w-ful container grid min-h-screen bg-[#0C0C12] px-6 md:px-8">
+      <View className="w-full grid min-h-screen h-screen px-6">
         <View className="flex flex-col gap-2">
           <Text className="text-2xl font-medium text-white">
             Referral code <Text className="text-[#B08BFF]">(optional)</Text>
@@ -63,12 +63,7 @@ export default function ReferralPage() {
         <View className="flex-1" />
 
         <View className="flex w-full flex-1 flex-row items-center justify-center">
-          <View className="flex-1">
-            {/* <Text className="text-white">
-                  By pressing continue, you agree to our Terms & Conditions and
-                  Policy
-                </Text> */}
-          </View>
+          <View className="flex-1" />
           <View className="grid w-1/3">
             <Button onPress={() => router.push(`/email`)}>
               <Text>Skip</Text>

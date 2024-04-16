@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
-const SuperTab: React.FC<{
+const TabView: React.FC<{
   items: React.ReactNode[];
   tabList: string[];
 }> = ({ items, tabList }) => {
@@ -18,7 +18,7 @@ const SuperTab: React.FC<{
               className="flex items-center justify-center rounded-full px-4 py-1"
               style={{
                 backgroundColor:
-                  activeIndex === index ? "#EEEEEE" : "transparent",
+                  activeIndex === index ? "#18EAFF" : "transparent",
               }}
               onPress={() => {
                 console.log(index, "Index");
@@ -27,7 +27,7 @@ const SuperTab: React.FC<{
             >
               <Text
                 style={{
-                  color: activeIndex === index ? "#000000" : "#666666",
+                  color: activeIndex === index ? "#FFFFFF" : "#49515D",
                 }}
               >
                 {item}
@@ -43,6 +43,7 @@ const SuperTab: React.FC<{
   );
 };
 
+// Subtab that can nested inside a TabView
 const SubTab: React.FC<{
   items: React.ReactNode[];
   tabList: string[];
@@ -61,7 +62,7 @@ const SubTab: React.FC<{
               style={{
                 borderBottomWidth: 1,
                 borderBottomColor:
-                  activeIndex === index ? "#000000" : "transparent",
+                  activeIndex === index ? "#18EAFF" : "transparent",
               }}
               onPress={() => {
                 console.log(index, "Index");
@@ -70,7 +71,7 @@ const SubTab: React.FC<{
             >
               <Text
                 style={{
-                  color: activeIndex === index ? "#000000" : "#666666",
+                  color: activeIndex === index ? "#FFFFFF" : "#49515D",
                 }}
               >
                 {item}
@@ -86,4 +87,4 @@ const SubTab: React.FC<{
   );
 };
 
-export { SubTab, SuperTab };
+export { SubTab, TabView };

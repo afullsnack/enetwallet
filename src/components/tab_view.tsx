@@ -60,12 +60,20 @@ const TabView: React.FC<{
 const SubTab: React.FC<{
   items: React.ReactNode[];
   tabList: string[];
-}> = ({ items, tabList }) => {
+  extra?: React.ReactNode;
+}> = ({ items, tabList, extra }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   return (
     <View className="grid w-full items-start justify-start">
-      <View className="mb-2 flex h-8 w-full">
+      <View
+        className="mb-2 flex w-full items-center"
+        style={{
+          height: items ? "auto" : 32,
+          alignContent: items ? "space-between" : "center",
+          flexDirection: "row",
+        }}
+      >
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={tabList}
@@ -73,9 +81,13 @@ const SubTab: React.FC<{
             <TouchableOpacity
               className="flex items-center justify-center px-4 py-1"
               style={{
-                borderBottomWidth: 1,
-                borderBottomColor:
-                  activeIndex === index ? "#18EAFF" : "transparent",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+                // borderBottomWidth: 1,
+                // borderBottomColor:
+                //   activeIndex === index ? "#18EAFF" : "transparent",
               }}
               onPress={() => {
                 console.log(index, "Index");
@@ -89,11 +101,23 @@ const SubTab: React.FC<{
               >
                 {item}
               </Text>
+              <View
+                style={{
+                  height: 2.2,
+                  width: "75%",
+                  borderRadius: 9999,
+                  backgroundColor:
+                    activeIndex === index ? "#18EAFF" : "transparent",
+                }}
+              />
             </TouchableOpacity>
           )}
           horizontal
-          className="w-full"
+          style={{
+            width: items ? "auto" : "100%",
+          }}
         />
+        {extra}
       </View>
       <View className="w-full">{items[activeIndex]}</View>
     </View>

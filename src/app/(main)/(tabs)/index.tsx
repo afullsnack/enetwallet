@@ -209,7 +209,7 @@ export default function HomeScreen() {
   );
 }
 
-const Balance = ({ balance }: { balance: number }) => {
+export const Balance = ({ balance }: { balance: number }) => {
   return (
     <View className="flex flex-col items-start justify-center gap-1">
       <TouchableOpacity>
@@ -231,6 +231,7 @@ const Balance = ({ balance }: { balance: number }) => {
           flexDirection: "row",
         }}
       >
+        $
         {balance.toLocaleString("en-US", {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2,

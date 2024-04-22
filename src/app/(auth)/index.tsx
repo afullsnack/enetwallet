@@ -104,7 +104,7 @@ function Content({
       <View className="flex-1" />
 
       {activeSlide >= 1 ? (
-        <View className="flex flex-col items-center justify-center gap-3 w-full">
+        <View className="flex flex-col items-center justify-center gap-3 w-full px-3">
           <Button
             style={{
               gap: 8,

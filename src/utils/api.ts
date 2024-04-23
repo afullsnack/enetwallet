@@ -1,20 +1,21 @@
-const API_BASE_URL = "http://100.24.73.108:1444/api/v1";
+const API_BASE_URL = "http://54.209.181.159:1444/api/v1";
 
 type ApiFunction<P, R extends Record<string, any>> = (args: P) => R;
 
 // Auth API functions
 export namespace Auth {
   interface IRegister {
-    email: string;
+    // email: string;
     data: Record<string, any>;
   }
-  export const register: ApiFunction<IRegister, Record<string, any>> = async (
-    args,
-  ) => {
+  export const register: ApiFunction<
+    IRegister,
+    Promise<Record<string, any>>
+  > = async (args) => {
     try {
       const options = {
         method: "POST",
-        body: JSON.stringify({ email: args.email, ...args.data }),
+        body: JSON.stringify({ ...args.data }),
         headers: {
           "Content-type": "application/json",
         },
@@ -41,7 +42,7 @@ export namespace Auth {
   }
   export const emailPasswordAuth: ApiFunction<
     IEmailPasswordAuth,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -425,9 +426,10 @@ export namespace Wallet {
   interface ICreateWallet {
     user_token: string;
   }
-  export const create: ApiFunction<ICreateWallet, Record<string, any>> = async (
-    args,
-  ) => {
+  export const create: ApiFunction<
+    ICreateWallet,
+    Promise<Record<string, any>>
+  > = async (args) => {
     try {
       const options = {
         method: "POST",
@@ -460,7 +462,7 @@ export namespace Wallet {
   }
   export const transactionInit: ApiFunction<
     ITransactionInit,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -489,7 +491,7 @@ export namespace Wallet {
   }
   export const getBalance: ApiFunction<
     IGetBalance,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -500,7 +502,10 @@ export namespace Wallet {
         },
       };
 
-      const response = await fetch(`${API_BASE_URL}/wallet/get`, options);
+      const response = await fetch(
+        `${API_BASE_URL}/wallet/get-balance`,
+        options,
+      );
 
       const json = (await response.json()) as Record<string, any>;
 
@@ -517,7 +522,7 @@ export namespace Wallet {
   }
   export const getAddress: ApiFunction<
     IGetAddress,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -540,13 +545,77 @@ export namespace Wallet {
     }
   };
 
+  // Token list
+  interface IGetTokenList {
+    user_token: string;
+  }
+  export const getTokenList: ApiFunction<
+    IGetTokenList,
+    Promise<Record<string, any>>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/wallet/get-currencies`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_TokenList");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_TokenList");
+      throw new Error(err);
+    }
+  };
+
+  interface IGetSingleToken {
+    user_token: string;
+    tokenId: string;
+  }
+  export const getSingleToken: ApiFunction<
+    IGetSingleToken,
+    Promise<Record<string, any>>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/wallet/get-currency/${args.tokenId}`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_SingleToken");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_SingleToken");
+      throw new Error(err);
+    }
+  };
+
   // Beneficiaries
   interface IGetBeneficiaries {
     user_token: string;
   }
   export const getBeneficiaries: ApiFunction<
     IGetBeneficiaries,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -578,7 +647,7 @@ export namespace Wallet {
   }
   export const deleteBeneficiary: ApiFunction<
     IDeleteBeneficiary,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -611,7 +680,7 @@ export namespace Wallet {
   }
   export const createBeneficiary: ApiFunction<
     ICreateBeneficiary,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {

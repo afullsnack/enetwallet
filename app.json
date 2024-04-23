@@ -30,11 +30,18 @@
     "name": "enetwallet",
     "slug": "enetwallet",
     "android": {
-      "package": "org.enetwallet.enet"
+      "package": "org.enetwallet.enet",
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "ios": {
       "bundleIdentifier": "org.enetwallet.enet",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Allow $(PRODUCT_NAME) to use Face ID."
+      }
     },
     "runtimeVersion": {
       "policy": "appVersion"
@@ -47,6 +54,9 @@
       "eas": {
         "projectId": "a26b4804-aade-45d1-b362-6369527cfdfd"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a26b4804-aade-45d1-b362-6369527cfdfd"
     }
   }
 }

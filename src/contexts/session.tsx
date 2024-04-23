@@ -36,9 +36,11 @@ export function SessionProvider(props: React.PropsWithChildren) {
         signIn: async (email, password) => {
           try {
             // Perform sign-in logic here
-            const result = Auth.emailPasswordAuth({ email, password });
+            const result = await Auth.emailPasswordAuth({ email, password });
             if (result?.success) {
               setSession(JSON.stringify(result?.data));
+            } else {
+              throw new Error(result?.message);
             }
           } catch (err: any) {
             throw new Error(err);

@@ -154,7 +154,8 @@ export namespace Auth {
   };
 
   interface IPrivateKeyStore {
-    upload_style: string;
+    token: string;
+    data: { upload_style: string };
   }
   export const storePrivateKey: ApiFunction<
     IPrivateKeyStore,
@@ -163,9 +164,10 @@ export namespace Auth {
     try {
       const options = {
         method: "POST",
-        body: JSON.stringify(args),
+        body: JSON.stringify(args.data),
         headers: {
           "Content-type": "application/json",
+          "x-auth-token": args.token,
         },
       };
 
@@ -194,8 +196,8 @@ export namespace Auth {
       const options = {
         method: "POST",
         body: JSON.stringify({
-          new_pin: args.new_pin,
-          confirm_pin: args.confirm_pin,
+          new_pin: args.new_pin ?? "123456",
+          confirm_pin: args.confirm_pin ?? "123456",
         }),
         headers: {
           "Content-type": "application/json",

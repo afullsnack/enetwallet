@@ -66,7 +66,7 @@ export default function WalletScreen() {
                 {index <= 1 && tab.toLowerCase() === "overview" && (
                   <View style={{ flex: 1, paddingTop: 20 }}>
                     <View className="flex flex-row items-center justify-between w-full">
-                      <Balance balance={90000} />
+                      <Balance balance={balance ? Number(balance) : 0} />
 
                       <View />
                     </View>

@@ -117,13 +117,14 @@ export default function Receive() {
                 backgroundColor: "white",
                 marginTop: 15,
                 padding: 3,
+                paddingVertical: 10,
                 borderRadius: 20,
                 width: width * 0.75,
-                height: width * 0.75,
+                height: width * 0.8,
                 position: "relative",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "flex-start",
               }}
             >
               {/* <Image

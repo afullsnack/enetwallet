@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
 import { SheetModal } from "@/components/modal";
@@ -17,15 +18,54 @@ import { Input } from "@/components/input";
 import { Feather } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useSession } from "@/contexts/session";
+import { Wallet } from "@/utils/api";
+import QRCode from "react-native-qrcode-svg";
+import * as Clipboard from "expo-clipboard";
 
 export default function Receive() {
   const tokenSheetRef = useRef<BottomSheetModal>(null);
   const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
 
+  const { session, signOut } = useSession();
+  const [userSession, setUserSession] = useState<Record<string, any>>();
+  const [address, setAddress] = useState<string>();
+
   // Search
   const [tokenSearch, setTokenSearch] = useState<string>();
 
   const { width } = useSafeAreaFrame();
+
+  useEffect(() => {
+    // Get user balance and wallet address
+    if (userSession) {
+      getWalletAddress()
+        .then(() => console.log("Fetched address"))
+        .catch((error) => console.log(error, ":::Address error"));
+    }
+    async function getWalletAddress() {
+      const result = await Wallet.getAddress({
+        user_token: userSession?.token,
+      });
+
+      if (!result?.success) {
+        return Alert.alert("Address error", result?.message);
+      }
+
+      setAddress(result?.data);
+    }
+  }, [useSession]);
+
+  useEffect(() => {
+    if (session) {
+      const parsed = JSON.parse(session);
+      setUserSession(parsed);
+    }
+  }, [session]);
+
+  async function copyAddressToClipboard() {
+    await Clipboard.setStringAsync(address);
+  }
 
   return (
     <>
@@ -81,16 +121,21 @@ export default function Receive() {
                 width: width * 0.75,
                 height: width * 0.75,
                 position: "relative",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Image
+              {/* <Image
                 source={require("../../../../../assets/qr_code_sample.png")}
                 style={{
                   width: "100%",
                   height: "100%",
                 }}
                 contentFit="contain"
-              />
+              /> */}
+
+              <QRCode value={address} size={width * 0.7} />
 
               <Button
                 style={{
@@ -110,6 +155,7 @@ export default function Receive() {
                   flexDirection: "row",
                   gap: 8,
                 }}
+                onPress={async () => await copyAddressToClipboard()}
               >
                 <Text style={{ color: "#FFFFFF" }}>ID: Johcee12</Text>
                 <Image
@@ -142,7 +188,7 @@ export default function Receive() {
                   textAlign: "center",
                 }}
               >
-                0x63802792790427902huhkfjkhjfhjf
+                {address}
               </Text>
             </View>
 
@@ -168,6 +214,7 @@ export default function Receive() {
                 flex: 1,
                 gap: 20,
               }}
+              onPress={async () => await copyAddressToClipboard()}
             >
               <Text
                 style={{

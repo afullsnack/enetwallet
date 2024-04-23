@@ -2,12 +2,13 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function PhonePage() {
-  const [phone, setPhone] = useState("");
+  const params = useLocalSearchParams();
+  const [phone, setPhone] = useState<string>();
 
   return (
     <Container>
@@ -35,7 +36,14 @@ export default function PhonePage() {
               <TouchableOpacity
                 {...props}
                 onPress={() => {
-                  router.push("/code");
+                  router.push({
+                    pathname: "/email",
+                    params: {
+                      data: {
+                        ...(params?.data as Record<string, any>),
+                      },
+                    },
+                  });
                 }}
               >
                 <Text className="text-[#BEE9E5]">Skip</Text>
@@ -92,7 +100,15 @@ export default function PhonePage() {
           <View className="grid w-1/3">
             <Button
               onPress={() => {
-                router.push("/code");
+                router.push({
+                  pathname: "/email",
+                  params: {
+                    data: {
+                      phone_number: phone,
+                      ...(params?.data as Record<string, any>),
+                    },
+                  },
+                });
               }}
             >
               <Text>Continue</Text>

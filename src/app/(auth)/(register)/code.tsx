@@ -1,7 +1,7 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
-import { Link, Stack, router } from "expo-router";
+import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
@@ -9,9 +9,12 @@ import { Image } from "expo-image";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function CodeScreen() {
+  const params = useLocalSearchParams();
   const [text, setText] = useState("");
   const inputRef = useRef(null);
   const { height } = useSafeAreaFrame();
+
+  console.log(params, ":::Register params, code screen");
 
   return (
     <Container>
@@ -50,7 +53,9 @@ export default function CodeScreen() {
             </TouchableOpacity>
           </View>
           <Text className="text-sm font-medium text-white/70">
-            Enter verification code sent to +491 01983674
+            Enter verification code sent to
+            {(params?.email as string) ??
+              (params?.data as Record<string, any>)?.email}
           </Text>
           <View className="mt-10 flex w-full flex-col items-center justify-center gap-3">
             <View className="flex w-full flex-row items-center justify-between">
@@ -62,7 +67,7 @@ export default function CodeScreen() {
               focusColor="#18EAFF"
               focusStickBlinkingDuration={500}
               onTextChange={(text) => console.log(text)}
-              onFilled={(text) => console.log(`OTP is ${text}`)}
+              onFilled={(text) => setText(text)}
               theme={{
                 // containerStyle: styles.container,
                 // inputsContainerStyle: styles.inputsContainer,
@@ -94,7 +99,20 @@ export default function CodeScreen() {
             </Text>
           </View>
           <View className="grid w-full">
-            <Button onPress={() => router.push(`/(register)/pin`)}>
+            <Button
+              onPress={() => {
+                // TODO: verify code logic
+
+                router.push({
+                  pathname: `/(register)/pin`,
+                  params: {
+                    data: {
+                      ...(params?.data as Record<string, any>),
+                    },
+                  },
+                });
+              }}
+            >
               <Text>Verify code</Text>
             </Button>
           </View>

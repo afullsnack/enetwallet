@@ -1,14 +1,17 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 
 export default function EmailPage() {
-  const [email, setEmail] = useState("");
+  const params = useLocalSearchParams();
+  const [email, setEmail] = useState<string>();
   const inputRef = useRef(null);
+
+  console.log(params, ":::Params for register, email screen");
 
   return (
     <>
@@ -74,11 +77,15 @@ export default function EmailPage() {
                     return Alert.alert("Email valiue is required");
                   }
 
-                  router.push(
-                    `/(auth)/(register)/confirm/${
-                      email ?? "miraclef60@gmail.com"
-                    }`,
-                  );
+                  router.push({
+                    pathname: `/(auth)/(register)/confirm/${email}`,
+                    params: {
+                      data: {
+                        email: email,
+                        ...(params?.data as Record<string, any>),
+                      },
+                    },
+                  });
                 }}
               >
                 <Text>Continue</Text>

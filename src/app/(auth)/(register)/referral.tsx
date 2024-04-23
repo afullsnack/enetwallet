@@ -1,14 +1,17 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 
 export default function ReferralPage() {
+  const params = useLocalSearchParams();
   const [text, setText] = useState("");
   const inputRef = useRef(null);
+
+  console.log(params, ":::Register params, referral page");
 
   return (
     <Container>
@@ -38,10 +41,6 @@ export default function ReferralPage() {
           <Text className="text-2xl font-medium text-white">
             Referral code <Text className="text-[#B08BFF]">(optional)</Text>
           </Text>
-          {/* <Text className="text-sm font-medium text-white/70">
-                The Email must match with the Email your registered your wallet
-                with
-              </Text> */}
           <Input
             ref={inputRef}
             // placeholder="Username"
@@ -65,7 +64,19 @@ export default function ReferralPage() {
         <View className="flex w-full flex-1 flex-row items-center justify-center">
           <View className="flex-1" />
           <View className="grid w-1/3">
-            <Button onPress={() => router.push(`/email`)}>
+            <Button
+              onPress={() =>
+                router.push({
+                  pathname: `/phone`,
+                  params: {
+                    data: {
+                      referral: text,
+                      ...(params?.data as Record<string, any>),
+                    },
+                  },
+                })
+              }
+            >
               <Text>Skip</Text>
             </Button>
           </View>

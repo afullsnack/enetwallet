@@ -1,16 +1,20 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { Auth } from "@/utils/api";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import Animated, { useSharedValue } from "react-native-reanimated";
 
 export default function Password() {
+  const params = useLocalSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const inputRef = useRef(null);
+
+  console.log(params, ":::Register params, password screen");
 
   return (
     <Container>
@@ -80,7 +84,34 @@ export default function Password() {
         <PasswordValidation password={password} />
         <View className="flex-1" />
 
-        <Button onPress={() => router.push("/phone")} style={{ width: "100%" }}>
+        <Button
+          onPress={async () => {
+            if (!password || !confirmPassword) {
+              return Alert.alert("Register error", "Password is required");
+            }
+
+            // await Auth.register({
+
+            //   data: {
+            //     password: password,
+            //     confirm_password: confirmPassword,
+            //     ...(params?.data as Record<string, any>),
+            //   },
+            // });
+
+            router.push({
+              pathname: "/code",
+              params: {
+                data: {
+                  password: password,
+                  confirm_password: confirmPassword,
+                  ...(params?.data as Record<string, any>),
+                },
+              },
+            });
+          }}
+          style={{ width: "100%" }}
+        >
           <Text>Continue</Text>
         </Button>
       </View>

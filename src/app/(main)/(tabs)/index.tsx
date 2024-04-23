@@ -1,10 +1,22 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import { useSession } from "@/contexts/session";
 import { Image } from "expo-image";
 import { Stack, Tabs, router } from "expo-router";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
+  const { session, signOut } = useSession();
+  const [userSession, setUserSession] = useState<Record<string, any>>();
+
+  useEffect(() => {
+    if (session) {
+      const parsed = JSON.parse(session);
+      setUserSession(parsed);
+    }
+  }, [session]);
+
   return (
     <Container style={{ padding: 24, borderColor: "#0C0C12" }}>
       <Stack.Screen
@@ -42,7 +54,7 @@ export default function HomeScreen() {
                       fontWeight: "500",
                     }}
                   >
-                    Hello, Micheal
+                    Hello, {userSession?.first_name ?? "Guest"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -84,7 +96,12 @@ export default function HomeScreen() {
                     }}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    signOut();
+                    router.replace("/");
+                  }}
+                >
                   <Image
                     source={require("../../../../assets/icons/dashboard/network.png")}
                     style={{

@@ -1,8 +1,10 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { useSession } from "@/contexts/session";
+import { Auth } from "@/utils/api";
 import { Image } from "expo-image";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, router } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -14,11 +16,13 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+// import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginIndexPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+
+  const { signIn, isLoading } = useSession();
 
   return (
     <Container>
@@ -77,10 +81,21 @@ export default function LoginIndexPage() {
             }}
           />
           <Button
-            onPress={() => {
+            onPress={async () => {
               if (!identifier || !password) {
                 return Alert.alert(
                   "Identifier and password values must be set",
+                );
+              }
+
+              try {
+                await signIn(identifier, password);
+                router.push("/(main)/");
+              } catch (err: any) {
+                console.log(err, ":::Error while log in");
+                return Alert.alert(
+                  "Login Error",
+                  err.message ?? err.toString(),
                 );
               }
 

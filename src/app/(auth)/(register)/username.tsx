@@ -2,15 +2,18 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 
 export default function UsernamePage() {
+  const params = useLocalSearchParams();
   const [text, setText] = useState("");
   const [isAvailable, setIsAvailable] = useState(true);
   const inputRef = useRef(null);
+
+  console.log(params, ":::Register params");
 
   return (
     <Container>
@@ -40,10 +43,6 @@ export default function UsernamePage() {
           <Text className="text-2xl font-medium text-white">
             Choose a username
           </Text>
-          {/* <Text className="text-sm font-medium text-white/70">
-                The Email must match with the Email your registered your wallet
-                with
-              </Text> */}
           <Input
             ref={inputRef}
             // placeholder="Username"
@@ -78,7 +77,19 @@ export default function UsernamePage() {
             </Text>
           </View>
           <View className="grid w-1/3">
-            <Button onPress={() => router.push(`/referral`)}>
+            <Button
+              onPress={() =>
+                router.push({
+                  pathname: `/referral`,
+                  params: {
+                    data: {
+                      username: text,
+                      ...(params?.data as Record<string, any>),
+                    },
+                  },
+                })
+              }
+            >
               <Text>Continue</Text>
             </Button>
           </View>

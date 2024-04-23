@@ -1,7 +1,7 @@
 import { Container } from "@/components/Container";
 import { Numpad } from "@/components/numpad";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
@@ -9,10 +9,13 @@ import { OtpInput } from "react-native-otp-entry";
 const CODE_LENGTH = 6;
 
 export default function PinPage() {
+  const params = useLocalSearchParams();
   const [text, setText] = useState("");
   const inputRef = useRef(null);
   const [code, setCode] = useState<number[]>([]);
   const codeLength = Array(CODE_LENGTH).fill(0);
+
+  console.log(params, ":::Register params, pin screen");
 
   return (
     <Container>

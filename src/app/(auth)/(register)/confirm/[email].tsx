@@ -6,7 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ConfirmEmailPage() {
-  const { email } = useLocalSearchParams();
+  const params = useLocalSearchParams();
   return (
     <Container>
       <Stack.Screen
@@ -44,9 +44,11 @@ export default function ConfirmEmailPage() {
               Confirm your email
             </Text>
             <Text className="text-sm font-medium text-white/50">
-              We sent you a link to your email.
+              We sent a confirmation code to your email.
             </Text>
-            <Text className="text-sm font-medium text-white/80">{email}</Text>
+            <Text className="text-sm font-medium text-white/80">
+              {params?.email ?? (params?.data as Record<string, any>)?.email}
+            </Text>
           </View>
         </View>
 
@@ -54,10 +56,19 @@ export default function ConfirmEmailPage() {
 
         <View className="flex flex-col w-full gap-4 items-center h-auto">
           <Button
-            onPress={() => router.push("/(register)/password")}
+            onPress={() =>
+              router.push({
+                pathname: "/(register)/password",
+                params: {
+                  data: {
+                    ...(params?.data as Record<string, any>),
+                  },
+                },
+              })
+            }
             style={{ width: "100%" }}
           >
-            <Text>Open email</Text>
+            <Text>Continue</Text>
           </Button>
           <Button
             style={{
@@ -66,7 +77,9 @@ export default function ConfirmEmailPage() {
               shadowOpacity: 0,
               shadowRadius: 0,
             }}
-            onPress={() => router.push("/(register)/phone")}
+            onPress={() => {
+              // TODO: carry out resend logic
+            }}
           >
             <Text className="text-[#18EAFF]">Not received email?</Text>
           </Button>

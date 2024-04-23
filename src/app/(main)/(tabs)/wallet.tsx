@@ -1,15 +1,51 @@
 import { Container } from "@/components/Container";
 import { SubTab, TabView } from "@/components/tab_view";
 import { router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { Button } from "@/components/button";
 import { Balance } from ".";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import { Wallet } from "@/utils/api";
+import { useSession } from "@/contexts/session";
 
 export default function WalletScreen() {
   const tabList = ["Overview", "Crypto", "NFT", "Earn", "Card"];
   const cryptoTabList = ["Assets", "NFT"];
+
+  const { session, signOut } = useSession();
+  const [userSession, setUserSession] = useState<Record<string, any>>();
+  const [balance, setBalance] = useState<string>();
+
+  console.log(typeof userSession, typeof session, ":::User session");
+
+  useEffect(() => {
+    // Get user balance and wallet address
+    if (userSession) {
+      getUserBalance()
+        .then(() => console.log("Fetched balance"))
+        .catch((error) => console.log(error, ":::Balance error"));
+    }
+    async function getUserBalance() {
+      const result = await Wallet.getBalance({
+        user_token: userSession?.token,
+      });
+
+      if (!result?.success) {
+        return Alert.alert("Balance error", result?.message);
+      }
+
+      setBalance(result?.data?.usdcBalanceFromSmartAccount);
+    }
+  }, [userSession]);
+
+  useEffect(() => {
+    if (session) {
+      const parsed = JSON.parse(session);
+      setUserSession(parsed);
+    }
+  }, [session]);
 
   return (
     <Container>
@@ -41,7 +77,7 @@ export default function WalletScreen() {
                 {index <= 1 && tab.toLowerCase() === "crypto" && (
                   <View style={{ flex: 1, paddingTop: 20 }}>
                     <View className="flex flex-row items-center justify-between w-full">
-                      <Balance balance={90000} />
+                      <Balance balance={balance ? Number(balance) : 0} />
 
                       <View />
                     </View>

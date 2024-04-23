@@ -1,14 +1,38 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { useSession } from "@/contexts/session";
+import { Wallet } from "@/utils/api";
 import { Image } from "expo-image";
 import { Stack, Tabs, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
   const { session, signOut } = useSession();
   const [userSession, setUserSession] = useState<Record<string, any>>();
+  const [balance, setBalance] = useState<string>();
+
+  console.log(typeof userSession, typeof session, ":::User session");
+
+  useEffect(() => {
+    // Get user balance and wallet address
+    if (userSession) {
+      getUserBalance()
+        .then(() => console.log("Fetched balance"))
+        .catch((error) => console.log(error, ":::Balance error"));
+    }
+    async function getUserBalance() {
+      const result = await Wallet.getBalance({
+        user_token: userSession?.token,
+      });
+
+      if (!result?.success) {
+        return Alert.alert("Balance error", result?.message);
+      }
+
+      setBalance(result?.data?.usdcBalanceFromSmartAccount);
+    }
+  }, [userSession]);
 
   useEffect(() => {
     if (session) {
@@ -122,7 +146,7 @@ export default function HomeScreen() {
 
       <View className="w-full h-full">
         <View className="flex flex-row items-center justify-between">
-          <Balance balance={userSession ? 90000 : 0} />
+          <Balance balance={balance ? Number(balance) : 0} />
 
           <Button
             style={{

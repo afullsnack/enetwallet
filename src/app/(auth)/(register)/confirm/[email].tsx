@@ -60,9 +60,7 @@ export default function ConfirmEmailPage() {
               router.push({
                 pathname: "/(register)/password",
                 params: {
-                  data: {
-                    ...(params?.data as Record<string, any>),
-                  },
+                  ...params,
                 },
               })
             }

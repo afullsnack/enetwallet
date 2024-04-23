@@ -90,24 +90,33 @@ export default function Password() {
               return Alert.alert("Register error", "Password is required");
             }
 
-            await Auth.register({
-              data: {
-                password: password,
-                confirm_password: confirmPassword,
-                ...(params?.data as Record<string, any>),
-              },
-            });
-
-            router.push({
-              pathname: "/code",
-              params: {
+            try {
+              const result = await Auth.register({
                 data: {
                   password: password,
                   confirm_password: confirmPassword,
-                  ...(params?.data as Record<string, any>),
+                  first_name: params?.username as string,
+                  last_name: params?.username as string,
+                  ...params,
                 },
-              },
-            });
+              });
+
+              if (!result?.success) {
+                return Alert.alert("Register error", result?.message);
+              }
+
+              router.push({
+                pathname: "/(register)/code",
+                params: {
+                  password: password,
+                  confirm_password: confirmPassword,
+                  ...params,
+                },
+              });
+            } catch (err: any) {
+              console.log(err, ":::Error in password");
+              Alert.alert("Register error", err.message ?? err.toString());
+            }
           }}
           style={{ width: "100%" }}
         >

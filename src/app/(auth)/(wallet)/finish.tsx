@@ -2,12 +2,13 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function WalletFinish() {
+  const params = useLocalSearchParams();
   const { width } = useSafeAreaFrame();
   return (
     <Container>
@@ -15,6 +16,9 @@ export default function WalletFinish() {
         options={{
           animation: "slide_from_right",
           headerShown: false,
+          statusBarColor: "#0C0C12",
+          statusBarHidden: false,
+          statusBarStyle: "auto",
           headerStyle: {
             backgroundColor: "#0C0C12",
           },
@@ -61,7 +65,8 @@ export default function WalletFinish() {
             maxWidth: 200,
           }}
         >
-          Your Enetwallet (0x5a6...67dca) is available on these following chains
+          Your Enetwallet {(params?.wallet_address as string) ?? "NA"} is
+          available on these following chains
         </Text>
 
         <Image
@@ -79,7 +84,10 @@ export default function WalletFinish() {
 
         <Button
           onPress={() => {
-            router.push("(wallet)/notification");
+            router.push({
+              pathname: "(wallet)/notification",
+              params: { ...params },
+            });
           }}
           style={{
             width: "100%",

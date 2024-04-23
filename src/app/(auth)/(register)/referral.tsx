@@ -69,10 +69,8 @@ export default function ReferralPage() {
                 router.push({
                   pathname: `/phone`,
                   params: {
-                    data: {
-                      referral: text,
-                      ...(params?.data as Record<string, any>),
-                    },
+                    referral: text,
+                    ...params,
                   },
                 })
               }

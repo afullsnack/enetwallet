@@ -2,12 +2,13 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function EnableFaceId() {
+  const params = useLocalSearchParams();
   const { width } = useSafeAreaFrame();
   return (
     <Container>
@@ -69,7 +70,10 @@ export default function EnableFaceId() {
 
         <Button
           onPress={() => {
-            router.replace("/(main)/(tabs)/");
+            router.replace({
+              pathname: "/(auth)/(login)/main",
+              params: { ...params },
+            });
           }}
           style={{
             width: "100%",
@@ -84,7 +88,10 @@ export default function EnableFaceId() {
         </Button>
         <Button
           onPress={() => {
-            router.replace("/(main)/(tabs)/");
+            router.replace({
+              pathname: "/(auth)/(login)/main",
+              params: { ...params },
+            });
           }}
           style={{
             width: "100%",

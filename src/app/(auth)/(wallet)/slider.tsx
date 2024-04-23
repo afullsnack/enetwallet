@@ -4,16 +4,21 @@ import {
   Text,
   useWindowDimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import Carousel from "react-native-reanimated-carousel";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/button";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { Auth, Wallet } from "@/utils/api";
 
 export default function WalletSlider() {
+  const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const carouselRef = useRef(null);
+
+  console.log(params, ":::params in slider");
 
   return (
     <Container>
@@ -44,13 +49,33 @@ export default function WalletSlider() {
           loop={false}
           width={width}
           // height={width / 2}
-          autoPlay={false}
+          autoPlay={true}
           pagingEnabled
           data={[...new Array(4).keys()]}
-          scrollAnimationDuration={700}
+          onProgressChange={() => {}}
+          scrollAnimationDuration={800}
           style={{ alignItems: "center", justifyContent: "center" }}
-          onSnapToItem={() => {
-            /**/
+          onSnapToItem={async (index) => {
+            console.log(`Current index of wallet slider: ${index}`);
+
+            if (index >= 3) {
+              // Call create wallet and show users their address on the next page
+              const result = await Wallet.create({
+                user_token: params?.token as string,
+              });
+
+              if (!result?.success) {
+                return Alert.alert("Wallet creation", result?.message);
+              }
+
+              router.replace({
+                pathname: "(wallet)/finish",
+                params: {
+                  wallet_address: result?.data?.wallet_address,
+                  ...params,
+                },
+              });
+            }
           }}
           defaultIndex={0}
           renderItem={({ index }) => (
@@ -231,11 +256,11 @@ export default function WalletSlider() {
                 </View>
               )}
 
-              <View className="flex-1" />
+              {/* <View className="flex-1" />
               <Button
                 title="Skip"
                 onPress={() => router.push("(wallet)/finish")}
-              />
+              /> */}
             </View>
           )}
         />

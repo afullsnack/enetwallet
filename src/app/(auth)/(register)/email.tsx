@@ -80,10 +80,8 @@ export default function EmailPage() {
                   router.push({
                     pathname: `/(auth)/(register)/confirm/${email}`,
                     params: {
-                      data: {
-                        email: email,
-                        ...(params?.data as Record<string, any>),
-                      },
+                      email: email,
+                      ...params,
                     },
                   });
                 }}

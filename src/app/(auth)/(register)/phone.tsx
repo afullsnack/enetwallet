@@ -10,6 +10,8 @@ export default function PhonePage() {
   const params = useLocalSearchParams();
   const [phone, setPhone] = useState<string>();
 
+  console.log(params, ":::Phone screen");
+
   return (
     <Container>
       <Stack.Screen
@@ -57,10 +59,6 @@ export default function PhonePage() {
           <Text className="text-2xl font-medium text-white">
             Enter Phone number
           </Text>
-          {/* <Text className="text-sm font-medium text-white/70">
-                The number must match with the Phone number your registered your
-                wallet
-              </Text> */}
           <Input
             outline={false}
             prefix={
@@ -77,7 +75,6 @@ export default function PhonePage() {
             }
             style={{
               color: "#01EAD4",
-              // textDecorationColor: "#01EAD4",
               fontSize: 17,
               fontWeight: "500",
               height: 45,
@@ -101,12 +98,10 @@ export default function PhonePage() {
             <Button
               onPress={() => {
                 router.push({
-                  pathname: "/email",
+                  pathname: "/(register)/email",
                   params: {
-                    data: {
-                      phone_number: phone,
-                      ...(params?.data as Record<string, any>),
-                    },
+                    phone_number: phone,
+                    ...params,
                   },
                 });
               }}

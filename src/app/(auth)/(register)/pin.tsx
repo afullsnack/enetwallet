@@ -98,11 +98,16 @@ export default function PinPage() {
               }
 
               try {
-                await Auth.setPin({
+                const result = await Auth.setPin({
                   new_pin: text,
                   confirm_pin: text,
                   token: params?.token as string,
                 });
+
+                // if (!result?.success) {
+                //   return Alert.alert("Set pin", result?.message);
+                // }
+
                 router.push({
                   pathname: "(backup)/upload",
                   params: { ...params },

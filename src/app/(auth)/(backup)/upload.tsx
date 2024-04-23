@@ -1,14 +1,16 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { SheetModal } from "@/components/modal";
+import { Auth } from "@/utils/api";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useMemo, useRef } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function BackupPage() {
+  const params = useLocalSearchParams();
   const sheetRef = useRef<BottomSheetModal>(null);
   const { top } = useSafeAreaInsets();
 
@@ -127,7 +129,10 @@ export default function BackupPage() {
           <Button
             onPress={() => {
               sheetRef.current.dismiss();
-              router.push("(backup)/qrcode");
+              router.push({
+                pathname: "(backup)/qrcode",
+                params: { ...params },
+              });
             }}
             style={{
               flexDirection: "row",
@@ -162,7 +167,15 @@ export default function BackupPage() {
           <Button
             title="Skip"
             style={{ width: "60%" }}
-            onPress={() => {
+            onPress={async () => {
+              const result = await Auth.storePrivateKey({
+                data: { upload_style: "cloud" },
+                token: params?.token as string,
+              });
+
+              if (!result?.message) {
+                return Alert.alert("Private key", result?.message);
+              }
               sheetRef.current.dismiss();
               router.push("/(wallet)/slider");
             }}

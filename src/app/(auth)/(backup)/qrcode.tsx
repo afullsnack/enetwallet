@@ -1,29 +1,57 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import Popup from "@/components/popup";
 import { Auth } from "@/utils/api";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function QRCode() {
   const params = useLocalSearchParams();
   const { width } = useSafeAreaFrame();
+  const [qrCodeData, setQRCodeData] = useState<string>();
+
+  const [downloadPopupVisible, setDonwloadPopupVisible] = useState(false);
 
   useEffect(() => {
+    setPrivKey()
+      .then(() => console.log("fetched"))
+      .catch((error) => console.log(error));
     async function setPrivKey() {
-      await Auth.storePrivateKey({ upload_style: "cloud" });
+      const result = await Auth.storePrivateKey({
+        data: { upload_style: "qr_code" },
+        token: params?.token as string,
+      });
+
+      if (!result?.message) {
+        return Alert.alert("Private key", result?.message);
+      }
+
+      setQRCodeData(result?.data); // Set the base64 data image
     }
   }, []);
+
+  console.log(qrCodeData, ":::QR Code data");
+
   return (
     <Container>
       <Stack.Screen
         options={{
           animation: "slide_from_right",
           headerShown: true,
+          statusBarStyle: "auto",
+          statusBarHidden: false,
+          statusBarColor: "#0C0C12",
           headerStyle: {
             backgroundColor: "#0C0C12",
           },
@@ -32,7 +60,14 @@ export default function QRCode() {
           title: "Encrypted QR code",
           headerRight(props) {
             return (
-              <TouchableOpacity onPress={() => router.push("(wallet)/fee")}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: "(wallet)/slider",
+                    params: { ...params },
+                  })
+                }
+              >
                 <EvilIcons name="close" size={24} color="white" />
               </TouchableOpacity>
             );
@@ -47,10 +82,15 @@ export default function QRCode() {
             borderRadius: 20,
             width: width * 0.95,
             height: width * 0.95,
+            overflow: "hidden",
           }}
         >
           <Image
-            source={require("../../../../assets/qr_code_sample.png")}
+            source={
+              qrCodeData
+                ? { uri: qrCodeData }
+                : require("../../../../assets/qr_code_sample.png")
+            }
             style={{
               width: "100%",
               height: "100%",
@@ -137,7 +177,12 @@ export default function QRCode() {
         </View>
 
         <Button
-          onPress={() => {}}
+          onPress={async () => {
+            // TODO: download
+            setDonwloadPopupVisible(true);
+
+            setTimeout(() => setDonwloadPopupVisible(false), 3000);
+          }}
           style={{
             width: "100%",
             flexDirection: "row",
@@ -158,6 +203,25 @@ export default function QRCode() {
           />
         </Button>
       </View>
+      <Popup
+        isPopupVisible={downloadPopupVisible}
+        setPopupVisible={setDonwloadPopupVisible}
+        tapToClose={false}
+      >
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 40,
+            backgroundColor: "white",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
+        </View>
+      </Popup>
     </Container>
   );
 }

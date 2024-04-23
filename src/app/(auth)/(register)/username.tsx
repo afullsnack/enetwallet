@@ -82,10 +82,8 @@ export default function UsernamePage() {
                 router.push({
                   pathname: `/referral`,
                   params: {
-                    data: {
-                      username: text,
-                      ...(params?.data as Record<string, any>),
-                    },
+                    username: text,
+                    ...params,
                   },
                 })
               }

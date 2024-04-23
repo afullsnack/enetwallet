@@ -1,12 +1,21 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
-import { Link, Stack, router, useLocalSearchParams } from "expo-router";
-import { useRef, useState } from "react";
+import {
+  Link,
+  Stack,
+  router,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+} from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 import { Image } from "expo-image";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { Auth } from "@/utils/api";
 
 export default function CodeScreen() {
@@ -14,15 +23,20 @@ export default function CodeScreen() {
   const [text, setText] = useState("");
   const inputRef = useRef(null);
   const { height } = useSafeAreaFrame();
+  const { top } = useSafeAreaInsets();
 
   console.log(params, ":::Register params, code screen");
+  // console.table(params, ":::Table outlining all params")
 
   return (
-    <Container>
+    <Container style={{ marginTop: top }}>
       <Stack.Screen
         options={{
           animation: "slide_from_right",
-          headerShown: true,
+          headerShown: false,
+          statusBarStyle: "auto",
+          statusBarHidden: false,
+          statusBarColor: "#0C0C12",
           headerStyle: {
             backgroundColor: "#0C0C12",
           },
@@ -45,7 +59,10 @@ export default function CodeScreen() {
         style={{ height }}
       >
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row items-center justify-between">
+          <View
+            style={{ marginTop: 20 }}
+            className="flex flex-row items-center justify-between"
+          >
             <Text className="text-2xl font-medium text-white">
               Verification code
             </Text>
@@ -54,14 +71,12 @@ export default function CodeScreen() {
             </TouchableOpacity>
           </View>
           <Text className="text-sm font-medium text-white/70">
-            Enter verification code sent to
-            {(params?.email as string) ??
-              (params?.data as Record<string, any>)?.email}
+            Enter verification code sent to {params?.email as string}
           </Text>
           <View className="mt-10 flex w-full flex-col items-center justify-center gap-3">
             <View className="flex w-full flex-row items-center justify-between">
               <Text className="text-[#3A4452]">Input code</Text>
-              <Text className="text-[#F80F0F]">Resend code in 00 : 60s</Text>
+              <CountdownTimer onTimerEnd={() => console.log("Timer ended!")} />
             </View>
             <OtpInput
               numberOfDigits={6}
@@ -93,8 +108,8 @@ export default function CodeScreen() {
         <View className="flex w-full flex-col items-center justify-center gap-4">
           <View className="">
             <Text className="text-white">
-              Phone number is not correct?{" "}
-              <Link href="/(register)/phone" className="text-[#18EAFF]">
+              Email is not correct?{" "}
+              <Link href="/(register)/email" className="text-[#18EAFF]">
                 Edit
               </Link>
             </Text>
@@ -103,21 +118,23 @@ export default function CodeScreen() {
             <Button
               onPress={async () => {
                 // TODO: verify code logic
-
                 try {
                   const result = await Auth.verifyEmail({
-                    email:
-                      params?.email ??
-                      (params?.data as Record<string, any>)?.email,
+                    email: params?.email as string,
                     otp: text,
                   });
+
+                  console.log(result?.data, ":::Result from verified email");
+
+                  if (!result?.success) {
+                    return Alert.alert("Verify email", result?.message);
+                  }
+
                   router.push({
                     pathname: `/(register)/pin`,
                     params: {
                       token: result?.data?.token,
-                      data: {
-                        ...(params?.data as Record<string, any>),
-                      },
+                      ...params,
                     },
                   });
                 } catch (err: any) {
@@ -134,3 +151,32 @@ export default function CodeScreen() {
     </Container>
   );
 }
+
+const CountdownTimer = ({ onTimerEnd }) => {
+  const [seconds, setSeconds] = useState(60);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      clearInterval(intervalRef.current);
+      // clearTimeout(intervalRef.current);
+      onTimerEnd();
+    }
+  }, [seconds, onTimerEnd]);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setSeconds((prevSeconds) => prevSeconds - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  return (
+    <View>
+      <Text className="text-[#F80F0F]">Resend code in 00 : {seconds}s</Text>
+    </View>
+  );
+};

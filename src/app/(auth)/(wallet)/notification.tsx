@@ -2,12 +2,13 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function EnableNotification() {
+  const params = useLocalSearchParams();
   const { width } = useSafeAreaFrame();
   return (
     <Container>
@@ -68,7 +69,10 @@ export default function EnableNotification() {
 
         <Button
           onPress={() => {
-            router.push("(wallet)/face_id");
+            router.push({
+              pathname: "(wallet)/face_id",
+              params: { ...params },
+            });
           }}
           style={{
             width: "100%",
@@ -83,7 +87,10 @@ export default function EnableNotification() {
         </Button>
         <Button
           onPress={() => {
-            router.push("(wallet)/face_id");
+            router.push({
+              pathname: "(wallet)/face_id",
+              params: { ...params },
+            });
           }}
           style={{
             width: "100%",

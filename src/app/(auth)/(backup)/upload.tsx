@@ -127,7 +127,7 @@ export default function BackupPage() {
           <Button
             onPress={() => {
               sheetRef.current.dismiss();
-              router.push("(backup)/encrypt");
+              router.push("(backup)/qrcode");
             }}
             style={{
               flexDirection: "row",

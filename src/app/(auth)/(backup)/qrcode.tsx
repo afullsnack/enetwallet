@@ -1,15 +1,23 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import { Auth } from "@/utils/api";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function QRCode() {
+  const params = useLocalSearchParams();
   const { width } = useSafeAreaFrame();
+
+  useEffect(() => {
+    async function setPrivKey() {
+      await Auth.storePrivateKey({ upload_style: "cloud" });
+    }
+  }, []);
   return (
     <Container>
       <Stack.Screen

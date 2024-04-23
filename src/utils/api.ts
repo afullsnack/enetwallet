@@ -130,7 +130,7 @@ export namespace Auth {
   }
   export const verifyEmail: ApiFunction<
     IVerifyEmail,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -158,7 +158,7 @@ export namespace Auth {
   }
   export const storePrivateKey: ApiFunction<
     IPrivateKeyStore,
-    Record<string, any>
+    Promise<Record<string, any>>
   > = async (args) => {
     try {
       const options = {
@@ -184,16 +184,22 @@ export namespace Auth {
   interface ISetPin {
     new_pin: string;
     confirm_pin: string;
+    token: string;
   }
-  export const setPin: ApiFunction<ISetPin, Record<string, any>> = async (
-    args,
-  ) => {
+  export const setPin: ApiFunction<
+    ISetPin,
+    Promise<Record<string, any>>
+  > = async (args) => {
     try {
       const options = {
         method: "POST",
-        body: JSON.stringify(args),
+        body: JSON.stringify({
+          new_pin: args.new_pin,
+          confirm_pin: args.confirm_pin,
+        }),
         headers: {
           "Content-type": "application/json",
+          "x-auth-token": args.token,
         },
       };
 

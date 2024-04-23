@@ -3,10 +3,11 @@ import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Link, Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 import { Image } from "expo-image";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { Auth } from "@/utils/api";
 
 export default function CodeScreen() {
   const params = useLocalSearchParams();
@@ -100,17 +101,29 @@ export default function CodeScreen() {
           </View>
           <View className="grid w-full">
             <Button
-              onPress={() => {
+              onPress={async () => {
                 // TODO: verify code logic
 
-                router.push({
-                  pathname: `/(register)/pin`,
-                  params: {
-                    data: {
-                      ...(params?.data as Record<string, any>),
+                try {
+                  const result = await Auth.verifyEmail({
+                    email:
+                      params?.email ??
+                      (params?.data as Record<string, any>)?.email,
+                    otp: text,
+                  });
+                  router.push({
+                    pathname: `/(register)/pin`,
+                    params: {
+                      token: result?.data?.token,
+                      data: {
+                        ...(params?.data as Record<string, any>),
+                      },
                     },
-                  },
-                });
+                  });
+                } catch (err: any) {
+                  console.log(err, ":::Error in code screen");
+                  return Alert.alert(err.message ?? err.toString());
+                }
               }}
             >
               <Text>Verify code</Text>

@@ -1,16 +1,16 @@
 import { Container } from "@/components/Container";
 import { Numpad } from "@/components/numpad";
+import { Auth } from "@/utils/api";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { OtpInput } from "react-native-otp-entry";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 const CODE_LENGTH = 6;
 
 export default function PinPage() {
   const params = useLocalSearchParams();
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>();
   const inputRef = useRef(null);
   const [code, setCode] = useState<number[]>([]);
   const codeLength = Array(CODE_LENGTH).fill(0);
@@ -92,11 +92,30 @@ export default function PinPage() {
 
         <View className="flex w-full flex-1 flex-row items-center justify-center">
           <Numpad
-            onConfirmPressed={() => {
-              router.push("(backup)/upload");
+            onConfirmPressed={async () => {
+              if (!text) {
+                return Alert.alert("Pin is required");
+              }
+
+              try {
+                await Auth.setPin({
+                  new_pin: text,
+                  confirm_pin: text,
+                  token: params?.token as string,
+                });
+                router.push({
+                  pathname: "(backup)/upload",
+                  params: { ...params },
+                });
+              } catch (err: any) {
+                console.log(err, ":::Error in pin screen");
+                return Alert.alert(
+                  "Unexpected error occurred while creating pin",
+                );
+              }
             }}
-            onPinChange={(pin) => setText(pin)}
-            onEntryComplete={(pin) => console.log(pin, ":::Complete pin digit")}
+            onPinChange={(pin: string) => setText(pin)}
+            onEntryComplete={(pin: string) => setText(pin)}
             code={code}
             setCode={setCode}
           />

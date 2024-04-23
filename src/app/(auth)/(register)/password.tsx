@@ -90,14 +90,13 @@ export default function Password() {
               return Alert.alert("Register error", "Password is required");
             }
 
-            // await Auth.register({
-
-            //   data: {
-            //     password: password,
-            //     confirm_password: confirmPassword,
-            //     ...(params?.data as Record<string, any>),
-            //   },
-            // });
+            await Auth.register({
+              data: {
+                password: password,
+                confirm_password: confirmPassword,
+                ...(params?.data as Record<string, any>),
+              },
+            });
 
             router.push({
               pathname: "/code",

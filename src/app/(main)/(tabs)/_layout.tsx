@@ -102,7 +102,6 @@ export default function DashboardTabLayout() {
       </Tabs>
       <StatusBar
         networkActivityIndicatorVisible={true}
-        translucent
         hidden={false}
         backgroundColor="#0C0C12"
         style="auto"

@@ -22,6 +22,9 @@ export default function HomeScreen() {
       <Stack.Screen
         options={{
           animation: "fade",
+          statusBarColor: "#0C0C12",
+          statusBarHidden: false,
+          statusBarStyle: "auto",
           headerStyle: {
             elevation: 0,
             backgroundColor: "#0C0C12",
@@ -99,7 +102,7 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   onPress={() => {
                     signOut();
-                    router.replace("/");
+                    router.replace("/(auth)/(login)/main");
                   }}
                 >
                   <Image
@@ -119,7 +122,7 @@ export default function HomeScreen() {
 
       <View className="w-full h-full">
         <View className="flex flex-row items-center justify-between">
-          <Balance balance={90000} />
+          <Balance balance={userSession ? 90000 : 0} />
 
           <Button
             style={{

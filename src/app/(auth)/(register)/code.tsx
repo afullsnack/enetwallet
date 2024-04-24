@@ -9,7 +9,13 @@ import {
   useLocalSearchParams,
 } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 import { Image } from "expo-image";
 import {
@@ -17,6 +23,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { Auth } from "@/utils/api";
+import Popup from "@/components/popup";
 
 export default function CodeScreen() {
   const params = useLocalSearchParams();
@@ -24,6 +31,8 @@ export default function CodeScreen() {
   const inputRef = useRef(null);
   const { height } = useSafeAreaFrame();
   const { top } = useSafeAreaInsets();
+
+  const [isVerifyLoading, setIsVerifyLoading] = useState(false);
 
   console.log(params, ":::Register params, code screen");
   // console.table(params, ":::Table outlining all params")
@@ -117,6 +126,7 @@ export default function CodeScreen() {
           <View className="grid w-full">
             <Button
               onPress={async () => {
+                setIsVerifyLoading(true);
                 // TODO: verify code logic
                 try {
                   const result = await Auth.verifyEmail({
@@ -127,8 +137,11 @@ export default function CodeScreen() {
                   console.log(result?.data, ":::Result from verified email");
 
                   if (!result?.success) {
+                    setIsVerifyLoading(false);
                     return Alert.alert("Verify email", result?.message);
                   }
+
+                  setIsVerifyLoading(false);
 
                   router.push({
                     pathname: `/(register)/pin`,
@@ -138,6 +151,7 @@ export default function CodeScreen() {
                     },
                   });
                 } catch (err: any) {
+                  setIsVerifyLoading(false);
                   console.log(err, ":::Error in code screen");
                   return Alert.alert(err.message ?? err.toString());
                 }
@@ -148,6 +162,25 @@ export default function CodeScreen() {
           </View>
         </View>
       </View>
+      <Popup
+        isPopupVisible={isVerifyLoading}
+        setPopupVisible={setIsVerifyLoading}
+        tapToClose={false}
+      >
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 40,
+            backgroundColor: "white",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
+        </View>
+      </Popup>
     </Container>
   );
 }

@@ -45,12 +45,6 @@ export default function Receive() {
   const { width } = useSafeAreaFrame();
 
   useEffect(() => {
-    if (params?.address) {
-      setAddress(params?.address as string);
-    }
-  }, []);
-
-  useEffect(() => {
     // Get user balance and wallet address
     console.log("UserSession effect");
     if (userSession) {
@@ -155,7 +149,10 @@ export default function Receive() {
                 contentFit="contain"
               /> */}
 
-              <QRCode value={address} size={width * 0.7} />
+              <QRCode
+                value={address ?? (params?.address as string)}
+                size={width * 0.7}
+              />
 
               <Button
                 style={{

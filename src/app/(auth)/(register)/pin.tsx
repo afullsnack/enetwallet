@@ -1,10 +1,17 @@
 import { Container } from "@/components/Container";
 import { Numpad } from "@/components/numpad";
+import Popup from "@/components/popup";
 import { Auth } from "@/utils/api";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const CODE_LENGTH = 6;
 
@@ -14,6 +21,8 @@ export default function PinPage() {
   const inputRef = useRef(null);
   const [code, setCode] = useState<number[]>([]);
   const codeLength = Array(CODE_LENGTH).fill(0);
+
+  const [isPinLoading, setIsPinLoading] = useState(false);
 
   console.log(params, ":::Register params, pin screen");
 
@@ -93,7 +102,9 @@ export default function PinPage() {
         <View className="flex w-full flex-1 flex-row items-center justify-center">
           <Numpad
             onConfirmPressed={async () => {
+              setIsPinLoading(true);
               if (!text) {
+                setIsPinLoading(false);
                 return Alert.alert("Pin is required");
               }
 
@@ -108,11 +119,14 @@ export default function PinPage() {
                 //   return Alert.alert("Set pin", result?.message);
                 // }
 
+                setIsPinLoading(false);
+
                 router.push({
                   pathname: "(backup)/upload",
                   params: { ...params },
                 });
               } catch (err: any) {
+                setIsPinLoading(false);
                 console.log(err, ":::Error in pin screen");
                 return Alert.alert(
                   "Unexpected error occurred while creating pin",
@@ -126,6 +140,25 @@ export default function PinPage() {
           />
         </View>
       </View>
+      <Popup
+        isPopupVisible={isPinLoading}
+        setPopupVisible={setIsPinLoading}
+        tapToClose={false}
+      >
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 40,
+            backgroundColor: "white",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
+        </View>
+      </Popup>
     </Container>
   );
 }

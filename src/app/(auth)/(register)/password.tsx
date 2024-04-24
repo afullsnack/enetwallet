@@ -1,17 +1,25 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import Popup from "@/components/popup";
 import { Auth } from "@/utils/api";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, { useSharedValue } from "react-native-reanimated";
 
 export default function Password() {
   const params = useLocalSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isRegisterLoading, setRegisterLoading] = useState(false);
   const inputRef = useRef(null);
 
   console.log(params, ":::Register params, password screen");
@@ -86,7 +94,9 @@ export default function Password() {
 
         <Button
           onPress={async () => {
+            setRegisterLoading(true);
             if (!password || !confirmPassword) {
+              setRegisterLoading(false);
               return Alert.alert("Register error", "Password is required");
             }
 
@@ -102,8 +112,11 @@ export default function Password() {
               });
 
               if (!result?.success) {
+                setRegisterLoading(false);
                 return Alert.alert("Register error", result?.message);
               }
+
+              setRegisterLoading(false);
 
               router.push({
                 pathname: "/(register)/code",
@@ -114,6 +127,7 @@ export default function Password() {
                 },
               });
             } catch (err: any) {
+              setRegisterLoading(false);
               console.log(err, ":::Error in password");
               Alert.alert("Register error", err.message ?? err.toString());
             }
@@ -123,6 +137,25 @@ export default function Password() {
           <Text>Continue</Text>
         </Button>
       </View>
+      <Popup
+        isPopupVisible={isRegisterLoading}
+        setPopupVisible={setRegisterLoading}
+        tapToClose={false}
+      >
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 40,
+            backgroundColor: "white",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
+        </View>
+      </Popup>
     </Container>
   );
 }

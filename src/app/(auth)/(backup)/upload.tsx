@@ -1,7 +1,9 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
-import { SheetModal } from "@/components/modal";
+import { MyBottomSheetModal, SheetModal } from "@/components/modal";
+import Popup from "@/components/popup";
 import { Auth } from "@/utils/api";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
@@ -11,7 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function BackupPage() {
   const params = useLocalSearchParams();
-  const sheetRef = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<BottomSheetMethods>(null);
   const { top } = useSafeAreaInsets();
 
   const snapPoints = useMemo(() => ["75%"], []);
@@ -77,19 +79,20 @@ export default function BackupPage() {
           <Button
             style={{ width: "100%" }}
             title="Upload"
-            onPress={() => sheetRef.current.present()}
+            onPress={() => sheetRef.current.open()}
           />
         </View>
       </Container>
-      <SheetModal
+      <MyBottomSheetModal
         ref={sheetRef}
-        snapPoints={snapPoints}
-        backgroundStyle={{
-          backgroundColor: "#0C0C12",
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: "#18EAFF",
-        }}
+        // snapPoints={snapPoints}
+        height={"75%"}
+        // backgroundStyle={{
+        //   backgroundColor: "#0C0C12",
+        // }}
+        // handleIndicatorStyle={{
+        //   backgroundColor: "#18EAFF",
+        // }}
       >
         <View
           className="w-full h-full flex flex-col items-center justify-between p-6 gap-4"
@@ -128,7 +131,7 @@ export default function BackupPage() {
 
           <Button
             onPress={() => {
-              sheetRef.current.dismiss();
+              sheetRef.current.close();
               router.push({
                 pathname: "(backup)/qrcode",
                 params: { ...params },
@@ -176,7 +179,7 @@ export default function BackupPage() {
               if (!result?.message) {
                 return Alert.alert("Private key", result?.message);
               }
-              sheetRef.current.dismiss();
+              sheetRef.current.close();
               router.push("/(wallet)/slider");
             }}
           />
@@ -193,7 +196,7 @@ export default function BackupPage() {
             Next of kin information
           </Text>
         </View>
-      </SheetModal>
+      </MyBottomSheetModal>
     </>
   );
 }

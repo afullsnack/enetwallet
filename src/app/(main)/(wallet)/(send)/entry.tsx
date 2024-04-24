@@ -1,8 +1,9 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import { SheetModal } from "@/components/modal";
+import { MyBottomSheetModal, SheetModal } from "@/components/modal";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
@@ -29,8 +30,10 @@ export default function Send() {
   const [tokenSearch, setTokenSearch] = useState<string>();
 
   const tokenSheetRef = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<BottomSheetMethods>(null);
+  const recurringSheetRef = useRef<BottomSheetMethods>(null);
   const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
-  const recurringSheetRef = useRef<BottomSheetModal>(null);
+  // const recurringSheetRef = useRef<BottomSheetModal>(null);
   const recurringSheetSnapPoints = useMemo(() => ["35%"], []);
 
   return (
@@ -88,7 +91,8 @@ export default function Send() {
             <View className="flex flex-col gap-4 mt-4">
               <SelectNetworkTrigger
                 onPress={() => {
-                  tokenSheetRef.current.present();
+                  // tokenSheetRef.current.present();
+                  sheetRef?.current?.open();
                 }}
               />
 
@@ -108,7 +112,7 @@ export default function Send() {
 
                   <TouchableOpacity
                     className="flex flex-row items-center justify-center"
-                    onPress={() => recurringSheetRef.current.present()}
+                    onPress={() => recurringSheetRef.current.open()}
                   >
                     <Text
                       style={{
@@ -444,15 +448,16 @@ export default function Send() {
           </ScrollView>
         </View>
       </Container>
-      <SheetModal
-        ref={tokenSheetRef}
-        snapPoints={tokenSheetSnapPoints}
-        backgroundStyle={{
-          backgroundColor: "#0C0C12",
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: "#18EAFF",
-        }}
+      <MyBottomSheetModal
+        ref={sheetRef}
+        // snapPoints={tokenSheetSnapPoints}
+        height={"75%"}
+        // backgroundStyle={{
+        //   backgroundColor: "#0C0C12",
+        // }}
+        // handleIndicatorStyle={{
+        //   backgroundColor: "#18EAFF",
+        // }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -597,16 +602,17 @@ export default function Send() {
             </ScrollView>
           </View>
         </TouchableWithoutFeedback>
-      </SheetModal>
-      <SheetModal
+      </MyBottomSheetModal>
+      <MyBottomSheetModal
         ref={recurringSheetRef}
-        snapPoints={recurringSheetSnapPoints}
-        backgroundStyle={{
-          backgroundColor: "#0C0C12",
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: "#18EAFF",
-        }}
+        // snapPoints={recurringSheetSnapPoints}
+        height={"35%"}
+        // backgroundStyle={{
+        //   backgroundColor: "#0C0C12",
+        // }}
+        // handleIndicatorStyle={{
+        //   backgroundColor: "#18EAFF",
+        // }}
       >
         <View
           style={{
@@ -662,7 +668,7 @@ export default function Send() {
                 backgroundColor: "transparent",
                 flex: 1,
               }}
-              onPress={() => recurringSheetRef.current.dismiss()}
+              onPress={() => recurringSheetRef.current.close()}
             >
               <Text
                 style={{
@@ -688,7 +694,7 @@ export default function Send() {
             </Button>
           </View>
         </View>
-      </SheetModal>
+      </MyBottomSheetModal>
     </>
   );
 }

@@ -3,14 +3,16 @@ import { Button } from "@/components/button";
 import { useSession } from "@/contexts/session";
 import { Wallet } from "@/utils/api";
 import { Image } from "expo-image";
-import { Stack, Tabs, router } from "expo-router";
+import { Stack, Tabs, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
+  const params = useLocalSearchParams();
   const { session, signOut } = useSession();
   const [userSession, setUserSession] = useState<Record<string, any>>();
   const [balance, setBalance] = useState<string>();
+  const [address, setAddress] = useState<string>();
 
   console.log(typeof userSession, typeof session, ":::User session");
 
@@ -20,6 +22,9 @@ export default function HomeScreen() {
       getUserBalance()
         .then(() => console.log("Fetched balance"))
         .catch((error) => console.log(error, ":::Balance error"));
+      getWalletAddress()
+        .then(() => console.log("Fetched address"))
+        .catch((error) => console.log(error, ":::Address error"));
     }
     async function getUserBalance() {
       const result = await Wallet.getBalance({
@@ -31,6 +36,19 @@ export default function HomeScreen() {
       }
 
       setBalance(result?.data?.usdcBalanceFromSmartAccount);
+    }
+    async function getWalletAddress() {
+      const result = await Wallet.getAddress({
+        user_token: userSession?.token,
+      });
+
+      if (!result?.success) {
+        return Alert.alert("Address error", result?.message);
+      }
+
+      console.log(result?.data, ":::Address result from API");
+
+      setAddress(result?.data);
     }
   }, [userSession]);
 
@@ -171,7 +189,12 @@ export default function HomeScreen() {
         <View className="flex flex-row items-center justify-between mt-20">
           <TouchableOpacity
             className="flex flex-col items-center justify-center gap-1"
-            onPress={() => router.push("/(main)/(send)/entry")}
+            onPress={() =>
+              router.push({
+                pathname: "/(main)/(send)/entry",
+                params: { ...params },
+              })
+            }
           >
             <Image
               source={require("../../../../assets/icons/dashboard/actions/send.png")}
@@ -192,7 +215,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             className="flex flex-col items-center justify-center gap-1"
-            onPress={() => router.push({ pathname: "/(main)/(receive)/entry" })}
+            onPress={() =>
+              router.push({
+                pathname: "/(main)/(receive)/entry",
+                params: { ...params, address: address },
+              })
+            }
           >
             <Image
               source={require("../../../../assets/icons/dashboard/actions/receive.png")}

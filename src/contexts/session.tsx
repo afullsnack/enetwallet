@@ -1,6 +1,6 @@
 import React from "react";
 import { useStorageState } from "@/utils/useStorageState";
-import { Auth } from "@/utils/api";
+import { Auth, Wallet } from "@/utils/api";
 
 // Create the auth context
 const AuthContext = React.createContext<{
@@ -38,6 +38,18 @@ export function SessionProvider(props: React.PropsWithChildren) {
             // Perform sign-in logic here
             const result = await Auth.emailPasswordAuth({ email, password });
             if (result?.success) {
+              const addressResp = await Wallet.getAddress({
+                user_token: result?.data?.token,
+              });
+
+              if (addressResp?.success) {
+                setSession(
+                  JSON.stringify({
+                    ...result?.data,
+                    wallet_address: addressResp?.data,
+                  }),
+                );
+              }
               setSession(JSON.stringify(result?.data));
             } else {
               throw new Error(result?.message);

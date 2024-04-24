@@ -3,6 +3,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import {
   ReactNode,
   forwardRef,
@@ -10,7 +11,7 @@ import {
   useMemo,
   type ComponentPropsWithRef,
 } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 interface ISheetModal extends ComponentPropsWithRef<typeof BottomSheetModal> {
@@ -67,6 +68,38 @@ export const SheetModal = forwardRef<Ref, ISheetModal>(
           {children}
         </BottomSheetView>
       </BottomSheetModal>
+    );
+  },
+);
+
+interface IBottomSheetModal extends ComponentPropsWithRef<typeof BottomSheet> {
+  children: ReactNode;
+  height: string | number;
+}
+type SheetRef = BottomSheetMethods;
+export const MyBottomSheetModal = forwardRef<SheetRef, IBottomSheetModal>(
+  ({ children, style, height, ...props }, ref) => {
+    return (
+      <BottomSheet
+        {...props}
+        ref={ref}
+        dragHandleStyle={{}}
+        height={height}
+        style={{ backgroundColor: "#0C0C12", zIndex: 50 }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            // flex: 1,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            marginBottom: -40,
+          }}
+        >
+          {children}
+        </View>
+      </BottomSheet>
     );
   },
 );

@@ -9,11 +9,11 @@ import {
   Alert,
 } from "react-native";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
-import { SheetModal } from "@/components/modal";
+import { MyBottomSheetModal, SheetModal } from "@/components/modal";
 import { Input } from "@/components/input";
 import { Feather } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
@@ -22,23 +22,39 @@ import { useSession } from "@/contexts/session";
 import { Wallet } from "@/utils/api";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 export default function Receive() {
-  const tokenSheetRef = useRef<BottomSheetModal>(null);
-  const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
+  const params = useLocalSearchParams();
+  // const tokenSheetRef = useRef<BottomSheetModal>(null);
+  const tokenListSheetRef = useRef<BottomSheetMethods>(null);
+  // const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
 
-  const { session, signOut } = useSession();
+  const { session } = useSession();
   const [userSession, setUserSession] = useState<Record<string, any>>();
-  const [address, setAddress] = useState<string>();
+  const [address, setAddress] = useState<string>(
+    session ? JSON.parse(session)?.wallet_address : null,
+  );
 
   // Search
   const [tokenSearch, setTokenSearch] = useState<string>();
 
+  console.log(address, ":::Address", userSession?.wallet_address);
+  console.log(typeof userSession, typeof session, ":::User session");
+
   const { width } = useSafeAreaFrame();
 
   useEffect(() => {
+    if (params?.address) {
+      setAddress(params?.address as string);
+    }
+  }, []);
+
+  useEffect(() => {
     // Get user balance and wallet address
+    console.log("UserSession effect");
     if (userSession) {
+      console.log("UserSession effect conditional");
       getWalletAddress()
         .then(() => console.log("Fetched address"))
         .catch((error) => console.log(error, ":::Address error"));
@@ -52,19 +68,22 @@ export default function Receive() {
         return Alert.alert("Address error", result?.message);
       }
 
+      console.log(result?.data, ":::Address result from API");
+
       setAddress(result?.data);
     }
-  }, [useSession]);
+  }, [useSession, address, session]);
 
   useEffect(() => {
     if (session) {
       const parsed = JSON.parse(session);
+      setAddress(parsed?.wallet_address);
       setUserSession(parsed);
     }
   }, [session]);
 
   async function copyAddressToClipboard() {
-    await Clipboard.setStringAsync(address);
+    await Clipboard.setStringAsync(address ?? (params?.address as string));
   }
 
   return (
@@ -96,7 +115,7 @@ export default function Receive() {
           <View className="flex flex-col items-center gap-4 mt-4 w-full">
             <SelectNetworkTrigger
               onPress={() => {
-                tokenSheetRef.current.present();
+                tokenListSheetRef.current.open();
               }}
             />
 
@@ -158,7 +177,9 @@ export default function Receive() {
                 }}
                 onPress={async () => await copyAddressToClipboard()}
               >
-                <Text style={{ color: "#FFFFFF" }}>ID: Johcee12</Text>
+                <Text style={{ color: "#FFFFFF" }}>
+                  ID: {userSession ? userSession?.first_name : "Guest"}
+                </Text>
                 <Image
                   source={require("../../../../../assets/icons/dashboard/receive/copy.png")}
                   style={{
@@ -189,7 +210,7 @@ export default function Receive() {
                   textAlign: "center",
                 }}
               >
-                {address}
+                {address ?? (params?.address as string)}
               </Text>
             </View>
 
@@ -260,15 +281,16 @@ export default function Receive() {
           </View>
         </View>
       </Container>
-      <SheetModal
-        ref={tokenSheetRef}
-        snapPoints={tokenSheetSnapPoints}
-        backgroundStyle={{
-          backgroundColor: "#0C0C12",
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: "#18EAFF",
-        }}
+      <MyBottomSheetModal
+        ref={tokenListSheetRef}
+        // snapPoints={tokenSheetSnapPoints}
+        height={"75%"}
+        // backgroundStyle={{
+        //   backgroundColor: "#0C0C12",
+        // }}
+        // handleIndicatorStyle={{
+        //   backgroundColor: "#18EAFF",
+        // }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -413,7 +435,7 @@ export default function Receive() {
             </ScrollView>
           </View>
         </TouchableWithoutFeedback>
-      </SheetModal>
+      </MyBottomSheetModal>
     </>
   );
 }

@@ -83,7 +83,6 @@ export const MyBottomSheetModal = forwardRef<SheetRef, IBottomSheetModal>(
       <BottomSheet
         {...props}
         ref={ref}
-        dragHandleStyle={{}}
         height={height}
         style={{ backgroundColor: "#0C0C12", zIndex: 50 }}
       >

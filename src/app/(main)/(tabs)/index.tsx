@@ -239,7 +239,15 @@ export default function HomeScreen() {
               Receive
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex flex-col items-center justify-center gap-1">
+          <TouchableOpacity
+            className="flex flex-col items-center justify-center gap-1"
+            onPress={() =>
+              router.push({
+                pathname: "/(main)/(swap)/entry",
+                params: { ...params, address: address },
+              })
+            }
+          >
             <Image
               source={require("../../../../assets/icons/dashboard/actions/swap.png")}
               style={{

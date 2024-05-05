@@ -43,54 +43,68 @@ export default function SpendVerification() {
           Complete the verifications step to continue with your transactions
         </Text>
 
-        <Button
-          onPress={() => {
-            router.push("(send)/finish");
-          }}
+        <View
           style={{
-            borderRadius: 8,
-            backgroundColor: "#12131B",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 10,
-            marginTop: 150,
-            width: "100%",
-            padding: 5,
-            paddingLeft: 15,
+            marginTop: "40%",
           }}
         >
           <Text
             style={{
-              fontSize: 13,
-              fontWeight: "400",
-              color: "#D3D3D3",
-              textAlign: "left",
+              fontSize: 40,
+              fontWeight: "800",
+              color: "#18EAFF",
             }}
           >
-            Verify with Biometris or security keys
+            0/1
           </Text>
-          <View
+          <Button
+            onPress={() => {
+              router.push("(send)/finish");
+            }}
             style={{
-              width: 85,
-              height: 85,
-              backgroundColor: "#18EAFF",
+              borderRadius: 8,
+              backgroundColor: "#12131B",
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 8,
+              justifyContent: "space-between",
+              gap: 10,
+              width: "100%",
+              padding: 5,
+              paddingLeft: 15,
             }}
           >
-            <Image
-              source={require("../../../../../assets/icons/dashboard/spend/verification.png")}
+            <Text
               style={{
-                width: 35,
-                height: 35,
+                fontSize: 13,
+                fontWeight: "400",
+                color: "#D3D3D3",
+                textAlign: "left",
               }}
-              contentFit="contain"
-            />
-          </View>
-        </Button>
+            >
+              Verify with Biometris or security keys
+            </Text>
+            <View
+              style={{
+                width: 65,
+                height: 65,
+                backgroundColor: "#18EAFF",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 8,
+              }}
+            >
+              <Image
+                source={require("../../../../../assets/icons/dashboard/spend/verification.png")}
+                style={{
+                  width: 35,
+                  height: 35,
+                }}
+                contentFit="contain"
+              />
+            </View>
+          </Button>
+        </View>
         <Text
           style={{
             fontSize: 13,

@@ -50,7 +50,7 @@ export default function HomeScreen() {
 
       setAddress(result?.data);
     }
-  }, [userSession]);
+  }, [userSession, session]);
 
   useEffect(() => {
     if (session) {

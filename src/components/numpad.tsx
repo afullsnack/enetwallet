@@ -16,7 +16,7 @@ export const Numpad = ({
   useEffect(() => {
     if (code.length === codeLength) {
       //TODO: call return code input
-      onEntryComplete(code);
+      onEntryComplete(code.join(""));
     }
   }, [code]);
 

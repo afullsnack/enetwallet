@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://54.209.181.159:1444/api/v1";
+const API_BASE_URL = "http://enetwallet.com/api/v1";
 
 type ApiFunction<P, R extends Record<string, any>> = (args: P) => R;
 
@@ -153,11 +153,44 @@ export namespace Auth {
     }
   };
 
+  interface ISetEncryptPassword {
+    token: string;
+    data: { secret_password: string; confirm_secret_password: string };
+  }
+  export const setEncryptPassword: ApiFunction<
+    ISetEncryptPassword,
+    Promise<Record<string, any>>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "POST",
+        body: JSON.stringify(args.data),
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.token,
+        },
+      };
+
+      const response = await fetch(
+        `${API_BASE_URL}/user/secret-password`,
+        options,
+      );
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_SecretPassword");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_SecretPassword");
+      throw new Error(err);
+    }
+  };
+
   interface IPrivateKeyStore {
     token: string;
     data: { upload_style: string };
   }
-  export const storePrivateKey: ApiFunction<
+  export const createPrivateKey: ApiFunction<
     IPrivateKeyStore,
     Promise<Record<string, any>>
   > = async (args) => {
@@ -243,6 +276,40 @@ export namespace Auth {
       return json;
     } catch (err: any) {
       console.log(err, ":::Error_StorePin");
+      throw new Error(err);
+    }
+  };
+
+  interface ISetPassword {
+    token: string;
+    data: {
+      new_password: string;
+      confirm_password: string;
+      phone_number: string;
+    };
+  }
+  export const setPassword: ApiFunction<
+    ISetPassword,
+    Promise<Record<string, any>>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "POST",
+        body: JSON.stringify(args.data),
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.token,
+        },
+      };
+
+      const response = await fetch(`${API_BASE_URL}/user/password`, options);
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_set_poassword");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_set_Password");
       throw new Error(err);
     }
   };

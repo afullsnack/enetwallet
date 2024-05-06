@@ -15,6 +15,8 @@ import {
 } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import ViewShot, { captureRef } from "react-native-view-shot";
+import * as FileSystem from "expo-file-system";
 
 export default function QRCode() {
   const params = useLocalSearchParams();
@@ -23,25 +25,9 @@ export default function QRCode() {
 
   const [downloadPopupVisible, setDonwloadPopupVisible] = useState(false);
 
-  useEffect(() => {
-    setPrivKey()
-      .then(() => console.log("fetched"))
-      .catch((error) => console.log(error));
-    async function setPrivKey() {
-      const result = await Auth.storePrivateKey({
-        data: { upload_style: "qr_code" },
-        token: params?.token as string,
-      });
+  const shotRef = useRef();
 
-      if (!result?.message) {
-        return Alert.alert("Private key", result?.message);
-      }
-
-      setQRCodeData(result?.data); // Set the base64 data image
-    }
-  }, []);
-
-  console.log(qrCodeData, ":::QR Code data");
+  // console.log(qrCodeData, ":::QR Code data");
 
   return (
     <Container>
@@ -75,7 +61,8 @@ export default function QRCode() {
         }}
       />
       <View className="w-full flex flex-col items-center justify-center h-full pb-6 bg-[#0C0C12] px-6 md:px-8">
-        <View
+        <ViewShot
+          ref={shotRef}
           style={{
             backgroundColor: "white",
             padding: 3,
@@ -87,8 +74,8 @@ export default function QRCode() {
         >
           <Image
             source={
-              qrCodeData
-                ? { uri: qrCodeData }
+              params
+                ? { uri: params?.qr_image }
                 : require("../../../../assets/qr_code_sample.png")
             }
             style={{
@@ -97,7 +84,7 @@ export default function QRCode() {
             }}
             contentFit="contain"
           />
-        </View>
+        </ViewShot>
 
         <View className="flex-1" />
 
@@ -180,8 +167,40 @@ export default function QRCode() {
           onPress={async () => {
             // TODO: download
             setDonwloadPopupVisible(true);
+            try {
+              const captureUri = await captureRef(shotRef, {
+                format: "jpg",
+                quality: 1.0,
+              });
 
-            setTimeout(() => setDonwloadPopupVisible(false), 3000);
+              // Save to FS
+              const downloadable = FileSystem.createDownloadResumable(
+                captureUri,
+                FileSystem.documentDirectory + "enetwallet_qr.jpg",
+              );
+              const download = await downloadable.downloadAsync();
+
+              Alert.alert(
+                "QR Code download",
+                `Downloaded successfuly to ${download.uri}`,
+                [
+                  {
+                    text: "Continue",
+                    style: "default",
+                    onPress(value) {
+                      router.push({
+                        pathname: "(wallet)/slider",
+                        params: { ...params },
+                      });
+                    },
+                  },
+                ],
+              );
+              setDonwloadPopupVisible(false);
+            } catch (err: any) {
+              setDonwloadPopupVisible(false);
+              Alert.alert("Download QR error", err?.message);
+            }
           }}
           style={{
             width: "100%",

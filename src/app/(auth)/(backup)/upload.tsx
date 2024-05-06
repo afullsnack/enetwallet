@@ -133,7 +133,7 @@ export default function BackupPage() {
             onPress={() => {
               sheetRef.current.close();
               router.push({
-                pathname: "(backup)/qrcode",
+                pathname: "(backup)/encrypt",
                 params: { ...params },
               });
             }}
@@ -171,16 +171,19 @@ export default function BackupPage() {
             title="Skip"
             style={{ width: "60%" }}
             onPress={async () => {
-              const result = await Auth.storePrivateKey({
-                data: { upload_style: "cloud" },
-                token: params?.token as string,
-              });
+              // const result = await Auth.storePrivateKey({
+              //   data: { upload_style: "cloud" },
+              //   token: params?.token as string,
+              // });
 
-              if (!result?.message) {
-                return Alert.alert("Private key", result?.message);
-              }
+              // if (!result?.message) {
+              //   return Alert.alert("Private key", result?.message);
+              // }
               sheetRef.current.close();
-              router.push("/(wallet)/slider");
+              router.push({
+                pathname: "/(wallet)/slider",
+                params: { ...params },
+              });
             }}
           />
           <Text

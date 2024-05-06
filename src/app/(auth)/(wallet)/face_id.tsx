@@ -1,9 +1,10 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import { authenticate } from "@/utils/localAuth";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
@@ -69,7 +70,14 @@ export default function EnableFaceId() {
         <View className="flex-1" />
 
         <Button
-          onPress={() => {
+          onPress={async () => {
+            const authenticationResult = await authenticate();
+            if (authenticationResult.success) {
+              Alert.alert("Biometric enabled!");
+            } else {
+              Alert.alert("Biometric authentication failed!");
+            }
+
             router.replace({
               pathname: "/(auth)/(login)/main",
               params: { ...params },

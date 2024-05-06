@@ -3,9 +3,11 @@ import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 // import Animated, { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 
 export default function EnableNotification() {
   const params = useLocalSearchParams();
@@ -51,7 +53,7 @@ export default function EnableNotification() {
             maxWidth: 250,
           }}
         >
-          Turn of notification
+          Turn on notification
         </Text>
         <Text
           style={{
@@ -68,11 +70,36 @@ export default function EnableNotification() {
         <View style={{ flex: 1 }} />
 
         <Button
-          onPress={() => {
-            router.push({
-              pathname: "(wallet)/face_id",
-              params: { ...params },
-            });
+          onPress={async () => {
+            // Permission
+            if (Device.isDevice) {
+              const { status: existingStatus } =
+                await Notifications.getPermissionsAsync();
+              let finalStatus = existingStatus;
+              if (existingStatus !== "granted") {
+                const { status } =
+                  await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+              }
+              if (finalStatus !== "granted") {
+                Alert.alert(
+                  "Notification",
+                  "Permission not granted to get push token for push notification!",
+                );
+
+                router.push({
+                  pathname: "(wallet)/face_id",
+                  params: { ...params },
+                });
+              } else {
+                Alert.alert("Notification", "Permission granted successfully");
+
+                router.push({
+                  pathname: "(wallet)/face_id",
+                  params: { ...params },
+                });
+              }
+            }
           }}
           style={{
             width: "100%",

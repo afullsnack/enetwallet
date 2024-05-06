@@ -1,16 +1,27 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import Popup from "@/components/popup";
+import { Auth } from "@/utils/api";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, { useSharedValue } from "react-native-reanimated";
 
 export default function EncryptDetails() {
+  const params = useLocalSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const inputRef = useRef(null);
+  const [isEncryptLoading, setEncryptLoading] = useState(false);
 
   return (
     <Container>
@@ -36,10 +47,16 @@ export default function EncryptDetails() {
           },
         }}
       />
-      <ScrollView className="w-full flex flex-col items-center gap-4 min-h-screen pb-6 px-6">
+      <ScrollView
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        className="w-full flex flex-col gap-4 min-h-screen pb-6 px-6"
+      >
         <View
           className="flex flex-col gap-4 items-center justify-center"
-          style={{ alignItems: "flex-start" }}
+          style={{ alignItems: "center" }}
         >
           <View className="rounded-full border border-[#2C1C40] bg-white p-3">
             <Image
@@ -116,6 +133,7 @@ export default function EncryptDetails() {
           style={{
             width: 35,
             height: 35,
+            marginTop: 20,
           }}
           contentFit="contain"
         />
@@ -125,18 +143,65 @@ export default function EncryptDetails() {
             fontWeight: "500",
             color: "#F80F0F",
             textAlign: "center",
+            marginVertical: 20,
           }}
         >
           Remember to use password you CANNOT forget
         </Text>
 
         <Button
-          onPress={() => router.push("(backup)/qrcode")}
+          onPress={async () => {
+            setEncryptLoading(true);
+            // Call set secret password
+            if (!password || !confirmPassword) {
+              setEncryptLoading(false);
+              Alert.alert("Invalid password", "Enter a valid password");
+            }
+
+            const result = await Auth.setEncryptPassword({
+              token: params?.token as string,
+              data: {
+                secret_password: password,
+                confirm_secret_password: confirmPassword,
+              },
+            });
+
+            if (!result?.success) {
+              setEncryptLoading(false);
+              return Alert.alert("Error encrypting", result?.message);
+            }
+
+            setEncryptLoading(false);
+
+            router.push({
+              pathname: "(backup)/qrcode",
+              params: { ...params, qr_image: result?.data },
+            });
+          }}
           style={{ width: "100%" }}
         >
           <Text>Continue</Text>
         </Button>
       </ScrollView>
+      <Popup
+        isPopupVisible={isEncryptLoading}
+        setPopupVisible={setEncryptLoading}
+        tapToClose={false}
+      >
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 40,
+            backgroundColor: "white",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
+        </View>
+      </Popup>
     </Container>
   );
 }

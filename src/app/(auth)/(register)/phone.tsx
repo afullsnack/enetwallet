@@ -39,11 +39,9 @@ export default function PhonePage() {
                 {...props}
                 onPress={() => {
                   router.push({
-                    pathname: "/email",
+                    pathname: "/password",
                     params: {
-                      data: {
-                        ...(params?.data as Record<string, any>),
-                      },
+                      ...(params?.data as Record<string, any>),
                     },
                   });
                 }}
@@ -98,7 +96,7 @@ export default function PhonePage() {
             <Button
               onPress={() => {
                 router.push({
-                  pathname: "/(register)/email",
+                  pathname: "/(register)/password",
                   params: {
                     phone_number: phone,
                     ...params,

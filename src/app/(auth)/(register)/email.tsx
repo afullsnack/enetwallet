@@ -3,12 +3,21 @@ import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Image } from "expo-image";
+import { Auth } from "@/utils/api";
+import Popup from "@/components/popup";
 
 export default function EmailPage() {
   const params = useLocalSearchParams();
   const [email, setEmail] = useState<string>();
+  const [isRegisterLoading, setRegisterLoading] = useState(false);
   const inputRef = useRef(null);
 
   console.log(params, ":::Params for register, email screen");
@@ -72,18 +81,51 @@ export default function EmailPage() {
             </View>
             <View className="grid w-1/3">
               <Button
-                onPress={() => {
+                onPress={async () => {
+                  setRegisterLoading(true);
                   if (!email) {
+                    setRegisterLoading(false);
                     return Alert.alert("Email valiue is required");
                   }
 
-                  router.push({
-                    pathname: `/(auth)/(register)/confirm/${email}`,
-                    params: {
-                      email: email,
-                      ...params,
-                    },
-                  });
+                  try {
+                    const result = await Auth.register({
+                      data: {
+                        email,
+                        ...params,
+                      },
+                    });
+
+                    if (!result?.success) {
+                      setRegisterLoading(false);
+                      return Alert.alert("Register error", result?.message);
+                    }
+
+                    setRegisterLoading(false);
+
+                    router.push({
+                      pathname: "/(register)/code",
+                      params: {
+                        email,
+                        ...params,
+                      },
+                    });
+                  } catch (err: any) {
+                    setRegisterLoading(false);
+                    console.log(err, ":::Error in password");
+                    Alert.alert(
+                      "Register error",
+                      err.message ?? err.toString(),
+                    );
+                  }
+
+                  // router.push({
+                  //   pathname: `/(auth)/(register)/confirm/${email}`,
+                  //   params: {
+                  //     email: email,
+                  //     ...params,
+                  //   },
+                  // });
                 }}
               >
                 <Text>Continue</Text>
@@ -91,6 +133,26 @@ export default function EmailPage() {
             </View>
           </View>
         </View>
+
+        <Popup
+          isPopupVisible={isRegisterLoading}
+          setPopupVisible={setRegisterLoading}
+          tapToClose={false}
+        >
+          <View
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 40,
+              backgroundColor: "white",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
+          </View>
+        </Popup>
       </Container>
     </>
   );

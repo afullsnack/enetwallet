@@ -101,13 +101,12 @@ export default function Password() {
             }
 
             try {
-              const result = await Auth.register({
+              const result = await Auth.setPassword({
+                token: params?.token as string,
                 data: {
-                  password: password,
+                  new_password: password,
                   confirm_password: confirmPassword,
-                  first_name: params?.username as string,
-                  last_name: params?.username as string,
-                  ...params,
+                  phone_number: params?.phone_number as string,
                 },
               });
 
@@ -119,12 +118,8 @@ export default function Password() {
               setRegisterLoading(false);
 
               router.push({
-                pathname: "/(register)/code",
-                params: {
-                  password: password,
-                  confirm_password: confirmPassword,
-                  ...params,
-                },
+                pathname: "/pin",
+                params: { password, confirmPassword, ...params },
               });
             } catch (err: any) {
               setRegisterLoading(false);

@@ -12,13 +12,29 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/button";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Auth, Wallet } from "@/utils/api";
+import Loader from "@/components/loader";
 
 export default function WalletSlider() {
   const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const carouselRef = useRef(null);
+  const sliderTimer = useRef(null);
+  const [indexTracker, setIndexTracker] = useState(0);
+
+  // Loader
+  const [loader, setLoader] = useState<boolean>(false);
 
   console.log(params, ":::params in slider");
+
+  // Start slider
+  // useEffect(() => {
+  //   if (indexTracker < 3 && carouselRef.current !== null) {
+  //     sliderTimer.current = setInterval(() => carouselRef.current.next(), 3000);
+  //     // setIndexTracker((_prev) => _prev + 1);
+  //   }
+
+  //   return () => clearInterval(sliderTimer.current);
+  // }, [indexTracker]);
 
   return (
     <Container>
@@ -56,17 +72,31 @@ export default function WalletSlider() {
           scrollAnimationDuration={800}
           style={{ alignItems: "center", justifyContent: "center" }}
           onSnapToItem={async (index) => {
+            setLoader(true);
             console.log(`Current index of wallet slider: ${index}`);
 
             if (index >= 3) {
+              const privKeyResult = await Auth.createPrivateKey({
+                token: params?.token as string,
+                data: { upload_style: "cloud" },
+              });
+
+              if (!privKeyResult?.success) {
+                setLoader(false);
+                return Alert.alert("Create Private key");
+              }
+
               // Call create wallet and show users their address on the next page
               const result = await Wallet.create({
                 user_token: params?.token as string,
               });
 
               if (!result?.success) {
+                setLoader(false);
                 return Alert.alert("Wallet creation", result?.message);
               }
+
+              setLoader(false);
 
               router.replace({
                 pathname: "(wallet)/finish",
@@ -134,6 +164,35 @@ export default function WalletSlider() {
                     successful, Your smart wallet is currently being created to
                     offer you the best user experience
                   </Text>
+                  <View className="flex-1" />
+                  <View className="flex flex-col items-center gap-2">
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Progress 5%, Estimated completion time: 2 minutes
+                    </Text>
+                    <Image
+                      source={require("../../../../assets/wallet/slider_loader_1.png")}
+                      contentFit="contain"
+                      style={{ width: "100%", height: 6 }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "400",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Do not close the App during the creation process to
+                      prevent wallet creation failure
+                    </Text>
+                  </View>
                 </View>
               )}
 
@@ -174,6 +233,35 @@ export default function WalletSlider() {
                     successful, Your smart wallet is currently being created to
                     offer you the best user experience
                   </Text>
+                  <View className="flex-1" />
+                  <View className="flex flex-col items-center gap-2">
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Progress 55%, Estimated completion time: 1 minutes
+                    </Text>
+                    <Image
+                      source={require("../../../../assets/wallet/slider_loader_2.png")}
+                      contentFit="contain"
+                      style={{ width: "100%", height: 6 }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "400",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Do not close the App during the creation process to
+                      prevent wallet creation failure
+                    </Text>
+                  </View>
                 </View>
               )}
               {index === 2 && (
@@ -213,6 +301,35 @@ export default function WalletSlider() {
                     successful, Your smart wallet is currently being created to
                     offer you the best user experience
                   </Text>
+                  <View className="flex-1" />
+                  <View className="flex flex-col items-center gap-2">
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Progress 95%, Estimated completion time: 10 seconds
+                    </Text>
+                    <Image
+                      source={require("../../../../assets/wallet/slider_loader_3.png")}
+                      contentFit="contain"
+                      style={{ width: "100%", height: 6 }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "400",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Do not close the App during the creation process to
+                      prevent wallet creation failure
+                    </Text>
+                  </View>
                 </View>
               )}
 
@@ -253,6 +370,35 @@ export default function WalletSlider() {
                     successful, Your smart wallet is currently being created to
                     offer you the best user experience
                   </Text>
+                  <View className="flex-1" />
+                  <View className="flex flex-col items-center gap-2">
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Progress 95%, Estimated completion time: 10 seconds
+                    </Text>
+                    <Image
+                      source={require("../../../../assets/wallet/slider_loader_3.png")}
+                      contentFit="contain"
+                      style={{ width: "100%", height: 6 }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "400",
+                        textAlign: "center",
+                        color: "#3A4452",
+                      }}
+                    >
+                      Do not close the App during the creation process to
+                      prevent wallet creation failure
+                    </Text>
+                  </View>
                 </View>
               )}
 
@@ -265,6 +411,7 @@ export default function WalletSlider() {
           )}
         />
       </View>
+      <Loader popupVisible={loader} setPopupVisible={setLoader} />
     </Container>
   );
 }

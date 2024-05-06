@@ -103,6 +103,7 @@ export default function PinPage() {
           <Numpad
             onConfirmPressed={async () => {
               setIsPinLoading(true);
+              console.log(text, ":::Pin entry");
               if (!text) {
                 setIsPinLoading(false);
                 return Alert.alert("Pin is required");
@@ -115,9 +116,10 @@ export default function PinPage() {
                   token: params?.token as string,
                 });
 
-                // if (!result?.success) {
-                //   return Alert.alert("Set pin", result?.message);
-                // }
+                if (!result?.success) {
+                  setIsPinLoading(false);
+                  return Alert.alert("Set pin", result?.message);
+                }
 
                 setIsPinLoading(false);
 

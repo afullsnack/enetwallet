@@ -67,7 +67,7 @@ export default function ReferralPage() {
             <Button
               onPress={() =>
                 router.push({
-                  pathname: `/phone`,
+                  pathname: `/email`,
                   params: {
                     referral: text,
                     ...params,

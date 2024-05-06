@@ -82,7 +82,7 @@ export default function UsernamePage() {
                 router.push({
                   pathname: `/referral`,
                   params: {
-                    username: text,
+                    user_name: text,
                     ...params,
                   },
                 })

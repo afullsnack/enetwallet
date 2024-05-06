@@ -144,7 +144,7 @@ export default function CodeScreen() {
                   setIsVerifyLoading(false);
 
                   router.push({
-                    pathname: `/(register)/pin`,
+                    pathname: `/(register)/phone`,
                     params: {
                       token: result?.data?.token,
                       ...params,

@@ -441,7 +441,7 @@ export namespace User {
   ) => {
     try {
       const options = {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(args.data),
         headers: {
           "Content-type": "application/json",
@@ -557,6 +557,48 @@ export namespace Wallet {
       return json;
     } catch (err: any) {
       console.log(err, ":::Error_WalletTransfer");
+      throw new Error(err);
+    }
+  };
+
+  interface ISwapInit {
+    user_token: string;
+    data: {
+      walletAddress: string;
+      amount: string;
+      chain_id: number;
+      token0Address: string;
+      token1Address: string;
+      token0Decimals: number;
+      token1Decimals: number;
+      token0Symbol: string;
+      token1Symbol: string;
+      token0Name: string;
+      token1Name: string;
+    };
+  }
+  export const swapInit: ApiFunction<
+    ISwapInit,
+    Promise<Record<string, any>>
+  > = async (args) => {
+    try {
+      const options = {
+        method: "POST",
+        body: JSON.stringify(args.data),
+        headers: {
+          "Content-type": "application/json",
+          "x-auth-token": args.user_token,
+        },
+      };
+
+      const response = await fetch(`${API_BASE_URL}/wallet/swap`, options);
+
+      const json = (await response.json()) as Record<string, any>;
+
+      console.log(json, ":::Result_WalletSwap");
+      return json;
+    } catch (err: any) {
+      console.log(err, ":::Error_WalletSwap");
       throw new Error(err);
     }
   };

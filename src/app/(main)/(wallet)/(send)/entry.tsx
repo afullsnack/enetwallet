@@ -9,6 +9,7 @@ import { Image } from "expo-image";
 import { Stack, router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Alert,
   Keyboard,
   Switch,
   Text,
@@ -19,8 +20,12 @@ import {
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { ScrollView } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
+import Loader from "@/components/loader";
+import { Wallet } from "@/utils/api";
+import { useSession } from "@/contexts/session";
 
 export default function Send() {
+  const { isLoading, session } = useSession();
   const [receipientAddress, setReceipientAddress] = useState<string>();
   const [amount, setAmount] = useState<string>();
   const [addBeneficiary, setAddBeneficiary] = useState<boolean>(true);
@@ -33,8 +38,32 @@ export default function Send() {
   const sheetRef = useRef<BottomSheetMethods>(null);
   const recurringSheetRef = useRef<BottomSheetMethods>(null);
   const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
-  // const recurringSheetRef = useRef<BottomSheetModal>(null);
+
   const recurringSheetSnapPoints = useMemo(() => ["35%"], []);
+  const [tokenList, setTokenList] = useState([]);
+  const getTokenList = useMemo(
+    () => async () => {
+      const result = await Wallet.getTokenList({ user_token: session?.token });
+
+      if (!result?.success) {
+        setLoader(false);
+        Alert.alert("Fetch token list", result?.message);
+        return;
+      }
+
+      setTokenList(result?.data);
+      setLoader(false);
+    },
+    [session],
+  );
+
+  // Loader
+  const [loader, setLoader] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoader(true);
+    getTokenList();
+  }, [getTokenList]);
 
   return (
     <>
@@ -447,6 +476,8 @@ export default function Send() {
             </Button>
           </ScrollView>
         </View>
+
+        <Loader popupVisible={loader} setPopupVisible={setLoader} />
       </Container>
       <MyBottomSheetModal
         ref={sheetRef}
@@ -508,7 +539,7 @@ export default function Send() {
                 // style={{ width: "100%", backgroundColor: "transparent" }}
                 scrollEnabled
                 nestedScrollEnabled
-                data={[...Array.from({ length: 15 })]}
+                data={tokenList}
                 estimatedItemSize={200}
                 renderItem={({ item, index }) => {
                   return (
@@ -525,7 +556,11 @@ export default function Send() {
                     >
                       <View className="relative p-1">
                         <Image
-                          source={require("../../../../../assets/icons/dashboard/dai.png")}
+                          source={
+                            item?.logo
+                              ? { uri: item?.logo }
+                              : require("../../../../../assets/icons/dashboard/dai.png")
+                          }
                           style={{ width: 35, height: 35 }}
                           contentFit="contain"
                         />
@@ -552,7 +587,7 @@ export default function Send() {
                                 color: "white",
                               }}
                             >
-                              BNB
+                              {item?.symbol ?? "BNB"}
                             </Text>
 
                             {/* <Image
@@ -568,7 +603,7 @@ export default function Send() {
                               color: "#49515D",
                             }}
                           >
-                            BNB Chain
+                            {item?.name ?? "BNB Chain"}
                           </Text>
                         </View>
                         <View className="flex flex-col items-end">
@@ -590,7 +625,7 @@ export default function Send() {
                               color: "white",
                             }}
                           >
-                            $0.00
+                            ${item?.quote?.USD?.price ?? "0.00"}
                             {/* <Text style={{ color: "#49515D" }}>{"  "} DAI</Text> */}
                           </Text>
                         </View>

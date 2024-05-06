@@ -6,7 +6,7 @@ import { Auth, Wallet } from "@/utils/api";
 const AuthContext = React.createContext<{
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  session?: string | null;
+  session?: Record<string, any> | null;
   isLoading: boolean;
 }>({
   signIn: () => null,
@@ -62,7 +62,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           // revoke logic for any OAuth2 accounts
           setSession(null);
         },
-        session,
+        session: JSON.parse(session),
         isLoading,
       }}
     >

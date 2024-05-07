@@ -1,6 +1,7 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import Loader from "@/components/loader";
 import Popup from "@/components/popup";
 import { useSession } from "@/contexts/session";
 import { Auth } from "@/utils/api";
@@ -154,25 +155,7 @@ export default function LoginIndexPage() {
           </View>
         </ScrollView>
       </View>
-      <Popup
-        isPopupVisible={loginLoading}
-        setPopupVisible={setLoginLoading}
-        tapToClose={false}
-      >
-        <View
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 40,
-            backgroundColor: "white",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <ActivityIndicator size={"large"} color={"#18EAFFCC"} />
-        </View>
-      </Popup>
+      <Loader popupVisible={loginLoading} setPopupVisible={setLoginLoading} />
     </Container>
   );
 }

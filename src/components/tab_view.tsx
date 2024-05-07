@@ -9,7 +9,7 @@ const TabView: React.FC<{
 
   return (
     <View className="grid w-full items-start justify-start">
-      <View className="mb-2 flex h-8 w-full">
+      <View className="mb-2 flex h-8 w-full" style={{ marginHorizontal: 10 }}>
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={tabList}

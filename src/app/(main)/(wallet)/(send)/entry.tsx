@@ -41,6 +41,7 @@ export default function Send() {
 
   const recurringSheetSnapPoints = useMemo(() => ["35%"], []);
   const [tokenList, setTokenList] = useState([]);
+  const [selectedToken, setSelectedToken] = useState();
   const getTokenList = useMemo(
     () => async () => {
       const result = await Wallet.getTokenList({ user_token: session?.token });
@@ -51,6 +52,7 @@ export default function Send() {
         return;
       }
 
+      setSelectedToken(result?.data[0]);
       setTokenList(result?.data);
       setLoader(false);
     },
@@ -119,6 +121,8 @@ export default function Send() {
           <ScrollView style={{ paddingHorizontal: 20, paddingBottom: 30 }}>
             <View className="flex flex-col gap-4 mt-4">
               <SelectNetworkTrigger
+                defaultToken={selectedToken}
+                tokenBalance={0}
                 onPress={() => {
                   // tokenSheetRef.current.present();
                   sheetRef?.current?.open();
@@ -544,7 +548,10 @@ export default function Send() {
                 renderItem={({ item, index }) => {
                   return (
                     <Button
-                      onPress={() => {}}
+                      onPress={() => {
+                        setSelectedToken(item);
+                        sheetRef.current.close();
+                      }}
                       style={{
                         borderRadius: 10,
                         backgroundColor: "transparent",
@@ -625,7 +632,14 @@ export default function Send() {
                               color: "white",
                             }}
                           >
-                            ${item?.quote?.USD?.price ?? "0.00"}
+                            $
+                            {(item?.quote?.USD?.price ?? 0.0)?.toLocaleString(
+                              "en-US",
+                              {
+                                maximumFractionalDigits: 2,
+                                minimumFractionalDigits: 2,
+                              },
+                            )}
                             {/* <Text style={{ color: "#49515D" }}>{"  "} DAI</Text> */}
                           </Text>
                         </View>
@@ -734,12 +748,7 @@ export default function Send() {
   );
 }
 
-const SelectNetworkTrigger = ({
-  onPress,
-  network,
-  tokenSymbol,
-  tokenBalance,
-}: any) => {
+const SelectNetworkTrigger = ({ onPress, defaultToken, tokenBalance }: any) => {
   return (
     <Button
       onPress={onPress}
@@ -754,7 +763,11 @@ const SelectNetworkTrigger = ({
     >
       <View className="relative p-1">
         <Image
-          source={require("../../../../../assets/icons/dashboard/dai.png")}
+          source={
+            defaultToken
+              ? { uri: defaultToken?.logo }
+              : require("../../../../../assets/icons/dashboard/dai.png")
+          }
           style={{ width: 35, height: 35 }}
           contentFit="contain"
         />
@@ -781,7 +794,7 @@ const SelectNetworkTrigger = ({
                 color: "white",
               }}
             >
-              DAI
+              {defaultToken?.symbol ?? "DAI"}
             </Text>
             <Image
               source={require("../../../../../assets/icons/carret.png")}
@@ -796,7 +809,7 @@ const SelectNetworkTrigger = ({
               color: "#49515D",
             }}
           >
-            Ehtereum
+            {defaultToken?.name ?? "Ehtereum"}
           </Text>
         </View>
         <View className="flex flex-col items-end">
@@ -818,8 +831,10 @@ const SelectNetworkTrigger = ({
               color: "white",
             }}
           >
-            600,000.89
-            <Text style={{ color: "#49515D" }}>{"  "} DAI</Text>
+            {tokenBalance ?? "0"}
+            <Text style={{ color: "#49515D" }}>
+              {"  "} {defaultToken?.symbol ?? "DAI"}
+            </Text>
           </Text>
         </View>
       </View>

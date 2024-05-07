@@ -43,6 +43,7 @@ export default function HomeScreen() {
       });
 
       if (!result?.success) {
+        if (result?.code === 401) router.replace("/(auth)/(login)/main");
         return Alert.alert("Address error", result?.message);
       }
 

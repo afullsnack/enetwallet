@@ -54,8 +54,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (session) {
-      const parsed = JSON.parse(session);
-      setUserSession(parsed);
+      setUserSession(session);
     }
   }, [session]);
 

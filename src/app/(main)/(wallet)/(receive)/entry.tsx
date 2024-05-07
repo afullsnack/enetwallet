@@ -33,7 +33,7 @@ export default function Receive() {
   const { session } = useSession();
   const [userSession, setUserSession] = useState<Record<string, any>>();
   const [address, setAddress] = useState<string>(
-    session ? JSON.parse(session)?.wallet_address : null,
+    session ? session?.wallet_address : null,
   );
 
   // Search

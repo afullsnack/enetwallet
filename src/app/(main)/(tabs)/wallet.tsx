@@ -42,8 +42,7 @@ export default function WalletScreen() {
 
   useEffect(() => {
     if (session) {
-      const parsed = JSON.parse(session);
-      setUserSession(parsed);
+      setUserSession(session);
     }
   }, [session]);
 

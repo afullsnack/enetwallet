@@ -529,10 +529,12 @@ export namespace Wallet {
   interface ITransactionInit {
     user_token: string;
     data: {
-      toAddress: string;
-      amount: string;
-      transfer_type?: string | undefined;
-      token_address?: string | undefined;
+      transactions: {
+        toAddress: string;
+        amount: string;
+        transfer_type?: string | undefined;
+        token_address?: string | undefined;
+      }[];
     };
   }
   export const transactionInit: ApiFunction<

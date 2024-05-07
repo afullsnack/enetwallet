@@ -69,7 +69,7 @@ export default function WalletSlider() {
           pagingEnabled
           data={[...new Array(4).keys()]}
           onProgressChange={() => {}}
-          scrollAnimationDuration={800}
+          scrollAnimationDuration={700}
           style={{ alignItems: "center", justifyContent: "center" }}
           onSnapToItem={async (index) => {
             setLoader(true);

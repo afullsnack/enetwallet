@@ -17,6 +17,7 @@ import {
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import * as FileSystem from "expo-file-system";
+import { shareAsync } from "expo-sharing";
 
 export default function QRCode() {
   const params = useLocalSearchParams();
@@ -173,29 +174,48 @@ export default function QRCode() {
                 quality: 1.0,
               });
 
-              // Save to FS
-              const downloadable = FileSystem.createDownloadResumable(
-                captureUri,
-                FileSystem.documentDirectory + "enetwallet_qr.jpg",
-              );
-              const download = await downloadable.downloadAsync();
+              console.log(captureUri, ":::Captured URI");
 
-              Alert.alert(
-                "QR Code download",
-                `Downloaded successfuly to ${download.uri}`,
-                [
-                  {
-                    text: "Continue",
-                    style: "default",
-                    onPress(value) {
-                      router.push({
-                        pathname: "(wallet)/slider",
-                        params: { ...params },
-                      });
-                    },
-                  },
-                ],
-              );
+              // Save to FS
+              const permissions =
+                await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+              if (permissions.granted) {
+                const base64 = await FileSystem.readAsStringAsync(captureUri, {
+                  encoding: FileSystem.EncodingType.Base64,
+                });
+
+                await FileSystem.StorageAccessFramework.createFileAsync(
+                  permissions.directoryUri,
+                  "Enetwallet-QR",
+                  "image/jpg",
+                )
+                  .then(async (uri) => {
+                    await FileSystem.writeAsStringAsync(uri, base64, {
+                      encoding: FileSystem.EncodingType.Base64,
+                    });
+                    Alert.alert(
+                      "QR Code download",
+                      `Downloaded successfuly to ${uri}`,
+                      [
+                        {
+                          text: "Continue",
+                          style: "default",
+                          onPress(value) {
+                            router.push({
+                              pathname: "(wallet)/slider",
+                              params: { ...params },
+                            });
+                          },
+                        },
+                      ],
+                    );
+                  })
+                  .catch((e) => console.log(e));
+              } else {
+                shareAsync(captureUri);
+              }
+
               setDonwloadPopupVisible(false);
             } catch (err: any) {
               setDonwloadPopupVisible(false);

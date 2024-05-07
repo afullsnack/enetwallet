@@ -100,18 +100,18 @@ export default function HomeScreen() {
         //   filteredListWithTokenAddress.length,
         // );
 
-        setSelectedToken(result?.data?.[0]);
+        setSelectedToken(result?.data[0]);
         setTokenList(result?.data);
         setLoader(false);
       }
     },
-    [session],
+    [session, tokenList],
   );
 
   useEffect(() => {
     setLoader(true);
     getTokenList();
-  }, [getTokenList]);
+  }, [getTokenList, tokenList]);
 
   const { height } = useSafeAreaFrame();
 

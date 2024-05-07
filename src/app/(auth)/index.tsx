@@ -4,7 +4,7 @@ import { authenticate } from "@/utils/localAuth";
 import { Image } from "expo-image";
 import { Link, router } from "expo-router";
 import React, { useRef } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import {
   useSafeAreaFrame,
@@ -228,7 +228,10 @@ function GetStartedSection() {
   return (
     <View className="flex flex-row items-center justify-between">
       <TouchableOpacity
-        onPress={() => router.push("/(main)/")}
+        onPress={() => {
+          Alert.alert("Please create an account or login, to explore");
+          // router.push("/(main)/")
+        }}
         className="flex flex-row place-items-center items-center justify-center"
       >
         <Image

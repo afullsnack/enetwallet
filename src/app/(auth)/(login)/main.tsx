@@ -5,6 +5,7 @@ import Loader from "@/components/loader";
 import Popup from "@/components/popup";
 import { useSession } from "@/contexts/session";
 import { Auth } from "@/utils/api";
+import { Octicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link, Stack, router } from "expo-router";
 import { useState } from "react";
@@ -28,6 +29,7 @@ export default function LoginIndexPage() {
 
   const { signIn, isLoading } = useSession();
   const [loginLoading, setLoginLoading] = useState<boolean>(isLoading ?? false);
+  const [hidePassword, setHidePassword] = useState(true);
 
   return (
     <Container>
@@ -74,7 +76,7 @@ export default function LoginIndexPage() {
               onChangeText={setPassword}
               keyboardType="default"
               textContentType="password"
-              secureTextEntry
+              secureTextEntry={hidePassword}
               containerStyle={{
                 borderRadius: 10,
                 marginTop: 20,
@@ -85,6 +87,17 @@ export default function LoginIndexPage() {
                 color: "#18EAFF",
                 opacity: 0.5,
               }}
+              suffix={
+                <TouchableOpacity
+                  onPress={() => setHidePassword((_prev) => !_prev)}
+                >
+                  {hidePassword ? (
+                    <Octicons name="eye" size={20} color="#18EAFF" />
+                  ) : (
+                    <Octicons name="eye-closed" size={20} color="#18EAFF" />
+                  )}
+                </TouchableOpacity>
+              }
             />
             <Button
               onPress={async () => {

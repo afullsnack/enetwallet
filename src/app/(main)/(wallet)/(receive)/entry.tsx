@@ -23,6 +23,7 @@ import { Wallet } from "@/utils/api";
 import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import Loader from "@/components/loader";
 
 export default function Receive() {
   const params = useLocalSearchParams();
@@ -66,19 +67,60 @@ export default function Receive() {
 
       setAddress(result?.data);
     }
-  }, [useSession, address, session]);
+  }, [userSession, address, session]);
 
   useEffect(() => {
     if (session) {
-      const parsed = JSON.parse(session);
-      setAddress(parsed?.wallet_address);
-      setUserSession(parsed);
+      setAddress(session?.wallet_address);
+      setUserSession(session);
     }
   }, [session]);
 
   async function copyAddressToClipboard() {
     await Clipboard.setStringAsync(address ?? (params?.address as string));
   }
+
+  const [tokenList, setTokenList] = useState([]);
+  const [selectedToken, setSelectedToken] = useState();
+  const getTokenList = useMemo(
+    () => async () => {
+      if (session) {
+        // const result = await Wallet.getTokenList({ user_token: session?.token });
+        const result = await Wallet.getTokenList({
+          user_token: session?.token,
+        });
+
+        if (!result?.success) {
+          setLoader(false);
+          Alert.alert("Fetch token list", result?.message);
+          return;
+        }
+
+        // const filteredListWithTokenAddress = result?.data?.filter(
+        //   (obj) => obj?.hasOwnProperty("platform") && obj["platform"] !== null,
+        // );
+
+        // console.log(
+        //   filteredListWithTokenAddress,
+        //   ":::Filtered prop",
+        //   filteredListWithTokenAddress.length,
+        // );
+
+        setSelectedToken(result?.data?.[0]);
+        setTokenList(result?.data);
+        setLoader(false);
+      }
+    },
+    [session],
+  );
+
+  // Loader
+  const [loader, setLoader] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoader(true);
+    getTokenList();
+  }, [getTokenList]);
 
   return (
     <>
@@ -111,6 +153,7 @@ export default function Receive() {
               onPress={() => {
                 tokenListSheetRef.current.open();
               }}
+              defaultToken={selectedToken}
             />
 
             <Text
@@ -175,7 +218,10 @@ export default function Receive() {
                 onPress={async () => await copyAddressToClipboard()}
               >
                 <Text style={{ color: "#FFFFFF" }}>
-                  ID: {userSession ? userSession?.first_name : "Guest"}
+                  ID:{" "}
+                  {(userSession && userSession?.user_name) ??
+                    userSession?.first_name ??
+                    "Guest"}
                 </Text>
                 <Image
                   source={require("../../../../../assets/icons/dashboard/receive/copy.png")}
@@ -277,6 +323,7 @@ export default function Receive() {
             </Button>
           </View>
         </View>
+        <Loader popupVisible={loader} setPopupVisible={setLoader} />
       </Container>
       <MyBottomSheetModal
         ref={tokenListSheetRef}
@@ -338,12 +385,15 @@ export default function Receive() {
                 // style={{ width: "100%", backgroundColor: "transparent" }}
                 scrollEnabled
                 nestedScrollEnabled
-                data={[...Array.from({ length: 15 })]}
+                data={tokenList}
                 estimatedItemSize={200}
                 renderItem={({ item, index }) => {
                   return (
                     <Button
-                      onPress={() => {}}
+                      onPress={() => {
+                        setSelectedToken(item);
+                        tokenListSheetRef.current.close();
+                      }}
                       style={{
                         borderRadius: 10,
                         backgroundColor: "transparent",
@@ -355,8 +405,12 @@ export default function Receive() {
                     >
                       <View className="relative p-1">
                         <Image
-                          source={require("../../../../../assets/icons/dashboard/dai.png")}
-                          style={{ width: 35, height: 35 }}
+                          source={
+                            item
+                              ? { uri: item?.logo }
+                              : require("../../../../../assets/icons/dashboard/dai.png")
+                          }
+                          style={{ width: 35, height: 35, borderRadius: 9999 }}
                           contentFit="contain"
                         />
 
@@ -382,7 +436,7 @@ export default function Receive() {
                                 color: "white",
                               }}
                             >
-                              BNB
+                              {item?.symbol ?? "BNB"}
                             </Text>
 
                             {/* <Image
@@ -398,7 +452,7 @@ export default function Receive() {
                               color: "#49515D",
                             }}
                           >
-                            BNB Chain
+                            {item?.slug ?? "BNB Chain"}
                           </Text>
                         </View>
                         <View className="flex flex-col items-end">
@@ -410,7 +464,7 @@ export default function Receive() {
                                 color: "#49515D",
                               }}
                             >
-                              0.00
+                              {"0.00"}
                             </Text>
                           </View>
                           <Text
@@ -420,7 +474,14 @@ export default function Receive() {
                               color: "white",
                             }}
                           >
-                            $0.00
+                            $
+                            {(item?.quote?.USD?.price ?? 0.0).toLocaleString(
+                              "en-US",
+                              {
+                                maximumFractionalDigits: 2,
+                                minimumFractionalDigits: 2,
+                              },
+                            )}
                             {/* <Text style={{ color: "#49515D" }}>{"  "} DAI</Text> */}
                           </Text>
                         </View>
@@ -437,12 +498,7 @@ export default function Receive() {
   );
 }
 
-export const SelectNetworkTrigger = ({
-  onPress,
-  network,
-  tokenSymbol,
-  tokenBalance,
-}: any) => {
+export const SelectNetworkTrigger = ({ onPress, defaultToken }: any) => {
   return (
     <Button
       onPress={onPress}
@@ -460,8 +516,12 @@ export const SelectNetworkTrigger = ({
     >
       <View className="relative p-1">
         <Image
-          source={require("../../../../../assets/icons/dashboard/dai.png")}
-          style={{ width: 26, height: 26 }}
+          source={
+            defaultToken
+              ? { uri: defaultToken?.logo }
+              : require("../../../../../assets/icons/dashboard/dai.png")
+          }
+          style={{ width: 26, height: 26, borderRadius: 9999 }}
           contentFit="contain"
         />
 
@@ -487,7 +547,7 @@ export const SelectNetworkTrigger = ({
                 color: "white",
               }}
             >
-              DAI
+              {defaultToken?.symbol ?? "DAI"}
             </Text>
           </View>
           <Text
@@ -497,7 +557,7 @@ export const SelectNetworkTrigger = ({
               color: "#49515D",
             }}
           >
-            Ehtereum
+            {defaultToken?.name ?? "Ehtereum"}
           </Text>
         </View>
         <View className="flex flex-col items-end">

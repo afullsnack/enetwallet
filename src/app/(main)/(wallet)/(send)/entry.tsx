@@ -44,7 +44,8 @@ export default function Send() {
   const [selectedToken, setSelectedToken] = useState();
   const getTokenList = useMemo(
     () => async () => {
-      const result = await Wallet.getTokenList({ user_token: session?.token });
+      // const result = await Wallet.getTokenList({ user_token: session?.token });
+      const result = await Wallet.getBalance({ user_token: session?.token });
 
       if (!result?.success) {
         setLoader(false);
@@ -52,8 +53,18 @@ export default function Send() {
         return;
       }
 
-      setSelectedToken(result?.data[0]);
-      setTokenList(result?.data);
+      // const filteredListWithTokenAddress = result?.data?.filter(
+      //   (obj) => obj?.hasOwnProperty("platform") && obj["platform"] !== null,
+      // );
+
+      // console.log(
+      //   filteredListWithTokenAddress,
+      //   ":::Filtered prop",
+      //   filteredListWithTokenAddress.length,
+      // );
+
+      setSelectedToken(result?.data?.items[0]);
+      setTokenList(result?.data?.items);
       setLoader(false);
     },
     [session],
@@ -564,11 +575,11 @@ export default function Send() {
                       <View className="relative p-1">
                         <Image
                           source={
-                            item?.logo
-                              ? { uri: item?.logo }
+                            item?.logo_url
+                              ? { uri: item?.logo_url }
                               : require("../../../../../assets/icons/dashboard/dai.png")
                           }
-                          style={{ width: 35, height: 35 }}
+                          style={{ width: 35, height: 35, borderRadius: 99999 }}
                           contentFit="contain"
                         />
 
@@ -594,7 +605,7 @@ export default function Send() {
                                 color: "white",
                               }}
                             >
-                              {item?.symbol ?? "BNB"}
+                              {item?.contract_symbols ?? "BNB"}
                             </Text>
 
                             {/* <Image
@@ -610,7 +621,7 @@ export default function Send() {
                               color: "#49515D",
                             }}
                           >
-                            {item?.name ?? "BNB Chain"}
+                            {item?.contractName ?? "BNB Chain"}
                           </Text>
                         </View>
                         <View className="flex flex-col items-end">
@@ -622,7 +633,7 @@ export default function Send() {
                                 color: "#49515D",
                               }}
                             >
-                              0.00
+                              {item?.balance ?? "0.00"}
                             </Text>
                           </View>
                           <Text
@@ -633,7 +644,7 @@ export default function Send() {
                             }}
                           >
                             $
-                            {(item?.quote?.USD?.price ?? 0.0)?.toLocaleString(
+                            {(item?.quote_rate ?? 0.0)?.toLocaleString(
                               "en-US",
                               {
                                 maximumFractionalDigits: 2,
@@ -748,7 +759,7 @@ export default function Send() {
   );
 }
 
-const SelectNetworkTrigger = ({ onPress, defaultToken, tokenBalance }: any) => {
+const SelectNetworkTrigger = ({ onPress, defaultToken }: any) => {
   return (
     <Button
       onPress={onPress}
@@ -765,10 +776,10 @@ const SelectNetworkTrigger = ({ onPress, defaultToken, tokenBalance }: any) => {
         <Image
           source={
             defaultToken
-              ? { uri: defaultToken?.logo }
+              ? { uri: defaultToken?.logo_url }
               : require("../../../../../assets/icons/dashboard/dai.png")
           }
-          style={{ width: 35, height: 35 }}
+          style={{ width: 35, height: 35, borderRadius: 99999 }}
           contentFit="contain"
         />
 
@@ -794,7 +805,7 @@ const SelectNetworkTrigger = ({ onPress, defaultToken, tokenBalance }: any) => {
                 color: "white",
               }}
             >
-              {defaultToken?.symbol ?? "DAI"}
+              {defaultToken?.contract_symbols ?? "DAI"}
             </Text>
             <Image
               source={require("../../../../../assets/icons/carret.png")}
@@ -809,7 +820,7 @@ const SelectNetworkTrigger = ({ onPress, defaultToken, tokenBalance }: any) => {
               color: "#49515D",
             }}
           >
-            {defaultToken?.name ?? "Ehtereum"}
+            {defaultToken?.contractName ?? "Ehtereum"}
           </Text>
         </View>
         <View className="flex flex-col items-end">
@@ -831,9 +842,9 @@ const SelectNetworkTrigger = ({ onPress, defaultToken, tokenBalance }: any) => {
               color: "white",
             }}
           >
-            {tokenBalance ?? "0"}
+            {defaultToken?.balance ?? "0"}
             <Text style={{ color: "#49515D" }}>
-              {"  "} {defaultToken?.symbol ?? "DAI"}
+              {"  "} {defaultToken?.contract_symbols ?? "DAI"}
             </Text>
           </Text>
         </View>

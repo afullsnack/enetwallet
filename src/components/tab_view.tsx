@@ -15,8 +15,10 @@ const TabView: React.FC<{
           data={tabList}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              className="flex items-center justify-center rounded-full px-4 py-1"
+              className="flex items-center justify-center rounded-full py-1"
               style={{
+                paddingHorizontal:
+                  index === 0 || index === tabList.length - 1 ? 0 : 16,
                 // backgroundColor:
                 //   activeIndex === index ? "#18EAFF" : "transparent",
                 flexDirection: "column",

@@ -25,6 +25,9 @@ export default function DashboardTabLayout() {
             backgroundColor: "#0C0C12",
             borderColor: "#0C0C12",
             paddingBottom: 20,
+            height: 70,
+            alignItems: "flex-end",
+            justifyContent: "flex-end",
           },
         }}
       >

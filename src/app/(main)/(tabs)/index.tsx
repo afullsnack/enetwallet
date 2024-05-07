@@ -1,11 +1,15 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import Loader from "@/components/loader";
+import { TabView } from "@/components/tab_view";
 import { useSession } from "@/contexts/session";
 import { Wallet } from "@/utils/api";
+import { checkNumber, isPositive } from "@/utils/digits";
 import { Image } from "expo-image";
-import { Stack, Tabs, router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const params = useLocalSearchParams();
@@ -35,7 +39,12 @@ export default function HomeScreen() {
         return Alert.alert("Balance error", result?.message);
       }
 
-      setBalance(result?.data?.usdcBalanceFromSmartAccount);
+      const totalBalance = result?.data?.items?.reduce(
+        (cur, obj) => cur + Number(obj?.balance),
+        0,
+      );
+
+      setBalance(totalBalance);
     }
     async function getWalletAddress() {
       const result = await Wallet.getAddress({
@@ -58,6 +67,53 @@ export default function HomeScreen() {
       setUserSession(session);
     }
   }, [session]);
+
+  // Tab list
+  const tabList = ["Trending", "Favorites", "New", "Hot", "Gainers", "Losers"];
+
+  // Loader
+  const [loader, setLoader] = useState<boolean>(false);
+  // Tokens
+  const [tokenList, setTokenList] = useState([]);
+  const [selectedToken, setSelectedToken] = useState();
+  const getTokenList = useMemo(
+    () => async () => {
+      if (session) {
+        // const result = await Wallet.getTokenList({ user_token: session?.token });
+        const result = await Wallet.getTokenList({
+          user_token: session?.token,
+        });
+
+        if (!result?.success) {
+          setLoader(false);
+          Alert.alert("Fetch token list", result?.message);
+          return;
+        }
+
+        // const filteredListWithTokenAddress = result?.data?.filter(
+        //   (obj) => obj?.hasOwnProperty("platform") && obj["platform"] !== null,
+        // );
+
+        // console.log(
+        //   filteredListWithTokenAddress,
+        //   ":::Filtered prop",
+        //   filteredListWithTokenAddress.length,
+        // );
+
+        setSelectedToken(result?.data?.[0]);
+        setTokenList(result?.data);
+        setLoader(false);
+      }
+    },
+    [session],
+  );
+
+  useEffect(() => {
+    setLoader(true);
+    getTokenList();
+  }, [getTokenList]);
+
+  const { height } = useSafeAreaFrame();
 
   return (
     <Container style={{ padding: 24, borderColor: "#0C0C12" }}>
@@ -99,7 +155,10 @@ export default function HomeScreen() {
                       fontWeight: "500",
                     }}
                   >
-                    Hello, {userSession?.first_name ?? "Guest"}
+                    Hello,{" "}
+                    {userSession?.user_name ??
+                      userSession?.full_name ??
+                      "Guest"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -186,7 +245,7 @@ export default function HomeScreen() {
           </Button>
         </View>
 
-        <View className="flex flex-row items-center justify-between mt-20">
+        <View className="flex flex-row items-center justify-between my-14">
           <TouchableOpacity
             className="flex flex-col items-center justify-center gap-1"
             onPress={() =>
@@ -284,7 +343,181 @@ export default function HomeScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Tabs with token list details */}
+
+        <TabView
+          tabList={tabList}
+          items={tabList.map((tab, index) => (
+            <ScrollView
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center",
+                paddingBottom: 260,
+              }}
+              contentInsetAdjustmentBehavior="always"
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled
+              scrollEnabled
+              style={{
+                flexDirection: "column",
+
+                width: "100%",
+                height: height * 0.75,
+              }}
+            >
+              {index <= 0 && tab.toLowerCase() === "trending" && (
+                <TouchableOpacity
+                  activeOpacity={1}
+                  touchSoundDisabled
+                  style={{
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: "100%",
+                    // paddingHorizontal: 20,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ flex: 3, color: "#49515D", fontSize: 8 }}>
+                      Coin
+                    </Text>
+                    <Text
+                      style={{
+                        flex: 1,
+                        color: "#49515D",
+                        fontSize: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      Last price
+                    </Text>
+                    <Text
+                      style={{
+                        flex: 1,
+                        color: "#49515D",
+                        fontSize: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      24h chg%
+                    </Text>
+                  </View>
+                  {tokenList.map((token) => (
+                    <View
+                      style={{
+                        flex: 1,
+                        paddingTop: 5,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 10,
+                        marginBottom: 8,
+                      }}
+                    >
+                      <View
+                        className="flex flex-col items-start justify-center"
+                        style={{ flex: 3 }}
+                      >
+                        <Text style={{ color: "white", fontSize: 12 }}>
+                          {token?.symbol ?? "DAI"}
+                        </Text>
+                        <Text style={{ color: "#49515D", fontSize: 9.5 }}>
+                          ${checkNumber(Number(token?.quote?.USD?.volume_24h))}
+                        </Text>
+                      </View>
+                      <View
+                        className="flex flex-col items-end justify-center"
+                        style={{ flex: 2 }}
+                      >
+                        <Text style={{ color: "white", fontSize: 12 }}>
+                          $
+                          {(token?.quote?.USD?.price ?? 0).toLocaleString(
+                            "en-US",
+                            {
+                              maximumFractionalDigits: 2,
+                              minimuFractionalDigits: 2,
+                            },
+                          )}
+                        </Text>
+                        <Text style={{ color: "#49515D", fontSize: 9.5 }}>
+                          0
+                        </Text>
+                      </View>
+
+                      <View
+                        className="flex flex-col items-end justify-center"
+                        style={{ flex: 1 }}
+                      >
+                        <View
+                          style={{
+                            width: "100%",
+                            height: 28,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: 6,
+                            backgroundColor: isPositive(
+                              Number(token?.quote?.USD?.volume_change_24h),
+                            )
+                              ? "#15BDCFCC"
+                              : "#F80F0F",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: 12,
+                              fontWeight: "400",
+                            }}
+                          >
+                            {isPositive(
+                              Number(token?.quote?.USD?.volume_change_24h),
+                            )
+                              ? "+"
+                              : "-"}
+                            {(
+                              token?.quote?.USD?.volume_change_24h ?? 0
+                            ).toLocaleString("en-US", {
+                              maximumFractionalDigits: 2,
+                              minimumFractionalDigits: 2,
+                            })}
+                          </Text>
+                        </View>
+                      </View>
+
+                      {/* incoming portfolio slider */}
+                    </View>
+                  ))}
+                </TouchableOpacity>
+              )}
+
+              {index > 0 && (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Text style={{ color: "white" }}>{tab} Comming soon...</Text>
+                </View>
+              )}
+            </ScrollView>
+          ))}
+        />
       </View>
+      <Loader
+        popupVisible={loader && tokenList.length <= 0}
+        setPopupVisible={setLoader}
+      />
     </Container>
   );
 }

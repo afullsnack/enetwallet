@@ -36,7 +36,12 @@ export default function WalletScreen() {
         return Alert.alert("Balance error", result?.message);
       }
 
-      setBalance(result?.data?.usdcBalanceFromSmartAccount);
+      const totalBalance = result?.data?.items?.reduce(
+        (cur, obj) => cur + Number(obj?.balance),
+        0,
+      );
+
+      setBalance(totalBalance);
     }
   }, [userSession]);
 

@@ -245,7 +245,10 @@ export default function HomeScreen() {
           </Button>
         </View>
 
-        <View className="flex flex-row items-center justify-between my-14">
+        <View
+          className="flex flex-row items-center justify-between"
+          style={{ marginVertical: 40 }}
+        >
           <TouchableOpacity
             className="flex flex-col items-center justify-center gap-1"
             onPress={() =>
@@ -350,6 +353,7 @@ export default function HomeScreen() {
           tabList={tabList}
           items={tabList.map((tab, index) => (
             <ScrollView
+              key={index}
               contentContainerStyle={{
                 alignItems: "center",
                 justifyContent: "center",
@@ -410,8 +414,9 @@ export default function HomeScreen() {
                       24h chg%
                     </Text>
                   </View>
-                  {tokenList.map((token) => (
+                  {tokenList.map((token, index) => (
                     <View
+                      key={index}
                       style={{
                         flex: 1,
                         paddingTop: 5,

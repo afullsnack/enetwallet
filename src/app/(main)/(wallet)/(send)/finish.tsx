@@ -2,9 +2,11 @@ import { Container } from "@/components/Container";
 import { View, Text } from "react-native";
 import { Image } from "expo-image";
 import { Button } from "@/components/button";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 
 export default function Finish() {
+  const params = useLocalSearchParams();
+
   return (
     <Container>
       <Stack.Screen
@@ -101,7 +103,9 @@ export default function Finish() {
         <View className="flex flex-row gap-4 items-center justify-center w-full">
           <Button
             style={{ flex: 1 }}
-            onPress={() => router.push("(send)/details")}
+            onPress={() =>
+              router.push({ pathname: "(send)/details", params: { ...params } })
+            }
           >
             <Text
               style={{

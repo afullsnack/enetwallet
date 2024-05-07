@@ -531,6 +531,7 @@ export namespace Wallet {
     data: {
       transactions: {
         toAddress: string;
+        walletAddress: string;
         amount: string;
         transfer_type?: string | undefined;
         token_address?: string | undefined;

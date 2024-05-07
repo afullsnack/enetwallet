@@ -2,10 +2,12 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { TouchableOpacity, View, Text } from "react-native";
 
 export default function SpendDetails() {
+  const params = useLocalSearchParams();
+
   return (
     <Container>
       <Stack.Screen
@@ -60,7 +62,11 @@ export default function SpendDetails() {
               color: "#FFFFFF",
             }}
           >
-            -200,000,678
+            -
+            {Number(params?.amount ?? 0).toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            })}
             <Text
               style={{
                 fontSize: 17,
@@ -68,7 +74,8 @@ export default function SpendDetails() {
                 color: "#49515D",
               }}
             >
-              {"  "}USDT
+              {"  "}
+              {params?.contract_symbols ?? "USDT"}
             </Text>
           </Text>
           <View className="flex flex-row gap-2 items-center justify-center">
@@ -120,7 +127,7 @@ export default function SpendDetails() {
                 color: "#FFFFFF",
               }}
             >
-              Phone number
+              NIL
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -140,7 +147,7 @@ export default function SpendDetails() {
                 color: "#FFFFFF",
               }}
             >
-              Philip
+              NIL
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -160,7 +167,8 @@ export default function SpendDetails() {
                 color: "#FFFFFF",
               }}
             >
-              0x63802792790427902huhkfjkhjfhjf
+              {(params?.receipientAddress as string) ??
+                "0x63802792790427902huhkfjkhjfhjf"}
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -180,7 +188,7 @@ export default function SpendDetails() {
                 color: "#FFFFFF",
               }}
             >
-              BNB Smart Chain (BEP20)
+              {"Ethereum"}
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -201,7 +209,7 @@ export default function SpendDetails() {
                 maxWidth: 150,
               }}
             >
-              0x63802792790427902huhkfjkhjfhjf063802792790427902hukfjkhjfhjf
+              {"0x63802792790427902huhkfjkhjfhjf063802792790427902hukfjkhjfhjf"}
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -251,7 +259,7 @@ export default function SpendDetails() {
                 color: "#FFFFFF",
               }}
             >
-              2023-01-11 18:32:59
+              {new Date(Date.now()).toLocaleString() ?? "2023-01-11 18:32:59"}
             </Text>
           </View>
         </View>

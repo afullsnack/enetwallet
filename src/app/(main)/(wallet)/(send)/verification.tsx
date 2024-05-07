@@ -1,11 +1,49 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import Loader from "@/components/loader";
+import { useSession } from "@/contexts/session";
+import { Wallet } from "@/utils/api";
+import { authenticate } from "@/utils/localAuth";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
-import { TouchableOpacity, View, Text } from "react-native";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { TouchableOpacity, View, Text, Alert } from "react-native";
 
 export default function SpendVerification() {
+  const params = useLocalSearchParams();
+  const { session, isLoading } = useSession();
+
+  const [loader, setLoader] = useState(false);
+
+  async function callSendTransaction() {
+    setLoader(true);
+    const result = await Wallet.transactionInit({
+      user_token: session?.token,
+      data: {
+        transactions: [
+          {
+            toAddress: params?.receipientAddress as string,
+            walletAddress: session?.wallet_address,
+            amount: params?.amount as string,
+            transfer_type: "tokens",
+            token_address: params?.contract_symbols as string,
+          },
+        ],
+      },
+    });
+
+    if (!result?.success) {
+      setLoader(false);
+      throw result?.message;
+    }
+
+    return result?.data;
+
+    // If all good
+    setLoader(false);
+  }
+
   return (
     <Container>
       <Stack.Screen
@@ -44,8 +82,18 @@ export default function SpendVerification() {
         </Text>
 
         <Button
-          onPress={() => {
-            router.push("(send)/finish");
+          onPress={async () => {
+            try {
+              const isAuthed = await authenticate();
+              console.log(isAuthed, "::::Authorization");
+              // TODO: Call transaction init with a lader activated
+              const data = await callSendTransaction();
+              console.log(data, ":::Transaction data");
+              router.push({ pathname: "(send)/finish", params: { ...params } });
+            } catch (err: any) {
+              console.log(err, ":::Error");
+              Alert.alert(err);
+            }
           }}
           style={{
             borderRadius: 8,
@@ -91,18 +139,33 @@ export default function SpendVerification() {
             />
           </View>
         </Button>
-        <Text
-          style={{
-            fontSize: 13,
-            fontWeight: "400",
-            color: "#18EAFF",
-            textAlign: "left",
-            marginTop: 10,
+        <TouchableOpacity
+          onPress={async () => {
+            try {
+              // TODO: Call transaction init with a lader activated
+              const data = await callSendTransaction();
+              console.log(data, ":::Transaction data");
+              router.push({ pathname: "(send)/finish", params: { ...params } });
+            } catch (err: any) {
+              console.log(err, ":::Error");
+              Alert.alert(err);
+            }
           }}
         >
-          Verification unavailable?
-        </Text>
+          <Text
+            style={{
+              fontSize: 13,
+              fontWeight: "400",
+              color: "#18EAFF",
+              textAlign: "left",
+              marginTop: 10,
+            }}
+          >
+            Verification unavailable?
+          </Text>
+        </TouchableOpacity>
       </View>
+      <Loader popupVisible={loader} setPopupVisible={setLoader} />
     </Container>
   );
 }

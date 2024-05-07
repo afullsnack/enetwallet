@@ -6,7 +6,7 @@ import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
@@ -25,6 +25,7 @@ import { Wallet } from "@/utils/api";
 import { useSession } from "@/contexts/session";
 
 export default function Send() {
+  const params = useLocalSearchParams();
   const { isLoading, session } = useSession();
   const [receipientAddress, setReceipientAddress] = useState<string>();
   const [amount, setAmount] = useState<string>();
@@ -41,7 +42,7 @@ export default function Send() {
 
   const recurringSheetSnapPoints = useMemo(() => ["35%"], []);
   const [tokenList, setTokenList] = useState([]);
-  const [selectedToken, setSelectedToken] = useState();
+  const [selectedToken, setSelectedToken] = useState<Record<string, any>>();
   const getTokenList = useMemo(
     () => async () => {
       // const result = await Wallet.getTokenList({ user_token: session?.token });
@@ -292,7 +293,7 @@ export default function Send() {
                         fontWeight: "500",
                       }}
                     >
-                      DAI
+                      {selectedToken?.contract_symbols ?? "DAI"}
                     </Text>
                   }
                   placeholder="$0.00"
@@ -483,7 +484,20 @@ export default function Send() {
 
             <Button
               onPress={() => {
-                router.push("(send)/confirm");
+                if (!receipientAddress || !amount || !selectedToken) {
+                  return Alert.alert("Please input all required fields");
+                }
+
+                router.push({
+                  pathname: "(send)/confirm",
+                  params: {
+                    ...params,
+                    amount,
+                    ...selectedToken,
+                    receipientAddress,
+                    memo,
+                  },
+                });
               }}
               style={{ width: "100%" }}
             >

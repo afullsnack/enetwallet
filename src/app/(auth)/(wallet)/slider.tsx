@@ -92,50 +92,6 @@ export default function WalletSlider() {
           style={{ alignItems: "center", justifyContent: "center" }}
           onSnapToItem={async (index) => {
             console.log(`Current index of wallet slider: ${index}`);
-
-            if (index >= 3) {
-              Alert.alert(
-                "Create private key and wallet",
-                "Tap continue to create your private key and wallet",
-                [
-                  {
-                    text: "Continue",
-                    async onPress(value) {
-                      setLoader(true);
-                      const privKeyResult = await Auth.createPrivateKey({
-                        token: params?.token as string,
-                        data: { upload_style: "cloud" },
-                      });
-
-                      if (!privKeyResult?.success) {
-                        setLoader(false);
-                        return Alert.alert("Create Private key");
-                      }
-
-                      // Call create wallet and show users their address on the next page
-                      const result = await Wallet.create({
-                        user_token: params?.token as string,
-                      });
-
-                      if (!result?.success) {
-                        setLoader(false);
-                        return Alert.alert("Wallet creation", result?.message);
-                      }
-
-                      setLoader(false);
-
-                      router.replace({
-                        pathname: "(wallet)/finish",
-                        params: {
-                          wallet_address: result?.data?.wallet_address,
-                          ...params,
-                        },
-                      });
-                    },
-                  },
-                ],
-              );
-            }
           }}
           defaultIndex={0}
           renderItem={({ index }) => (
@@ -158,7 +114,14 @@ export default function WalletSlider() {
               </View>
 
               {index === 0 && (
-                <View className="gap-4" style={{ marginVertical: 100 }}>
+                <View
+                  className="gap-4"
+                  style={{
+                    marginVertical: 100,
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                >
                   <Image
                     source={require("../../../../assets/wallet/wallet_slider_1.png")}
                     style={{
@@ -227,7 +190,14 @@ export default function WalletSlider() {
               )}
 
               {index === 1 && (
-                <View style={{ marginVertical: 100 }} className="gap-4">
+                <View
+                  style={{
+                    marginVertical: 100,
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                  className="gap-4"
+                >
                   <Image
                     source={require("../../../../assets/wallet/wallet_slider_2.png")}
                     style={{
@@ -295,7 +265,14 @@ export default function WalletSlider() {
                 </View>
               )}
               {index === 2 && (
-                <View style={{ marginVertical: 100 }} className="gap-4">
+                <View
+                  style={{
+                    marginVertical: 100,
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                  className="gap-4"
+                >
                   <Image
                     source={require("../../../../assets/wallet/wallet_slider_3.png")}
                     style={{
@@ -364,7 +341,14 @@ export default function WalletSlider() {
               )}
 
               {index >= 3 && (
-                <View className="gap-4" style={{ marginVertical: 100 }}>
+                <View
+                  className="gap-4"
+                  style={{
+                    marginVertical: 100,
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                >
                   <Image
                     source={require("../../../../assets/wallet/wallet_slider_4.png")}
                     style={{
@@ -400,6 +384,49 @@ export default function WalletSlider() {
                     successful, Your smart wallet is currently being created to
                     offer you the best user experience
                   </Text>
+                  <Button
+                    style={{
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={async () => {
+                      setLoader(true);
+                      const privKeyResult = await Auth.createPrivateKey({
+                        token: params?.token as string,
+                        data: { upload_style: "cloud" },
+                      });
+
+                      if (!privKeyResult?.success) {
+                        setLoader(false);
+                        return Alert.alert("Create Private key");
+                      }
+
+                      // Call create wallet and show users their address on the next page
+                      const result = await Wallet.create({
+                        user_token: params?.token as string,
+                      });
+
+                      if (!result?.success) {
+                        setLoader(false);
+                        return Alert.alert("Wallet creation", result?.message);
+                      }
+
+                      setLoader(false);
+
+                      router.replace({
+                        pathname: "(wallet)/finish",
+                        params: {
+                          wallet_address: result?.data?.wallet_address,
+                          ...params,
+                        },
+                      });
+                    }}
+                  >
+                    <Text style={{ color: "white", textAlign: "center" }}>
+                      Continue to create wallet
+                    </Text>
+                  </Button>
                   <View className="flex-1" />
                   <View className="flex flex-col items-center gap-2">
                     <Text

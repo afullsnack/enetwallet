@@ -9,23 +9,23 @@ import { SessionProvider } from "@/contexts/session";
 import { Alert } from "react-native";
 
 export default function Layout() {
-  onFetchUpdateAsync().catch((result) =>
-    console.log(result, ":::_layout.tsx file"),
-  );
+  // onFetchUpdateAsync().catch((result) =>
+  //   console.log(result, ":::_layout.tsx file"),
+  // );
 
-  async function onFetchUpdateAsync() {
-    try {
-      const update = await Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        Alert.alert("Updating app", "Wait for latest update to be fetched...");
-        await Updates.fetchUpdateAsync();
-        await Updates.reloadAsync();
-      }
-    } catch (error: any) {
-      // You can also add an alert() to see the error message in case of an error when fetching updates.
-      Alert.alert("Update error", `Error fetching latest update: ${error}`);
-    }
-  }
+  // async function onFetchUpdateAsync() {
+  //   try {
+  //     const update = await Updates.checkForUpdateAsync();
+  //     if (update.isAvailable) {
+  //       Alert.alert("Updating app", "Wait for latest update to be fetched...");
+  //       await Updates.fetchUpdateAsync();
+  //       await Updates.reloadAsync();
+  //     }
+  //   } catch (error: any) {
+  //     // You can also add an alert() to see the error message in case of an error when fetching updates.
+  //     Alert.alert("Update error", `Error fetching latest update: ${error}`);
+  //   }
+  // }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

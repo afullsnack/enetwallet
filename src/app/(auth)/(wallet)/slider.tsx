@@ -36,6 +36,24 @@ export default function WalletSlider() {
   //   return () => clearInterval(sliderTimer.current);
   // }, [indexTracker]);
 
+  const slideCarouselManually = async () => {
+    if (carouselRef.current.getCurrentIndex() >= 3) {
+      return;
+    }
+    await sleep(4000);
+    carouselRef.current.next();
+
+    setTimeout(slideCarouselManually, 1000);
+  };
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  useEffect(() => {
+    slideCarouselManually();
+  }, []);
+
   return (
     <Container>
       <Stack.Screen
@@ -65,17 +83,18 @@ export default function WalletSlider() {
           loop={false}
           width={width}
           // height={width / 2}
-          autoPlay={true}
+          autoPlay={false}
           pagingEnabled
+          enabled={false}
           data={[...new Array(4).keys()]}
           onProgressChange={() => {}}
           scrollAnimationDuration={700}
           style={{ alignItems: "center", justifyContent: "center" }}
           onSnapToItem={async (index) => {
-            setLoader(true);
             console.log(`Current index of wallet slider: ${index}`);
 
             if (index >= 3) {
+              setLoader(true);
               const privKeyResult = await Auth.createPrivateKey({
                 token: params?.token as string,
                 data: { upload_style: "cloud" },

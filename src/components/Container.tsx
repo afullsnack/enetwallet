@@ -25,22 +25,18 @@ export const Container = React.forwardRef<Ref, ISafeAreaViewProps>(
     // const { height } = useSafeAreaFrame();
 
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "android" ? "height" : "position"}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <SafeAreaView
-            style={[
-              styles.container,
-              style,
-              { paddingTop: top, paddingBottom: bottom },
-            ]}
-            edges={["right", "left", "bottom"]}
-          >
-            {children}
-          </SafeAreaView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
+          style={[
+            styles.container,
+            style,
+            { paddingTop: top, paddingBottom: bottom },
+          ]}
+          edges={["right", "left", "bottom"]}
+        >
+          {children}
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   },
 );

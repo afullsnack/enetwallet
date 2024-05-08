@@ -94,36 +94,47 @@ export default function WalletSlider() {
             console.log(`Current index of wallet slider: ${index}`);
 
             if (index >= 3) {
-              setLoader(true);
-              const privKeyResult = await Auth.createPrivateKey({
-                token: params?.token as string,
-                data: { upload_style: "cloud" },
-              });
+              Alert.alert(
+                "Create private key and wallet",
+                "Tap continue to create your private key and wallet",
+                [
+                  {
+                    text: "Continue",
+                    async onPress(value) {
+                      setLoader(true);
+                      const privKeyResult = await Auth.createPrivateKey({
+                        token: params?.token as string,
+                        data: { upload_style: "cloud" },
+                      });
 
-              if (!privKeyResult?.success) {
-                setLoader(false);
-                return Alert.alert("Create Private key");
-              }
+                      if (!privKeyResult?.success) {
+                        setLoader(false);
+                        return Alert.alert("Create Private key");
+                      }
 
-              // Call create wallet and show users their address on the next page
-              const result = await Wallet.create({
-                user_token: params?.token as string,
-              });
+                      // Call create wallet and show users their address on the next page
+                      const result = await Wallet.create({
+                        user_token: params?.token as string,
+                      });
 
-              if (!result?.success) {
-                setLoader(false);
-                return Alert.alert("Wallet creation", result?.message);
-              }
+                      if (!result?.success) {
+                        setLoader(false);
+                        return Alert.alert("Wallet creation", result?.message);
+                      }
 
-              setLoader(false);
+                      setLoader(false);
 
-              router.replace({
-                pathname: "(wallet)/finish",
-                params: {
-                  wallet_address: result?.data?.wallet_address,
-                  ...params,
-                },
-              });
+                      router.replace({
+                        pathname: "(wallet)/finish",
+                        params: {
+                          wallet_address: result?.data?.wallet_address,
+                          ...params,
+                        },
+                      });
+                    },
+                  },
+                ],
+              );
             }
           }}
           defaultIndex={0}

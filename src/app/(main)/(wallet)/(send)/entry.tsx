@@ -11,6 +11,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Switch,
   Text,
   TouchableOpacity,
@@ -129,20 +131,142 @@ export default function Send() {
           }}
         />
 
-        <View className="w-full h-full">
-          <ScrollView style={{ paddingHorizontal: 20, paddingBottom: 30 }}>
-            <View className="flex flex-col gap-4 mt-4">
-              <SelectNetworkTrigger
-                defaultToken={selectedToken}
-                tokenBalance={0}
-                onPress={() => {
-                  // tokenSheetRef.current.present();
-                  sheetRef?.current?.open();
-                }}
-              />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "android" ? "position" : "position"}
+        >
+          <View className="w-full h-full">
+            <ScrollView style={{ paddingHorizontal: 20, paddingBottom: 30 }}>
+              <View className="flex flex-col gap-4 mt-4">
+                <SelectNetworkTrigger
+                  defaultToken={selectedToken}
+                  tokenBalance={0}
+                  onPress={() => {
+                    // tokenSheetRef.current.present();
+                    sheetRef?.current?.open();
+                  }}
+                />
 
-              <View className="flex flex-col gap-2 w-full items-center mb-[30px]">
-                <View className="flex flex-row items-center justify-between w-full">
+                <View className="flex flex-col gap-2 w-full items-center mb-[30px]">
+                  <View className="flex flex-row items-center justify-between w-full">
+                    <Text
+                      style={{
+                        color: "#49515D",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "left",
+                      }}
+                    >
+                      Paste recipient details
+                    </Text>
+
+                    <TouchableOpacity
+                      className="flex flex-row items-center justify-center"
+                      onPress={() => recurringSheetRef.current.open()}
+                    >
+                      <Text
+                        style={{
+                          color: "#49515D",
+                          fontSize: 12,
+                          fontWeight: "400",
+                          paddingHorizontal: 8,
+                          textAlign: "right",
+                        }}
+                      >
+                        Recurring transfer
+                      </Text>
+                      <Image
+                        source={require("../../../../../assets/icons/dashboard/spend/recurring.png")}
+                        style={{ width: 23, height: 23 }}
+                        contentFit="contain"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Input
+                    outline={true}
+                    style={{
+                      color: "#01EAD4",
+                      // textDecorationColor: "#01EAD4",
+                      fontSize: 13,
+                      fontWeight: "500",
+                      height: 45,
+                      borderRadius: 6,
+                      flexWrap: "wrap",
+                    }}
+                    placeholder="Enet ID / Phone number / ENS / Email / Wallet Address"
+                    placeholderTextColor="#49515D"
+                    cursorColor="white"
+                    defaultValue={receipientAddress}
+                    inputMode="email"
+                    textContentType="password"
+                    onChangeText={(text) => setReceipientAddress(text)}
+                    keyboardType="default"
+                    suffix={
+                      <View className="flex flex-row gap-3 items-center justify-center">
+                        <TouchableOpacity>
+                          <Image
+                            source={require("../../../../../assets/icons/contact.png")}
+                            style={{ width: 22, height: 22 }}
+                            contentFit="contain"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                          <Image
+                            source={require("../../../../../assets/icons/scan_spend.png")}
+                            style={{ width: 22, height: 22 }}
+                            contentFit="contain"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    }
+                  />
+                  <View className="flex flex-row items-center justify-between w-full">
+                    <View className="flex flex-row items-center justify-center">
+                      <Text
+                        style={{
+                          color: "#18EAFFCC",
+                          fontSize: 12,
+                          fontWeight: "400",
+                          paddingHorizontal: 8,
+                          textAlign: "left",
+                        }}
+                      >
+                        Recent transaction
+                      </Text>
+                      <Image
+                        source={require("../../../../../assets/icons/carret.png")}
+                        style={{ width: 14, height: 14 }}
+                        contentFit="contain"
+                      />
+                    </View>
+
+                    <View className="flex flex-row items-center gap-3 justify-center">
+                      <Text
+                        style={{
+                          color: "#18EAFFCC",
+                          fontSize: 13,
+                          fontWeight: "400",
+                          paddingHorizontal: 8,
+                          textAlign: "left",
+                        }}
+                      >
+                        Add to Beneficiary
+                      </Text>
+                      <Switch
+                        style={{
+                          width: 29,
+                          height: 15,
+                        }}
+                        trackColor={{ false: "#767577", true: "#18EAFFCC" }}
+                        thumbColor={addBeneficiary ? "#000000" : "#000000"}
+                        ios_backgroundColor="#18EAFFCC"
+                        onValueChange={(value) => setAddBeneficiary(value)}
+                        value={addBeneficiary}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View className="flex flex-col w-full gap-2 mb-[30px]">
                   <Text
                     style={{
                       color: "#49515D",
@@ -152,194 +276,113 @@ export default function Send() {
                       textAlign: "left",
                     }}
                   >
-                    Paste recipient details
+                    Enter Amount
                   </Text>
-
-                  <TouchableOpacity
-                    className="flex flex-row items-center justify-center"
-                    onPress={() => recurringSheetRef.current.open()}
-                  >
-                    <Text
-                      style={{
-                        color: "#49515D",
-                        fontSize: 12,
-                        fontWeight: "400",
-                        paddingHorizontal: 8,
-                        textAlign: "right",
-                      }}
-                    >
-                      Recurring transfer
-                    </Text>
-                    <Image
-                      source={require("../../../../../assets/icons/dashboard/spend/recurring.png")}
-                      style={{ width: 23, height: 23 }}
-                      contentFit="contain"
-                    />
-                  </TouchableOpacity>
-                </View>
-                <Input
-                  outline={true}
-                  style={{
-                    color: "#01EAD4",
-                    // textDecorationColor: "#01EAD4",
-                    fontSize: 13,
-                    fontWeight: "500",
-                    height: 45,
-                    borderRadius: 6,
-                    flexWrap: "wrap",
-                  }}
-                  placeholder="Enet ID / Phone number / ENS / Email / Wallet Address"
-                  placeholderTextColor="#49515D"
-                  cursorColor="white"
-                  defaultValue={receipientAddress}
-                  inputMode="email"
-                  textContentType="password"
-                  onChangeText={(text) => setReceipientAddress(text)}
-                  keyboardType="default"
-                  suffix={
-                    <View className="flex flex-row gap-3 items-center justify-center">
-                      <TouchableOpacity>
-                        <Image
-                          source={require("../../../../../assets/icons/contact.png")}
-                          style={{ width: 22, height: 22 }}
-                          contentFit="contain"
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity>
-                        <Image
-                          source={require("../../../../../assets/icons/scan_spend.png")}
-                          style={{ width: 22, height: 22 }}
-                          contentFit="contain"
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  }
-                />
-                <View className="flex flex-row items-center justify-between w-full">
-                  <View className="flex flex-row items-center justify-center">
-                    <Text
-                      style={{
-                        color: "#18EAFFCC",
-                        fontSize: 12,
-                        fontWeight: "400",
-                        paddingHorizontal: 8,
-                        textAlign: "left",
-                      }}
-                    >
-                      Recent transaction
-                    </Text>
-                    <Image
-                      source={require("../../../../../assets/icons/carret.png")}
-                      style={{ width: 14, height: 14 }}
-                      contentFit="contain"
-                    />
-                  </View>
-
-                  <View className="flex flex-row items-center gap-3 justify-center">
-                    <Text
-                      style={{
-                        color: "#18EAFFCC",
-                        fontSize: 13,
-                        fontWeight: "400",
-                        paddingHorizontal: 8,
-                        textAlign: "left",
-                      }}
-                    >
-                      Add to Beneficiary
-                    </Text>
-                    <Switch
-                      style={{
-                        width: 29,
-                        height: 15,
-                      }}
-                      trackColor={{ false: "#767577", true: "#18EAFFCC" }}
-                      thumbColor={addBeneficiary ? "#000000" : "#000000"}
-                      ios_backgroundColor="#18EAFFCC"
-                      onValueChange={(value) => setAddBeneficiary(value)}
-                      value={addBeneficiary}
-                    />
-                  </View>
-                </View>
-              </View>
-              <View className="flex flex-col w-full gap-2 mb-[30px]">
-                <Text
-                  style={{
-                    color: "#49515D",
-                    fontSize: 12,
-                    fontWeight: "400",
-                    paddingHorizontal: 8,
-                    textAlign: "left",
-                  }}
-                >
-                  Enter Amount
-                </Text>
-                <Input
-                  outline={true}
-                  style={{
-                    color: "#01EAD4",
-                    // textDecorationColor: "#01EAD4",
-                    fontSize: 17,
-                    fontWeight: "500",
-                    height: 45,
-                    borderRadius: 6,
-                    flexWrap: "wrap",
-                    textAlign: "right",
-                  }}
-                  prefix={
-                    <Text
-                      style={{
-                        color: "#49515D",
-                        fontSize: 16,
-                        fontWeight: "500",
-                      }}
-                    >
-                      {selectedToken?.contract_symbols ?? "DAI"}
-                    </Text>
-                  }
-                  placeholder="$0.00"
-                  placeholderTextColor="#49515D"
-                  cursorColor="white"
-                  defaultValue={amount}
-                  inputMode="numeric"
-                  textContentType="password"
-                  onChangeText={(text) => setAmount(text)}
-                  keyboardType="number-pad"
-                  suffix={
-                    <View className="flex flex-row items-center justify-center">
-                      {/* <Text
+                  <Input
+                    outline={true}
+                    style={{
+                      color: "#01EAD4",
+                      // textDecorationColor: "#01EAD4",
+                      fontSize: 17,
+                      fontWeight: "500",
+                      height: 45,
+                      borderRadius: 6,
+                      flexWrap: "wrap",
+                      textAlign: "right",
+                    }}
+                    prefix={
+                      <Text
+                        style={{
+                          color: "#49515D",
+                          fontSize: 16,
+                          fontWeight: "500",
+                        }}
+                      >
+                        {selectedToken?.contract_symbols ?? "DAI"}
+                      </Text>
+                    }
+                    placeholder="$0.00"
+                    placeholderTextColor="#49515D"
+                    cursorColor="white"
+                    defaultValue={amount}
+                    inputMode="numeric"
+                    textContentType="password"
+                    onChangeText={(text) => setAmount(text)}
+                    keyboardType="number-pad"
+                    suffix={
+                      <View className="flex flex-row items-center justify-center">
+                        {/* <Text
                     style={{
                       fontSize: 14,
                       fontWeight: "500",
                       color: "#49515D",
                     }}
                   ></Text> */}
-                      <View
-                        style={{
-                          backgroundColor: "#49515D",
-                          width: 1.6,
-                          borderColor: "#49515D",
-                          height: "100%",
-                          minHeight: 20,
-                          marginHorizontal: 10,
-                          borderRadius: 999,
-                        }}
-                      />
-                      <TouchableOpacity>
-                        <Text
+                        <View
                           style={{
-                            fontSize: 14,
-                            fontWeight: "400",
-                            color: "#18EAFFCC",
+                            backgroundColor: "#49515D",
+                            width: 1.6,
+                            borderColor: "#49515D",
+                            height: "100%",
+                            minHeight: 20,
+                            marginHorizontal: 10,
+                            borderRadius: 999,
                           }}
-                        >
-                          MAX
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  }
-                />
+                        />
+                        <TouchableOpacity>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              fontWeight: "400",
+                              color: "#18EAFFCC",
+                            }}
+                          >
+                            MAX
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    }
+                  />
+                </View>
+                <View className="flex flex-col gap-2 w-full items-start">
+                  <Text
+                    style={{
+                      color: "#49515D",
+                      fontSize: 12,
+                      fontWeight: "400",
+                      paddingHorizontal: 8,
+                      textAlign: "left",
+                    }}
+                  >
+                    Memo
+                  </Text>
+                  <Input
+                    outline={true}
+                    style={{
+                      color: "#01EAD4",
+                      // textDecorationColor: "#01EAD4",
+                      fontSize: 17,
+                      fontWeight: "500",
+                      height: 45,
+                      borderRadius: 6,
+                      flexWrap: "wrap",
+                      // textAlign: "right",
+                    }}
+                    placeholder="Enter memo"
+                    placeholderTextColor="#49515D"
+                    cursorColor="white"
+                    defaultValue={memo}
+                    inputMode="text"
+                    textContentType="password"
+                    onChangeText={(text) => setMemo(text)}
+                    keyboardType="default"
+                  />
+                </View>
               </View>
-              <View className="flex flex-col gap-2 w-full items-start">
+
+              <View className="flex-1" />
+
+              <View className="flex flex-col gap-2 w-full items-start mb-5">
                 <Text
                   style={{
                     color: "#49515D",
@@ -349,162 +392,125 @@ export default function Send() {
                     textAlign: "left",
                   }}
                 >
-                  Memo
+                  Summary
                 </Text>
-                <Input
-                  outline={true}
+                <View
+                  className="flex flex-col p-3 w-full"
                   style={{
-                    color: "#01EAD4",
-                    // textDecorationColor: "#01EAD4",
-                    fontSize: 17,
-                    fontWeight: "500",
-                    height: 45,
-                    borderRadius: 6,
-                    flexWrap: "wrap",
-                    // textAlign: "right",
+                    borderRadius: 11,
+                    borderWidth: 1,
+                    gap: 10,
+                    borderColor: "#49515D",
+                    borderStyle: "dashed",
                   }}
-                  placeholder="Enter memo"
-                  placeholderTextColor="#49515D"
-                  cursorColor="white"
-                  defaultValue={memo}
-                  inputMode="text"
-                  textContentType="password"
-                  onChangeText={(text) => setMemo(text)}
-                  keyboardType="default"
-                />
-              </View>
-            </View>
-
-            <View className="flex-1" />
-
-            <View className="flex flex-col gap-2 w-full items-start mb-5">
-              <Text
-                style={{
-                  color: "#49515D",
-                  fontSize: 12,
-                  fontWeight: "400",
-                  paddingHorizontal: 8,
-                  textAlign: "left",
-                }}
-              >
-                Summary
-              </Text>
-              <View
-                className="flex flex-col p-3 w-full"
-                style={{
-                  borderRadius: 11,
-                  borderWidth: 1,
-                  gap: 10,
-                  borderColor: "#49515D",
-                  borderStyle: "dashed",
-                }}
-              >
-                <View className="flex flex-row items-center justify-between w-full">
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 12,
-                      fontWeight: "400",
-                      paddingHorizontal: 8,
-                      textAlign: "left",
-                    }}
-                  >
-                    Gas fee
-                  </Text>
-
-                  <Text
-                    style={{
-                      color: "#18EAFFCC",
-                      fontSize: 12,
-                      fontWeight: "400",
-                      paddingHorizontal: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    13.61GWEI
-                  </Text>
-                </View>
-                <View className="flex flex-row items-center justify-between w-full">
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 12,
-                      fontWeight: "400",
-                      paddingHorizontal: 8,
-                      textAlign: "left",
-                    }}
-                  >
-                    Total Est. Time
-                  </Text>
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 12,
-                      fontWeight: "400",
-                      paddingHorizontal: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    5 Mins
-                  </Text>
-                </View>
-                <View className="flex flex-row items-center justify-between w-full">
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 12,
-                      fontWeight: "400",
-                      paddingHorizontal: 8,
-                      textAlign: "left",
-                    }}
-                  >
-                    Receive amount
-                  </Text>
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 12,
-                      fontWeight: "400",
-                      paddingHorizontal: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    0.00{" "}
+                >
+                  <View className="flex flex-row items-center justify-between w-full">
                     <Text
                       style={{
-                        color: "#49515D",
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "left",
                       }}
                     >
-                      {"  "} DAI
+                      Gas fee
                     </Text>
-                  </Text>
+
+                    <Text
+                      style={{
+                        color: "#18EAFFCC",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      13.61GWEI
+                    </Text>
+                  </View>
+                  <View className="flex flex-row items-center justify-between w-full">
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "left",
+                      }}
+                    >
+                      Total Est. Time
+                    </Text>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      5 Mins
+                    </Text>
+                  </View>
+                  <View className="flex flex-row items-center justify-between w-full">
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "left",
+                      }}
+                    >
+                      Receive amount
+                    </Text>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: "400",
+                        paddingHorizontal: 8,
+                        textAlign: "right",
+                      }}
+                    >
+                      0.00{" "}
+                      <Text
+                        style={{
+                          color: "#49515D",
+                        }}
+                      >
+                        {"  "} DAI
+                      </Text>
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
 
-            <Button
-              onPress={() => {
-                if (!receipientAddress || !amount || !selectedToken) {
-                  return Alert.alert("Please input all required fields");
-                }
+              <Button
+                onPress={() => {
+                  if (!receipientAddress || !amount || !selectedToken) {
+                    return Alert.alert("Please input all required fields");
+                  }
 
-                router.push({
-                  pathname: "(send)/confirm",
-                  params: {
-                    ...params,
-                    amount,
-                    ...selectedToken,
-                    receipientAddress,
-                    memo,
-                  },
-                });
-              }}
-              style={{ width: "100%" }}
-            >
-              <Text>Swipe to confirm transaction</Text>
-            </Button>
-          </ScrollView>
-        </View>
+                  router.push({
+                    pathname: "(send)/confirm",
+                    params: {
+                      ...params,
+                      amount,
+                      ...selectedToken,
+                      receipientAddress,
+                      memo,
+                    },
+                  });
+                }}
+                style={{ width: "100%" }}
+              >
+                <Text>Swipe to confirm transaction</Text>
+              </Button>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
 
         <Loader popupVisible={loader} setPopupVisible={setLoader} />
       </Container>

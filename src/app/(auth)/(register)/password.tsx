@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -47,91 +49,95 @@ export default function Password() {
           },
         }}
       />
-      <View className="w-full flex flex-col h-full pb-28 bg-[#0C0C12] px-6">
-        <View className="flex flex-col gap-4">
-          <Text style={{ fontSize: 13, fontWeight: "400", color: "#F3F4F8" }}>
-            We will generate a QR code that contains your encrypted key The QR
-            code will be encrypted with the password you will define below
-          </Text>
-          <Input
-            outline={true}
-            label="Password"
-            style={{
-              color: "#01EAD4",
-              // textDecorationColor: "#01EAD4",
-              fontSize: 17,
-              fontWeight: "500",
-              height: 45,
-            }}
-            cursorColor="white"
-            defaultValue={password}
-            // inputMode="email"
-            textContentType="password"
-            onChangeText={(text) => setPassword(text)}
-            keyboardType="default"
-          />
-          <Input
-            outline={true}
-            label="Confirm password"
-            style={{
-              color: "#01EAD4",
-              // textDecorationColor: "#01EAD4",
-              fontSize: 17,
-              fontWeight: "500",
-              height: 45,
-            }}
-            cursorColor="white"
-            defaultValue={confirmPassword}
-            inputMode="email"
-            textContentType="password"
-            onChangeText={(text) => setConfirmPassword(text)}
-            keyboardType="default"
-          />
-        </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "android" ? "position" : "position"}
+      >
+        <View className="w-full flex flex-col h-full pb-28 bg-[#0C0C12] px-6">
+          <View className="flex flex-col gap-4">
+            <Text style={{ fontSize: 13, fontWeight: "400", color: "#F3F4F8" }}>
+              We will generate a QR code that contains your encrypted key The QR
+              code will be encrypted with the password you will define below
+            </Text>
+            <Input
+              outline={true}
+              label="Password"
+              style={{
+                color: "#01EAD4",
+                // textDecorationColor: "#01EAD4",
+                fontSize: 17,
+                fontWeight: "500",
+                height: 45,
+              }}
+              cursorColor="white"
+              defaultValue={password}
+              // inputMode="email"
+              textContentType="password"
+              onChangeText={(text) => setPassword(text)}
+              keyboardType="default"
+            />
+            <Input
+              outline={true}
+              label="Confirm password"
+              style={{
+                color: "#01EAD4",
+                // textDecorationColor: "#01EAD4",
+                fontSize: 17,
+                fontWeight: "500",
+                height: 45,
+              }}
+              cursorColor="white"
+              defaultValue={confirmPassword}
+              inputMode="email"
+              textContentType="password"
+              onChangeText={(text) => setConfirmPassword(text)}
+              keyboardType="default"
+            />
+          </View>
 
-        <PasswordValidation password={password} />
-        <View className="flex-1" />
+          <PasswordValidation password={password} />
+          <View className="flex-1" />
 
-        <Button
-          onPress={async () => {
-            setRegisterLoading(true);
-            if (!password || !confirmPassword) {
-              setRegisterLoading(false);
-              return Alert.alert("Register error", "Password is required");
-            }
-
-            try {
-              const result = await Auth.setPassword({
-                token: params?.token as string,
-                data: {
-                  new_password: password,
-                  confirm_password: confirmPassword,
-                  phone_number: params?.phone_number as string,
-                },
-              });
-
-              if (!result?.success) {
+          <Button
+            onPress={async () => {
+              setRegisterLoading(true);
+              if (!password || !confirmPassword) {
                 setRegisterLoading(false);
-                return Alert.alert("Register error", result?.message);
+                return Alert.alert("Register error", "Password is required");
               }
 
-              setRegisterLoading(false);
+              try {
+                const result = await Auth.setPassword({
+                  token: params?.token as string,
+                  data: {
+                    new_password: password,
+                    confirm_password: confirmPassword,
+                    phone_number: params?.phone_number as string,
+                  },
+                });
 
-              router.push({
-                pathname: "/pin",
-                params: { password, confirmPassword, ...params },
-              });
-            } catch (err: any) {
-              setRegisterLoading(false);
-              console.log(err, ":::Error in password");
-              Alert.alert("Register error", err.message ?? err.toString());
-            }
-          }}
-          style={{ width: "100%" }}
-        >
-          <Text>Continue</Text>
-        </Button>
-      </View>
+                if (!result?.success) {
+                  setRegisterLoading(false);
+                  return Alert.alert("Register error", result?.message);
+                }
+
+                setRegisterLoading(false);
+
+                router.push({
+                  pathname: "/pin",
+                  params: { password, confirmPassword, ...params },
+                });
+              } catch (err: any) {
+                setRegisterLoading(false);
+                console.log(err, ":::Error in password");
+                Alert.alert("Register error", err.message ?? err.toString());
+              }
+            }}
+            style={{ width: "100%" }}
+          >
+            <Text>Continue</Text>
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
       <Popup
         isPopupVisible={isRegisterLoading}
         setPopupVisible={setRegisterLoading}

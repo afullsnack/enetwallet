@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -47,142 +49,176 @@ export default function EncryptDetails() {
           },
         }}
       />
-      <ScrollView
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        className="w-full flex flex-col gap-4 min-h-screen pb-6 px-6"
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "android" ? "position" : "position"}
       >
-        <View
-          className="flex flex-col gap-4 items-center justify-center"
-          style={{ alignItems: "center" }}
+        <ScrollView
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+            paddingBottom: 260,
+          }}
+          contentInsetAdjustmentBehavior="always"
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+          scrollEnabled
+          style={{
+            flexDirection: "column",
+            width: "100%",
+            paddingHorizontal: 20,
+            // height: height * 0.75,
+          }}
         >
-          <View className="rounded-full border border-[#2C1C40] bg-white p-3">
-            <Image
-              source={require("../../../../assets/icons/scan.png")}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={{
+              flexDirection: "column",
+              gap: 10,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <View
+              className="flex flex-col gap-4 items-center justify-center"
+              style={{ alignItems: "center" }}
+            >
+              <View className="rounded-full border border-[#2C1C40] bg-white p-3">
+                <Image
+                  source={require("../../../../assets/icons/scan.png")}
+                  style={{
+                    width: 20,
+                    height: 20,
+                  }}
+                  contentFit="contain"
+                />
+              </View>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  color: "#EEEFFF",
+                  textAlign: "center",
+                }}
+              >
+                Encrypt your Key in a QR code
+              </Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: "400",
+                  color: "#F3F4F8",
+                  textAlign: "center",
+                }}
+              >
+                We will generate a QR code that contains your encrypted key The
+                QR code will be encrypted with the password you will define
+                below
+              </Text>
+              <Input
+                outline={true}
+                label="Password"
+                style={{
+                  color: "#01EAD4",
+                  // textDecorationColor: "#01EAD4",
+                  fontSize: 17,
+                  fontWeight: "500",
+                  height: 45,
+                }}
+                cursorColor="white"
+                defaultValue={password}
+                inputMode="email"
+                textContentType="password"
+                onChangeText={(text) => setPassword(text)}
+                keyboardType="default"
+              />
+              <Input
+                outline={true}
+                label="Confirm password"
+                style={{
+                  color: "#01EAD4",
+                  // textDecorationColor: "#01EAD4",
+                  fontSize: 17,
+                  fontWeight: "500",
+                  height: 45,
+                }}
+                cursorColor="white"
+                defaultValue={confirmPassword}
+                inputMode="email"
+                textContentType="password"
+                onChangeText={(text) => setConfirmPassword(text)}
+                keyboardType="default"
+              />
+            </View>
+
+            <PasswordValidation password={password} />
+            <View className="flex-1" />
+
+            <View
               style={{
-                width: 20,
-                height: 20,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              contentFit="contain"
-            />
-          </View>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "500",
-              color: "#EEEFFF",
-              textAlign: "center",
-            }}
-          >
-            Encrypt your Key in a QR code
-          </Text>
-          <Text
-            style={{
-              fontSize: 11,
-              fontWeight: "400",
-              color: "#F3F4F8",
-              textAlign: "center",
-            }}
-          >
-            We will generate a QR code that contains your encrypted key The QR
-            code will be encrypted with the password you will define below
-          </Text>
-          <Input
-            outline={true}
-            label="Password"
-            style={{
-              color: "#01EAD4",
-              // textDecorationColor: "#01EAD4",
-              fontSize: 17,
-              fontWeight: "500",
-              height: 45,
-            }}
-            cursorColor="white"
-            defaultValue={password}
-            inputMode="email"
-            textContentType="password"
-            onChangeText={(text) => setPassword(text)}
-            keyboardType="default"
-          />
-          <Input
-            outline={true}
-            label="Confirm password"
-            style={{
-              color: "#01EAD4",
-              // textDecorationColor: "#01EAD4",
-              fontSize: 17,
-              fontWeight: "500",
-              height: 45,
-            }}
-            cursorColor="white"
-            defaultValue={confirmPassword}
-            inputMode="email"
-            textContentType="password"
-            onChangeText={(text) => setConfirmPassword(text)}
-            keyboardType="default"
-          />
-        </View>
+            >
+              <Image
+                source={require("../../../../assets/icons/lock.png")}
+                style={{
+                  width: 35,
+                  height: 35,
+                  marginTop: 20,
+                }}
+                contentFit="contain"
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "500",
+                color: "#F80F0F",
+                textAlign: "center",
+                marginVertical: 20,
+              }}
+            >
+              Remember to use password you CANNOT forget
+            </Text>
 
-        <PasswordValidation password={password} />
-        <View className="flex-1" />
+            <Button
+              onPress={async () => {
+                setEncryptLoading(true);
+                // Call set secret password
+                if (!password || !confirmPassword) {
+                  setEncryptLoading(false);
+                  Alert.alert("Invalid password", "Enter a valid password");
+                }
 
-        <Image
-          source={require("../../../../assets/icons/lock.png")}
-          style={{
-            width: 35,
-            height: 35,
-            marginTop: 20,
-          }}
-          contentFit="contain"
-        />
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: "500",
-            color: "#F80F0F",
-            textAlign: "center",
-            marginVertical: 20,
-          }}
-        >
-          Remember to use password you CANNOT forget
-        </Text>
+                const result = await Auth.setEncryptPassword({
+                  token: params?.token as string,
+                  data: {
+                    secret_password: password,
+                    confirm_secret_password: confirmPassword,
+                  },
+                });
 
-        <Button
-          onPress={async () => {
-            setEncryptLoading(true);
-            // Call set secret password
-            if (!password || !confirmPassword) {
-              setEncryptLoading(false);
-              Alert.alert("Invalid password", "Enter a valid password");
-            }
+                if (!result?.success) {
+                  setEncryptLoading(false);
+                  return Alert.alert("Error encrypting", result?.message);
+                }
 
-            const result = await Auth.setEncryptPassword({
-              token: params?.token as string,
-              data: {
-                secret_password: password,
-                confirm_secret_password: confirmPassword,
-              },
-            });
+                setEncryptLoading(false);
 
-            if (!result?.success) {
-              setEncryptLoading(false);
-              return Alert.alert("Error encrypting", result?.message);
-            }
-
-            setEncryptLoading(false);
-
-            router.push({
-              pathname: "(backup)/qrcode",
-              params: { ...params, qr_image: result?.data },
-            });
-          }}
-          style={{ width: "100%" }}
-        >
-          <Text>Continue</Text>
-        </Button>
-      </ScrollView>
+                router.push({
+                  pathname: "(backup)/qrcode",
+                  params: { ...params, qr_image: result?.data },
+                });
+              }}
+              style={{ width: "100%" }}
+            >
+              <Text>Continue</Text>
+            </Button>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <Popup
         isPopupVisible={isEncryptLoading}
         setPopupVisible={setEncryptLoading}

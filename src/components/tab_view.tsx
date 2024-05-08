@@ -4,17 +4,26 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 const TabView: React.FC<{
   items: React.ReactNode[];
   tabList: string[];
-}> = ({ items, tabList }) => {
+  tabStyle?: "compact" | "narrow";
+}> = ({ items, tabList, tabStyle = "narrow" }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   return (
     <View className="grid w-full items-start justify-start">
-      <View className="mb-2 flex h-8 w-full" style={{ marginHorizontal: 10 }}>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={tabList}
-          renderItem={({ item, index }) => (
+      <View
+        className="mb-2 flex h-8 w-full"
+        style={{
+          marginHorizontal: 0,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent:
+            tabStyle === "compact" ? "space-evenly" : "space-around",
+        }}
+      >
+        {tabStyle === "compact" ? (
+          tabList.map((item, index) => (
             <TouchableOpacity
+              key={index}
               className="flex items-center justify-center rounded-full py-1"
               style={{
                 paddingHorizontal:
@@ -24,7 +33,7 @@ const TabView: React.FC<{
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 4,
+                // gap: 4,
               }}
               onPress={() => {
                 console.log(index, "Index");
@@ -48,10 +57,51 @@ const TabView: React.FC<{
                 }}
               />
             </TouchableOpacity>
-          )}
-          horizontal
-          className="w-full"
-        />
+          ))
+        ) : (
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={tabList}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                className="flex items-center justify-center rounded-full py-1"
+                style={{
+                  paddingHorizontal:
+                    index === 0 || index === tabList.length - 1 ? 0 : 16,
+                  // backgroundColor:
+                  //   activeIndex === index ? "#18EAFF" : "transparent",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                }}
+                onPress={() => {
+                  console.log(index, "Index");
+                  setActiveIndex(index);
+                }}
+              >
+                <Text
+                  style={{
+                    color: activeIndex === index ? "#FFFFFF" : "#49515D",
+                  }}
+                >
+                  {item}
+                </Text>
+                <View
+                  style={{
+                    height: 2.2,
+                    width: "75%",
+                    borderRadius: 9999,
+                    backgroundColor:
+                      activeIndex === index ? "#18EAFF" : "transparent",
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+            horizontal
+            className="w-full"
+          />
+        )}
       </View>
       <View className="w-full">{items[activeIndex]}</View>
     </View>

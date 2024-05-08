@@ -81,6 +81,7 @@ export default function WalletScreen() {
           style={{ paddingHorizontal: 0 }}
         >
           <TabView
+            tabStyle="compact"
             tabList={tabList}
             items={tabList.map((tab, index) => (
               <ScrollView

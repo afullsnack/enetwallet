@@ -388,16 +388,17 @@ export default function HomeScreen() {
                       flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      marginBottom: 5,
                     }}
                   >
-                    <Text style={{ flex: 3, color: "#49515D", fontSize: 8 }}>
+                    <Text style={{ flex: 3, color: "#49515D", fontSize: 14 }}>
                       Coin
                     </Text>
                     <Text
                       style={{
                         flex: 1,
                         color: "#49515D",
-                        fontSize: 8,
+                        fontSize: 14,
                         textAlign: "right",
                       }}
                     >
@@ -407,7 +408,7 @@ export default function HomeScreen() {
                       style={{
                         flex: 1,
                         color: "#49515D",
-                        fontSize: 8,
+                        fontSize: 14,
                         textAlign: "right",
                       }}
                     >
@@ -431,10 +432,10 @@ export default function HomeScreen() {
                         className="flex flex-col items-start justify-center"
                         style={{ flex: 3 }}
                       >
-                        <Text style={{ color: "white", fontSize: 12 }}>
+                        <Text style={{ color: "white", fontSize: 16 }}>
                           {token?.symbol ?? "DAI"}
                         </Text>
-                        <Text style={{ color: "#49515D", fontSize: 9.5 }}>
+                        <Text style={{ color: "#49515D", fontSize: 14 }}>
                           ${checkNumber(Number(token?.quote?.USD?.volume_24h))}
                         </Text>
                       </View>
@@ -442,7 +443,7 @@ export default function HomeScreen() {
                         className="flex flex-col items-end justify-center"
                         style={{ flex: 2 }}
                       >
-                        <Text style={{ color: "white", fontSize: 12 }}>
+                        <Text style={{ color: "white", fontSize: 16 }}>
                           $
                           {(token?.quote?.USD?.price ?? 0).toLocaleString(
                             "en-US",
@@ -452,14 +453,14 @@ export default function HomeScreen() {
                             },
                           )}
                         </Text>
-                        <Text style={{ color: "#49515D", fontSize: 9.5 }}>
+                        <Text style={{ color: "#49515D", fontSize: 14 }}>
                           0
                         </Text>
                       </View>
 
                       <View
                         className="flex flex-col items-end justify-center"
-                        style={{ flex: 1 }}
+                        style={{ flex: 1.5 }}
                       >
                         <View
                           style={{
@@ -478,7 +479,7 @@ export default function HomeScreen() {
                           <Text
                             style={{
                               color: "white",
-                              fontSize: 12,
+                              fontSize: 16,
                               fontWeight: "400",
                             }}
                           >
@@ -486,7 +487,7 @@ export default function HomeScreen() {
                               Number(token?.quote?.USD?.volume_change_24h),
                             )
                               ? "+"
-                              : "-"}
+                              : ""}
                             {(
                               token?.quote?.USD?.volume_change_24h ?? 0
                             ).toLocaleString("en-US", {
@@ -512,7 +513,9 @@ export default function HomeScreen() {
                     height: "100%",
                   }}
                 >
-                  <Text style={{ color: "white" }}>{tab} Comming soon...</Text>
+                  <Text style={{ color: "white", padding: 20, fontSize: 18 }}>
+                    {tab} Comming soon...
+                  </Text>
                 </View>
               )}
             </ScrollView>

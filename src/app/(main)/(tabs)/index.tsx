@@ -35,9 +35,18 @@ export default function HomeScreen() {
         user_token: userSession?.token,
       });
 
+
+      if (result?.code === 401) {
+        router.replace({ pathname: "/(auth)/(login)/main" })
+      }
+
+
       if (!result?.success) {
         return Alert.alert("Balance error", result?.message);
       }
+
+
+      console.log(result?.data?.items[0], "First asset balance");
 
       const totalBalance = result?.data?.items?.reduce(
         (cur, obj) => cur + Number(obj?.balance),
@@ -50,6 +59,11 @@ export default function HomeScreen() {
       const result = await Wallet.getAddress({
         user_token: userSession?.token,
       });
+
+      if (result?.code === 401) {
+        router.replace({ pathname: "/(auth)/(login)/main" })
+      }
+
 
       if (!result?.success) {
         if (result?.code === 401) router.replace("/(auth)/(login)/main");

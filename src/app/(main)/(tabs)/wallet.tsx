@@ -43,6 +43,12 @@ export default function WalletScreen() {
         user_token: userSession?.token,
       });
 
+
+      if(result?.code === 401) {
+        router.replace({pathname: "/(auth)/(login)/main"})
+      }
+      
+
       if (!result?.success) {
         return Alert.alert("Balance error", result?.message);
       }

@@ -56,6 +56,12 @@ export default function Send() {
         return;
       }
 
+
+      if(result?.code === 401) {
+        router.replace({pathname: "/(auth)/(login)/main"})
+        return;
+      }
+
       // const filteredListWithTokenAddress = result?.data?.filter(
       //   (obj) => obj?.hasOwnProperty("platform") && obj["platform"] !== null,
       // );

@@ -90,6 +90,11 @@ export default function Receive() {
           user_token: session?.token,
         });
 
+        if (result?.code === 401) {
+          router.replace({ pathname: "/(auth)/(login)/main" })
+        }
+
+
         if (!result?.success) {
           setLoader(false);
           Alert.alert("Fetch token list", result?.message);
@@ -329,12 +334,12 @@ export default function Receive() {
         ref={tokenListSheetRef}
         // snapPoints={tokenSheetSnapPoints}
         height={"75%"}
-        // backgroundStyle={{
-        //   backgroundColor: "#0C0C12",
-        // }}
-        // handleIndicatorStyle={{
-        //   backgroundColor: "#18EAFF",
-        // }}
+      // backgroundStyle={{
+      //   backgroundColor: "#0C0C12",
+      // }}
+      // handleIndicatorStyle={{
+      //   backgroundColor: "#18EAFF",
+      // }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View

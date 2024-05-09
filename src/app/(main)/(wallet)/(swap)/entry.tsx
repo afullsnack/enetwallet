@@ -6,7 +6,7 @@ import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import {
   Keyboard,
@@ -19,6 +19,7 @@ import {
   StyleSheet,
   TextInputProps,
   FlatList,
+  Alert,
 } from "react-native";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { ScrollView } from "react-native-gesture-handler";
@@ -31,8 +32,12 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { CustomSwapSlider } from "@/components/swap_slider";
+import { useSession } from "@/contexts/session";
+import { Wallet } from "@/utils/api";
 
 export default function Send() {
+  const params = useLocalSearchParams();
+  const { session } = useSession();
   const [toValue, setToValue] = useState<string>();
   const [fromValue, setFromValue] = useState<string>();
 
@@ -41,7 +46,8 @@ export default function Send() {
 
   // Search
   const [tokenSearch, setTokenSearch] = useState<string>();
-  const sheetRef = useRef<BottomSheetMethods>(null);
+  const toSheetRef = useRef<BottomSheetMethods>(null);
+  const fromSheetRef = useRef<BottomSheetMethods>(null);
   const numpadSheetRef = useRef<BottomSheetMethods>(null);
   const settingsSheetRef = useRef<BottomSheetMethods>(null);
   const tokenSheetSnapPoints = useMemo(() => ["75%"], []);
@@ -60,6 +66,85 @@ export default function Send() {
   // select change
   const [selectToChange, setSelectToChange] = useState({});
   const [selectFromChange, setSelectFromChange] = useState({});
+
+  // Loader
+  const [loader, setLoader] = useState<boolean>(false);
+  const [tokenListFrom, setTokenListFrom] = useState([]);
+  const [tokenListTo, setTokenListTo] = useState([]);
+  const [selectedTokenFrom, setSelectedTokenFrom] =
+    useState<Record<string, any>>();
+  const [selectedTokenTo, setSelectedTokenTo] = useState<Record<string, any>>();
+
+  const getTokenList = useMemo(
+    () => async () => {
+      // const result = await Wallet.getTokenList({ user_token: session?.token });
+      const fromTokenListResult = await Wallet.getBalance({
+        user_token: session?.token,
+      });
+
+      if (!fromTokenListResult?.success) {
+        setLoader(false);
+        Alert.alert("Fetch token list", fromTokenListResult?.message);
+        return;
+      }
+
+      if (fromTokenListResult?.code === 401) {
+        router.replace({ pathname: "/(auth)/(login)/main" });
+        return;
+      }
+
+      // const filteredListWithTokenAddress = result?.data?.filter(
+      //   (obj) => obj?.hasOwnProperty("platform") && obj["platform"] !== null,
+      // );
+
+      // console.log(
+      //   filteredListWithTokenAddress,
+      //   ":::Filtered prop",
+      //   filteredListWithTokenAddress.length,
+      // );
+
+      // To token list result
+      // const result = await Wallet.getTokenList({ user_token: session?.token });
+      const toTokenResult = await Wallet.getTokenList({
+        user_token: session?.token,
+      });
+
+      if (toTokenResult?.code === 401) {
+        router.replace({ pathname: "/(auth)/(login)/main" });
+      }
+
+      if (!toTokenResult?.success) {
+        setLoader(false);
+        Alert.alert("Fetch token list", toTokenResult?.message);
+        return;
+      }
+
+      // const filteredListWithTokenAddress = result?.data?.filter(
+      //   (obj) => obj?.hasOwnProperty("platform") && obj["platform"] !== null,
+      // );
+
+      // console.log(
+      //   filteredListWithTokenAddress,
+      //   ":::Filtered prop",
+      //   filteredListWithTokenAddress.length,
+      // );
+
+      // To list of tokens
+      setSelectedTokenTo(toTokenResult?.data[0]);
+      setTokenListTo(toTokenResult?.data);
+
+      // From list of tokens
+      setSelectedTokenFrom(fromTokenListResult?.data?.items[0]);
+      setTokenListFrom(fromTokenListResult?.data?.items);
+      setLoader(false);
+    },
+    [session],
+  );
+
+  useEffect(() => {
+    setLoader(true);
+    getTokenList();
+  }, [getTokenList]);
 
   return (
     <>
@@ -134,7 +219,8 @@ export default function Send() {
                         fromValue={fromValue}
                         handleToChange={(text) => setToValue(text)}
                         handleFromChange={(text) => setFromValue(text)}
-                        sheetRef={sheetRef}
+                        toSheetRef={toSheetRef}
+                        fromSheetRef={fromSheetRef}
                         onInputFocus={(isFocused, inputType) => {
                           // if (isFocused) {
                           //   setSwapInput(inputType);
@@ -143,8 +229,12 @@ export default function Send() {
                           //   numpadSheetRef.current.close();
                           // }
                         }}
-                        onToSelectChange={(select) => setSelectToChange(select)}
-                        onFromSelectChange={(select) =>
+                        selectedTokenTo={selectedTokenTo}
+                        selectedTokenFrom={selectedTokenFrom}
+                        onToSelectTokenChange={(select) =>
+                          setSelectToChange(select)
+                        }
+                        onFromSelectTokenChange={(select) =>
                           setSelectFromChange(select)
                         }
                       />
@@ -311,7 +401,10 @@ export default function Send() {
 
                     <Button
                       onPress={() => {
-                        router.push("(swap)/verification");
+                        router.push({
+                          pathname: "(swap)/verification",
+                          params: { ...params },
+                        });
                       }}
                       style={{ width: "100%" }}
                     >
@@ -393,8 +486,9 @@ export default function Send() {
           />
         </View>
       </MyBottomSheetModal>
+      {/* From bottom sheet */}
       <MyBottomSheetModal
-        ref={sheetRef}
+        ref={fromSheetRef}
         // snapPoints={tokenSheetSnapPoints}
         height={"75%"}
         // backgroundStyle={{
@@ -453,12 +547,15 @@ export default function Send() {
                 // style={{ width: "100%", backgroundColor: "transparent" }}
                 scrollEnabled
                 nestedScrollEnabled
-                data={[...Array.from({ length: 15 })]}
+                data={tokenListFrom}
                 estimatedItemSize={200}
                 renderItem={({ item, index }) => {
                   return (
                     <Button
-                      onPress={() => sheetRef.current.close()}
+                      onPress={() => {
+                        setSelectedTokenFrom(item);
+                        fromSheetRef?.current?.close();
+                      }}
                       style={{
                         borderRadius: 10,
                         backgroundColor: "transparent",
@@ -470,8 +567,12 @@ export default function Send() {
                     >
                       <View className="relative p-1">
                         <Image
-                          source={require("../../../../../assets/icons/dashboard/dai.png")}
-                          style={{ width: 35, height: 35 }}
+                          source={
+                            item
+                              ? { uri: item?.logo_url }
+                              : require("../../../../../assets/icons/dashboard/dai.png")
+                          }
+                          style={{ width: 35, height: 35, borderRadius: 9999 }}
                           contentFit="contain"
                         />
 
@@ -497,7 +598,7 @@ export default function Send() {
                                 color: "white",
                               }}
                             >
-                              BNB
+                              {item?.contract_symbols ?? "BNB"}
                             </Text>
 
                             {/* <Image
@@ -513,7 +614,7 @@ export default function Send() {
                               color: "#49515D",
                             }}
                           >
-                            BNB Chain
+                            {"Ethereum"}
                           </Text>
                         </View>
                         <View className="flex flex-col items-end">
@@ -525,7 +626,7 @@ export default function Send() {
                                 color: "#49515D",
                               }}
                             >
-                              0.00
+                              {item?.balance ?? "0.00"}
                             </Text>
                           </View>
                           <Text
@@ -535,7 +636,171 @@ export default function Send() {
                               color: "white",
                             }}
                           >
-                            $0.00
+                            ${item?.quote_rate ?? "0.00"}
+                            {/* <Text style={{ color: "#49515D" }}>{"  "} DAI</Text> */}
+                          </Text>
+                        </View>
+                      </View>
+                    </Button>
+                  );
+                }}
+              />
+            </ScrollView>
+          </View>
+        </TouchableWithoutFeedback>
+      </MyBottomSheetModal>
+
+      {/* To bottom sheet */}
+      <MyBottomSheetModal
+        ref={toSheetRef}
+        // snapPoints={tokenSheetSnapPoints}
+        height={"75%"}
+        // backgroundStyle={{
+        //   backgroundColor: "#0C0C12",
+        // }}
+        // handleIndicatorStyle={{
+        //   backgroundColor: "#18EAFF",
+        // }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View
+            style={{
+              backgroundColor: "#0C0C12",
+              width: "100%",
+              height: "100%",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "700",
+                color: "white",
+                lineHeight: 19,
+                textAlign: "center",
+              }}
+            >
+              Select token
+            </Text>
+            <Input
+              outline={false}
+              containerStyle={{
+                borderRadius: 15,
+                borderColor: "#171925",
+                width: "100%",
+                minHeight: 35,
+                marginTop: 10,
+                backgroundColor: "#12131B",
+              }}
+              style={{ paddingHorizontal: 10 }}
+              placeholderTextColor="#49515D"
+              placeholder="Search Token"
+              prefix={<Feather name="search" size={18} color="#49515D" />}
+              defaultValue={tokenSearch}
+              onChangeText={setTokenSearch}
+            />
+            <ScrollView
+              style={{ width: "100%", flex: 1 }}
+              nestedScrollEnabled
+              scrollEnabled
+            >
+              <FlashList
+                // style={{ width: "100%", backgroundColor: "transparent" }}
+                scrollEnabled
+                nestedScrollEnabled
+                data={tokenListTo}
+                estimatedItemSize={200}
+                renderItem={({ item, index }) => {
+                  return (
+                    <Button
+                      onPress={() => {
+                        setSelectedTokenTo(item);
+                        toSheetRef?.current?.close();
+                      }}
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: "transparent",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 10,
+                      }}
+                    >
+                      <View className="relative p-1">
+                        <Image
+                          source={
+                            item
+                              ? { uri: item?.logo }
+                              : require("../../../../../assets/icons/dashboard/dai.png")
+                          }
+                          style={{ width: 35, height: 35, borderRadius: 9999 }}
+                          contentFit="contain"
+                        />
+
+                        <Image
+                          source={require("../../../../../assets/icons/dashboard/eth.png")}
+                          style={{
+                            width: 15,
+                            height: 15,
+                            position: "absolute",
+                            bottom: 2,
+                            right: 2,
+                          }}
+                          contentFit="contain"
+                        />
+                      </View>
+                      <View className="flex flex-row flex-1 items-center justify-between">
+                        <View className="flex flex-col">
+                          <View className="flex flex-row items-center gap-1">
+                            <Text
+                              style={{
+                                fontSize: 15,
+                                fontWeight: "400",
+                                color: "white",
+                              }}
+                            >
+                              {item?.symbol ?? "BNB"}
+                            </Text>
+
+                            {/* <Image
+                              source={require("../../../../../assets/icons/carret.png")}
+                              style={{ width: 20, height: 20 }}
+                              contentFit="contain"
+                            /> */}
+                          </View>
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              fontWeight: "400",
+                              color: "#49515D",
+                            }}
+                          >
+                            {item?.name ?? "Ethereum"}
+                          </Text>
+                        </View>
+                        <View className="flex flex-col items-end">
+                          <View>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                fontWeight: "400",
+                                color: "#49515D",
+                              }}
+                            >
+                              {item?.balance ?? "0.00"}
+                            </Text>
+                          </View>
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              fontWeight: "400",
+                              color: "white",
+                            }}
+                          >
+                            ${item?.quote?.USD?.price ?? "0.00"}
                             {/* <Text style={{ color: "#49515D" }}>{"  "} DAI</Text> */}
                           </Text>
                         </View>

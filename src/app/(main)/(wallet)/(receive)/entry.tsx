@@ -91,9 +91,8 @@ export default function Receive() {
         });
 
         if (result?.code === 401) {
-          router.replace({ pathname: "/(auth)/(login)/main" })
+          router.replace({ pathname: "/(auth)/(login)/main" });
         }
-
 
         if (!result?.success) {
           setLoader(false);
@@ -111,7 +110,7 @@ export default function Receive() {
         //   filteredListWithTokenAddress.length,
         // );
 
-        setSelectedToken(result?.data?.[0]);
+        setSelectedToken(result?.data[0]);
         setTokenList(result?.data);
         setLoader(false);
       }
@@ -334,12 +333,12 @@ export default function Receive() {
         ref={tokenListSheetRef}
         // snapPoints={tokenSheetSnapPoints}
         height={"75%"}
-      // backgroundStyle={{
-      //   backgroundColor: "#0C0C12",
-      // }}
-      // handleIndicatorStyle={{
-      //   backgroundColor: "#18EAFF",
-      // }}
+        // backgroundStyle={{
+        //   backgroundColor: "#0C0C12",
+        // }}
+        // handleIndicatorStyle={{
+        //   backgroundColor: "#18EAFF",
+        // }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View

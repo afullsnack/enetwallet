@@ -629,7 +629,7 @@ export namespace Wallet {
 
       const json = (await response.json()) as Record<string, any>;
 
-      console.log(json, ":::Result_WalletBalance");
+      console.log(json, json?.data?.items[0], ":::Result_WalletBalance");
       return json;
     } catch (err: any) {
       console.log(err, ":::Error_WalletBalance");

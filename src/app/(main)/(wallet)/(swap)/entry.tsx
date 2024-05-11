@@ -401,9 +401,40 @@ export default function Send() {
 
                     <Button
                       onPress={() => {
+
+
+                        // TODO: destructure selectedFromToken and selectedToToken to get currently selected tokens
+                        console.log(selectedTokenTo, ":::The selected tokens:w");
+
+                        const objWithPlatformAttr = selectedTokenTo?.hasOwnProperty('platform')
+
+
+                        if (!objWithPlatformAttr) {
+                          return Alert.alert("Cannot swap with token not on the supported chain");
+                        }
+
+
+                        const token0Address = selectedTokenFrom?.contract_address;
+                        const token1Address = selectedTokenTo?.platform?.token_address;
+                        const walletAddress = session?.wallet_address;
+                        const amount = fromValue;
+                        const chain_id = 1;
+                        const token0Decimal = selectedTokenFrom?.contractDecimals;
+                        const token1Decimal = 6;
+                        const token0Symbol = selectedTokenFrom?.contract_symbols;
+                        const token1Symbol = selectedTokenTo?.platform?.symbol ?? selectedTokenTo?.symbol;
+                        const token0Name = selectedTokenFrom?.contractName;
+                        const token1Name = selectedTokenTo?.name;
+
+
+                        console.log(token0Address, token1Address, ":::Selected contract addresses, and values:::", fromValue, toValue);
+
                         router.push({
-                          pathname: "(swap)/verification",
-                          params: { ...params },
+                          pathname: "(swap)/confirm",
+                          params: {
+                            ...params,
+                            walletAddress, amount, chain_id, token0Address, token1Address, token0Decimal, token1Decimal, token0Symbol, token1Symbol, token0Name, token1Name,
+                          },
                         });
                       }}
                       style={{ width: "100%" }}
@@ -491,12 +522,12 @@ export default function Send() {
         ref={fromSheetRef}
         // snapPoints={tokenSheetSnapPoints}
         height={"75%"}
-        // backgroundStyle={{
-        //   backgroundColor: "#0C0C12",
-        // }}
-        // handleIndicatorStyle={{
-        //   backgroundColor: "#18EAFF",
-        // }}
+      // backgroundStyle={{
+      //   backgroundColor: "#0C0C12",
+      // }}
+      // handleIndicatorStyle={{
+      //   backgroundColor: "#18EAFF",
+      // }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -655,12 +686,12 @@ export default function Send() {
         ref={toSheetRef}
         // snapPoints={tokenSheetSnapPoints}
         height={"75%"}
-        // backgroundStyle={{
-        //   backgroundColor: "#0C0C12",
-        // }}
-        // handleIndicatorStyle={{
-        //   backgroundColor: "#18EAFF",
-        // }}
+      // backgroundStyle={{
+      //   backgroundColor: "#0C0C12",
+      // }}
+      // handleIndicatorStyle={{
+      //   backgroundColor: "#18EAFF",
+      // }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -717,6 +748,7 @@ export default function Send() {
                   return (
                     <Button
                       onPress={() => {
+                        console.log(item?.platform, ":::Tokens platform object");
                         setSelectedTokenTo(item);
                         toSheetRef?.current?.close();
                       }}

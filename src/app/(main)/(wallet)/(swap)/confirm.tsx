@@ -2,10 +2,14 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { TouchableOpacity, View, Text } from "react-native";
 
 export default function ConifrmSpend() {
+  const params = useLocalSearchParams();
+
+
+  
   return (
     <Container>
       <Stack.Screen
@@ -39,7 +43,7 @@ export default function ConifrmSpend() {
               color: "white",
             }}
           >
-            Thomas Fred
+            {params?.walletAddress ?? "Thomas Fred"}
           </Text>
           <Text
             style={{
@@ -57,7 +61,7 @@ export default function ConifrmSpend() {
               color: "#FFFFFF",
             }}
           >
-            200,000,678
+            {Number(params?.amount ?? 0).toLocaleString('en-US', {maximumFractionDigits: 2, minimumFractionDigits: 2})}
             <Text
               style={{
                 fontSize: 17,
@@ -65,7 +69,7 @@ export default function ConifrmSpend() {
                 color: "#49515D",
               }}
             >
-              {"  "}USDT
+              {"  "}{params?.token0Symbol ?? "USDT"}
             </Text>
           </Text>
         </View>
@@ -118,7 +122,7 @@ export default function ConifrmSpend() {
                 color: "#FFFFFF",
               }}
             >
-              Philip
+              NIL
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -138,7 +142,7 @@ export default function ConifrmSpend() {
                 color: "#FFFFFF",
               }}
             >
-              0x63802792790427902huhkfjkhjfhjf
+              {params?.walletAddress ?? "0x63802792790427902huhkfjkhjfhjf"}
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -158,7 +162,7 @@ export default function ConifrmSpend() {
                 color: "#FFFFFF",
               }}
             >
-              BNB Smart Chain (BEP20)
+              {params?.token0Symbol ?? "BNB Smart Chain (BEP20)"}
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -178,7 +182,7 @@ export default function ConifrmSpend() {
                 color: "#FFFFFF",
               }}
             >
-              200,000,976 USDT
+              {Number(params?.amount ?? 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} {params?.token0Symbol ?? "USDT"}
             </Text>
           </View>
           <View className="flex flex-row w-full items-center justify-between">
@@ -206,9 +210,9 @@ export default function ConifrmSpend() {
                   color: "#3A4452",
                 }}
               >
-                $3.50
+                $0
               </Text>{" "}
-              5.50 GWEI
+              0.00 GWEI
             </Text>
           </View>
         </View>
@@ -259,7 +263,7 @@ export default function ConifrmSpend() {
               width: "100%",
               backgroundColor: "transparent",
             }}
-            onPress={() => router.push("(send)/verification")}
+            onPress={() => router.push({pathname: "(send)/verification", params: {...params}})}
           >
             <Text
               style={{

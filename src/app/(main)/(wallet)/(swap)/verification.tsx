@@ -1,11 +1,20 @@
 import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
+import Loader from "@/components/loader";
+import { SessionProvider, useSession } from "@/contexts/session";
+import { Wallet } from "@/utils/api";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Stack, router } from "expo-router";
-import { TouchableOpacity, View, Text } from "react-native";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { TouchableOpacity, View, Text, Alert } from "react-native";
 
 export default function SpendVerification() {
+  const params = useLocalSearchParams();
+  const { session } = useSession();
+
+  const [loader, setLoader] = useState(false);
+
   return (
     <Container>
       <Stack.Screen
@@ -58,8 +67,31 @@ export default function SpendVerification() {
             0/1
           </Text>
           <Button
-            onPress={() => {
-              router.push("(send)/finish");
+            onPress={async () => {
+              // TODO: call swap function
+              setLoader(true);
+
+              const result = await Wallet.swapInit({
+                user_token: session?.token, data: {
+                  walletAddress: params?.walletAddress as string,
+                  amount: params?.amount as string,
+                  chain_id: Number(params?.chain_id as string),
+                  token0Address: params?.token0Address as string,
+                  token1Address: params?.token1Address as string,
+                  token0Decimals: Number(params?.token0Decimal as string),
+                  token1Decimals: Number(params?.token1Decimal as string),
+                  token0Symbol: params?.token0Symbol as string,
+                  token1Symbol: params?.token1Symbol as string,
+                  token0Name: params?.token0Name as string,
+                  token1Name: params?.token1Name as string,
+                }
+              });
+
+              if (!result?.success) {
+                return Alert.alert("Swap error", result?.message)
+              }
+
+              router.push({ pathname: "(send)/finish", params: { ...params } });
             }}
             style={{
               borderRadius: 8,
@@ -117,6 +149,7 @@ export default function SpendVerification() {
           Verification unavailable?
         </Text>
       </View>
+      <Loader popupVisible={loader} setPopupVisible={setLoader} />
     </Container>
   );
 }

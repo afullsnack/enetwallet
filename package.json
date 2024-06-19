@@ -4,7 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "bun with-env expo run:android",
+    "dev": "bun with-env expo run:android",
     "android:release": "bun with-env expo run:android --variant release",
     "android:eas-build": "eas build --platform android --profile preview",
     "ios": "expo run:ios",

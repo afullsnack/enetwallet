@@ -6,7 +6,7 @@ import { Auth, Wallet } from "@/utils/api";
 const AuthContext = React.createContext<{
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  session?: Record<string, any> | null;
+  session: Record<string, any> | null;
   isLoading: boolean;
 }>({
   signIn: () => null,
@@ -18,7 +18,7 @@ const AuthContext = React.createContext<{
 // This hook can be used to access the user info.
 export function useSession() {
   const value = React.useContext(AuthContext);
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.APP_ENV !== "production") {
     if (!value) {
       throw new Error("useSession must be wrapped in a <SessionProvider />");
     }

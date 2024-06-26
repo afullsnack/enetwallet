@@ -137,12 +137,10 @@ export default function HomeScreen() {
           statusBarColor: "#0C0C12",
           statusBarHidden: false,
           statusBarStyle: "auto",
+          headerShadowVisible: false,
+          headerLargeTitleShadowVisible: false,
           headerStyle: {
-            elevation: 0,
             backgroundColor: "#0C0C12",
-            // borderColor: "#0C0C12",
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
           },
           title: "",
           headerLeft(props) {

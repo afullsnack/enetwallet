@@ -13,7 +13,7 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const params = useLocalSearchParams();
-  const { session, signOut } = useSession();
+  const { session, signOut, defaultChainId } = useSession();
   const [userSession, setUserSession] = useState<Record<string, any>>();
   const [balance, setBalance] = useState<string>();
   const [address, setAddress] = useState<string>();
@@ -33,6 +33,7 @@ export default function HomeScreen() {
     async function getUserBalance() {
       const result = await Wallet.getBalance({
         user_token: userSession?.token,
+        chainId: defaultChainId
       });
 
 

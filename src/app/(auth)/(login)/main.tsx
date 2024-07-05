@@ -133,7 +133,7 @@ export default function LoginIndexPage() {
                   marginTop: 20,
                 }}
               >
-                <Text>Login</Text>
+                <Text style={{color: "black", fontSize: 14, fontWeight: "bold"}}>Login</Text>
               </Button>
               <Link
                 href="/recovery/email"

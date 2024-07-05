@@ -6,6 +6,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css";
 import { SessionProvider } from "@/contexts/session";
+import * as SystemUI from "expo-system-ui";
+import { useEffect } from "react";
 // import { Alert } from "react-native";
 
 export default function Layout() {
@@ -26,6 +28,14 @@ export default function Layout() {
   //     Alert.alert("Update error", `Error fetching latest update: ${error}`);
   //   }
   // }
+
+
+  useEffect(() => {
+    (async () => {
+      await SystemUI.setBackgroundColorAsync("#0C0C12");
+      console.log(await SystemUI.getBackgroundColorAsync());
+    })();
+  }, []);
 
 
   return (

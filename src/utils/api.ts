@@ -1,3 +1,5 @@
+import { ChainID } from "@/contexts/session";
+
 const API_BASE_URL = "http://enetwallet.com/api/v1";
 
 type ApiFunction<P, R extends Record<string, any>> = (args: P) => R;
@@ -25,6 +27,9 @@ export namespace Auth {
         `${API_BASE_URL}/user/register-mobile`,
         options,
       );
+
+
+      console.log(response, ":::Response from register function");
 
       const json = (await response.json()) as Record<string, any>;
 
@@ -57,6 +62,9 @@ export namespace Auth {
         `${API_BASE_URL}/user/login-mobile`,
         options,
       );
+
+
+      // console.log(response, ":::Login response");
 
       const json = (await response.json()) as Record<string, any>;
 
@@ -608,6 +616,7 @@ export namespace Wallet {
 
   interface IGetBalance {
     user_token: string;
+    chainId:ChainID
   }
   export const getBalance: ApiFunction<
     IGetBalance,
@@ -623,7 +632,7 @@ export namespace Wallet {
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/wallet/get-balance`,
+        `${API_BASE_URL}/wallet/get-balance?chainId=${args.chainId}`,
         options,
       );
 

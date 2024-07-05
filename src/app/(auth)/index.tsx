@@ -13,7 +13,7 @@ import {
 
 export default function Page() {
   return (
-    <Container style={{}}>
+    <Container style={{backgroundColor: "#0C0C12"}}>
       <View className="w-full min-h-screen h-screen bg-[#0C0C12] flex-1">
         <Slider />
       </View>
@@ -145,9 +145,12 @@ function Content({
       >
         <Text className="text-white">
           I have an account?{" "}
-          <Link href="/(auth)/(login)/main" className="text-[#18EAFF]">
+          {/*<Link push href="/(auth)/(login)/main" className="text-[#18EAFF]">
             Login
-          </Link>
+          </Link>*/}
+          <TouchableOpacity onPress={() => router.push("/(login)/main")}>
+            <Text className="text-[#18EAFF]">Login</Text>  
+          </TouchableOpacity>
         </Text>
       </View>
     </View>

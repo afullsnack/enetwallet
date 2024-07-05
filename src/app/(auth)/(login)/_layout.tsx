@@ -10,6 +10,7 @@ export default function LoginLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          contentStyle: { backgroundColor: "#0C0C12" }
           // headerStyle: {
           //   backgroundColor: "#0C0C12",
           // },

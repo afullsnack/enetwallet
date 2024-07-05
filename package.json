@@ -38,6 +38,7 @@
     "expo-sharing": "~11.10.0",
     "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
+    "expo-system-ui": "~2.9.4",
     "expo-updates": "~0.24.13",
     "nativewind": "~4.0.36",
     "react": "18.2.0",

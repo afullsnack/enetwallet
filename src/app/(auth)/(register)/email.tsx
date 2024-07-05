@@ -85,7 +85,7 @@ export default function EmailPage() {
                   setRegisterLoading(true);
                   if (!email) {
                     setRegisterLoading(false);
-                    return Alert.alert("Email valiue is required");
+                    return Alert.alert("Email value is required");
                   }
 
                   try {

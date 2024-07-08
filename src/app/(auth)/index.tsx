@@ -2,18 +2,30 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/button";
 import { authenticate } from "@/utils/localAuth";
 import { Image } from "expo-image";
-import { Link, router } from "expo-router";
-import React, { useRef } from "react";
+import { router } from "expo-router";
+import React, { useRef, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import * as WebBrowser from "expo-web-browser";
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import { Env } from "env";
+
+
+WebBrowser.maybeCompleteAuthSession();
+const discovery = {
+  authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+  tokenEndpoint: "https://oauth2.googleapis.com/token",
+  revocationEndpoint: "https://oauth2.googleapis.com/revoke",
+};
+
 
 export default function Page() {
   return (
-    <Container style={{backgroundColor: "#0C0C12"}}>
+    <Container style={{ backgroundColor: "#0C0C12" }}>
       <View className="w-full min-h-screen h-screen bg-[#0C0C12] flex-1">
         <Slider />
       </View>
@@ -45,7 +57,7 @@ function Content({
         marginVertical: 24,
       }}
     >
-      {Array.from({ length: dotsLength }).map((dot, index) => (
+      {Array.from({ length: dotsLength }).map((_, index) => (
         <View
           key={index}
           style={[
@@ -58,26 +70,75 @@ function Content({
             },
             activeDotIndex !== index
               ? {
-                  opacity: 0.8,
-                  transform: [
-                    {
-                      scaleX: 0.8,
-                    },
-                  ],
-                }
+                opacity: 0.8,
+                transform: [
+                  {
+                    scaleX: 0.8,
+                  },
+                ],
+              }
               : {
-                  opacity: 1,
-                  transform: [
-                    {
-                      scaleX: 1,
-                    },
-                  ],
-                },
+                opacity: 1,
+                transform: [
+                  {
+                    scaleX: 1,
+                  },
+                ],
+              },
           ]}
         />
       ))}
     </View>
   );
+
+
+  const clientId = Env.GOOGLE_CLIENT_ID;
+  // const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirectUrl = Env.CALLBACK_URL;
+  const [code, setCode] = useState<string>();
+
+  const redirectUri = makeRedirectUri({
+    // native: "com.enetminer.enet/",
+    // scheme: "org.enetwallet.enet",
+    // path: "/(auth)/",
+    // isTripleSlashed: true,
+    native: redirectUrl
+    // queryParams: {
+    //   userId: params?.userId as Id<"user">,
+    // },
+  });
+
+  // Twitter auth test
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId,
+      redirectUri,
+      usePKCE: true,
+      scopes: [
+        "offline",
+        "profiel",
+        "email"
+      ],
+    },
+    discovery,
+  );
+
+
+  console.log(request, response, redirectUri, clientId, ":::request, response, redirectUri", redirectUri);
+
+
+  // TODO: called when google icon is pressed;
+  const googleAuth = async (e: any) => {
+    e.preventDefault();
+
+    console.log("Google auth button", redirectUri);
+
+    await promptAsync({
+      dismissButtonStyle: "close",
+    });
+
+  }
+
 
   return (
     <View className="grid items-center justify-between gap-2 w-full">
@@ -119,11 +180,12 @@ function Content({
             <Text className="text-xl font-medium">Continue with Apple</Text>
           </Button>
           <View className="flex flex-row items-center justify-center gap-4 mt-2">
-            <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2">
+            <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2" onPress={googleAuth}>
               <Image
                 source={require("../../../assets/socials-1.png")}
                 style={{ width: 20, height: 20 }}
                 className="bg-contain"
+                alt="Google authentication"
               />
             </TouchableOpacity>
             <TouchableOpacity className="rounded-2xl border border-[#18EAFF]/30 p-2">
@@ -131,6 +193,7 @@ function Content({
                 source={require("../../../assets/socials-2.png")}
                 style={{ width: 20, height: 20 }}
                 className="bg-contain"
+                alt="Email authentication"
               />
             </TouchableOpacity>
           </View>
@@ -149,7 +212,7 @@ function Content({
             Login
           </Link>*/}
           <TouchableOpacity onPress={() => router.push("/(login)/main")}>
-            <Text className="text-[#18EAFF]">Login</Text>  
+            <Text className="text-[#18EAFF]">Login</Text>
           </TouchableOpacity>
         </Text>
       </View>

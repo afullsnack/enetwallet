@@ -632,7 +632,7 @@ export namespace Wallet {
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/wallet/get-balance?chainId=${args.chainId}`,
+        `${API_BASE_URL}/wallet/get-balance/chainId=${args.chainId}`,
         options,
       );
 

@@ -632,7 +632,7 @@ export namespace Wallet {
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/wallet/get-balance/chainId=${args.chainId}`,
+        `${API_BASE_URL}/wallet/get-balance/${args.chainId}`,
         options,
       );
 
@@ -698,7 +698,7 @@ export namespace Wallet {
 
       const json = (await response.json()) as Record<string, any>;
 
-      console.log(json, ":::Result_TokenList");
+      // console.log(json, ":::Result_TokenList");
       return json;
     } catch (err: any) {
       console.log(err, ":::Error_TokenList");

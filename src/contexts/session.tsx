@@ -2,8 +2,6 @@ import React from "react";
 import { useStorageState } from "@/utils/useStorageState";
 import { Auth, Wallet } from "@/utils/api";
 
-
-
 export enum ChainID {
   ETHEREUM = 1,
   ETHEREUM_SEPOLIA = 11155111,
@@ -26,7 +24,7 @@ const AuthContext = React.createContext<{
   signOut: () => Promise<void>;
   session: Record<string, any> | null;
   isLoading: boolean;
-  defaultChainId: ChainID
+  defaultChainId: ChainID;
 }>({
   signIn: () => null,
   signOut: () => null,
@@ -57,12 +55,11 @@ export function SessionProvider(props: React.PropsWithChildren) {
           try {
             // Perform sign-in logic here
             const result = await Auth.emailPasswordAuth({ email, password });
-            console.log(result, ':::Login result');
+            console.log(result, ":::Login result");
             if (result?.success) {
               const addressResp = await Wallet.getAddress({
                 user_token: result?.data?.token,
               });
-
 
               console.log(addressResp, ":::Address result");
 
@@ -88,7 +85,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
         },
         session: JSON.parse(session),
         isLoading,
-        defaultChainId: ChainID.OPTIMISM_SEPOLIA,
+        defaultChainId: ChainID.ETHEREUM,
       }}
     >
       {props.children}

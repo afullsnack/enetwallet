@@ -10,28 +10,22 @@ export default function RootIndexPage() {
 
   console.log(session, isLoading, ":::Session and loading state");
 
-
   useEffect(() => {
-
     setTimeout(() => {
-
       if (!isLoading) {
         if (session === null) {
           console.log("Moving to /auth route");
           return router.replace("/(auth)/");
         } else {
-          console.log("if session exists move to dashboard", session, isLoading);
+          console.log(
+            "if session exists move to dashboard",
+            session,
+            isLoading,
+          );
           return router.replace("/(main)/(tabs)/");
-
         }
-
       }
-      // // Redirect to auth if no session
-
-
-
-    }, 4000)
-
+    }, 4000);
   }, [isLoading, session]);
 
   // Loading Indicator for initial route
@@ -52,5 +46,4 @@ export default function RootIndexPage() {
       </View>
     </Container>
   );
-
 }

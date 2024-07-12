@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { Button } from "@/components/button";
-import { Balance } from ".";
+import { Balance } from "./index";
 import { AntDesign, Feather, SimpleLineIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Wallet } from "@/utils/api";
@@ -24,30 +24,28 @@ export default function WalletScreen() {
   const tabList = ["Overview", "Crypto", "NFT", "Earn", "Card"];
   const cryptoTabList = ["Assets", "NFT"];
 
-  const { session, signOut } = useSession();
-  const [userSession, setUserSession] = useState<Record<string, any>>();
-  const [balance, setBalance] = useState<string>();
+  const { session, defaultChainId } = useSession();
+  // const [userSession, setUserSession] = useState<Record<string, any>>();
+  const [balance, setBalance] = useState<number>(0);
   const [assets, setAssets] = useState([]);
-
-  console.log(typeof userSession, typeof session, ":::User session");
+  const [currency, setCurrency] = useState("USD");
 
   useEffect(() => {
     // Get user balance and wallet address
-    if (userSession) {
+    if (session) {
       getUserBalance()
-        .then(() => console.log("Fetched balance"))
+        .then((val) => console.log(val, "Fetched balance"))
         .catch((error) => console.log(error, ":::Balance error"));
     }
     async function getUserBalance() {
       const result = await Wallet.getBalance({
-        user_token: userSession?.token,
+        user_token: session?.token,
+        chainId: defaultChainId,
       });
 
-
-      if(result?.code === 401) {
-        router.replace({pathname: "/(auth)/(login)/main"})
+      if (result?.code === 401) {
+        router.replace({ pathname: "/(auth)/(login)/main" });
       }
-      
 
       if (!result?.success) {
         return Alert.alert("Balance error", result?.message);
@@ -58,14 +56,11 @@ export default function WalletScreen() {
         0,
       );
 
-      setBalance(totalBalance);
+      setBalance(Number(result?.data?.total ?? 0));
       setAssets(result?.data?.items);
-    }
-  }, [userSession]);
+      setCurrency(result?.data?.quote_currency);
 
-  useEffect(() => {
-    if (session) {
-      setUserSession(session);
+      return { totalBalance, items: result?.data?.items };
     }
   }, [session]);
 
@@ -131,7 +126,7 @@ export default function WalletScreen() {
                         className="flex flex-row items-center justify-between w-full"
                         style={{ paddingHorizontal: 20 }}
                       >
-                        <Balance balance={balance ? Number(balance) : 0} />
+                        <Balance balance={balance} currency={currency} />
 
                         <View style={{}}>
                           <View></View>
@@ -389,7 +384,7 @@ export default function WalletScreen() {
                               width: "100%",
                             }}
                           >
-                            ${balance}{" "}
+                            ${balance}
                             <Text style={{ color: "#3A4452" }}>USD</Text>
                           </Text>
                         </LinearGradient>
@@ -596,8 +591,7 @@ export default function WalletScreen() {
                       style={{ flex: 1, paddingTop: 20, paddingHorizontal: 20 }}
                     >
                       <View className="flex flex-row items-center justify-between w-full">
-                        <Balance balance={balance ? Number(balance) : 0} />
-
+                        <Balance balance={balance} currency={currency} />
                         <View />
                       </View>
 
@@ -897,7 +891,12 @@ export default function WalletScreen() {
                                               color: "white",
                                             }}
                                           >
-                                            {asset?.balance}
+                                            {Number(
+                                              asset?.balance,
+                                            ).toLocaleString("en-US", {
+                                              maximumFractionDigits: 5,
+                                              minimumFractionDigits: 5,
+                                            })}
                                             {"  "}
                                             <Text
                                               style={{
@@ -916,7 +915,7 @@ export default function WalletScreen() {
                                               color: "#49515D",
                                             }}
                                           >
-                                            ~${asset?.quote_rate}
+                                            ~${asset?.value}
                                           </Text>
                                         </View>
 
@@ -939,10 +938,10 @@ export default function WalletScreen() {
                                             }}
                                           >
                                             {Number(
-                                              asset?.quote_rate_24h,
+                                              asset?.balance_24h,
                                             ).toLocaleString("en-US", {
-                                              minimumFractionDigits: 2,
-                                              maximumFractionDigits: 2,
+                                              minimumFractionDigits: 8,
+                                              maximumFractionDigits: 8,
                                             })}
                                           </Text>
                                         </View>

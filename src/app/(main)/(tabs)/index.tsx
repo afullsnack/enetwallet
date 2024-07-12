@@ -15,7 +15,9 @@ export default function HomeScreen() {
   const params = useLocalSearchParams();
   const { session, signOut, defaultChainId } = useSession();
   const [userSession, setUserSession] = useState<Record<string, any>>();
-  const [balance, setBalance] = useState<string>();
+  const [balance, setBalance] = useState<number>(0);
+  const [assets, setAssets] = useState([]);
+  const [currency, setCurrency] = useState("USD");
   const [address, setAddress] = useState<string>();
 
   console.log(typeof userSession, typeof session, ":::User session");
@@ -33,28 +35,20 @@ export default function HomeScreen() {
     async function getUserBalance() {
       const result = await Wallet.getBalance({
         user_token: userSession?.token,
-        chainId: defaultChainId
+        chainId: defaultChainId,
       });
 
-
       if (result?.code === 401) {
-        router.replace({ pathname: "/(auth)/(login)/main" })
+        router.replace({ pathname: "/(auth)/(login)/main" });
       }
-
 
       if (!result?.success) {
         return Alert.alert("Balance error", result?.message);
       }
 
-
-      console.log(result?.data?.items[0], "First asset balance");
-
-      const totalBalance = result?.data?.items?.reduce(
-        (cur, obj) => cur + Number(obj?.balance),
-        0,
-      );
-
-      setBalance(totalBalance);
+      setBalance(Number(result?.data?.total ?? 0));
+      setAssets(result?.data?.items);
+      setCurrency(result?.data?.quote_currency);
     }
     async function getWalletAddress() {
       const result = await Wallet.getAddress({
@@ -62,9 +56,8 @@ export default function HomeScreen() {
       });
 
       if (result?.code === 401) {
-        router.replace({ pathname: "/(auth)/(login)/main" })
+        router.replace({ pathname: "/(auth)/(login)/main" });
       }
-
 
       if (!result?.success) {
         if (result?.code === 401) router.replace("/(auth)/(login)/main");
@@ -236,7 +229,7 @@ export default function HomeScreen() {
 
       <View className="w-full h-full">
         <View className="flex flex-row items-center justify-between">
-          <Balance balance={balance ? Number(balance) : 0} />
+          <Balance balance={balance} currency={currency} />
 
           <Button
             style={{
@@ -543,7 +536,13 @@ export default function HomeScreen() {
   );
 }
 
-export const Balance = ({ balance }: { balance: number }) => {
+export const Balance = ({
+  balance,
+  currency,
+}: {
+  balance: number;
+  currency?: string;
+}) => {
   return (
     <View className="flex flex-col items-start justify-center gap-1">
       <TouchableOpacity>
@@ -578,7 +577,8 @@ export const Balance = ({ balance }: { balance: number }) => {
             marginLeft: 10,
           }}
         >
-          {"  "}USD
+          {"  "}
+          {currency ?? "USD"}
         </Text>
       </Text>
     </View>

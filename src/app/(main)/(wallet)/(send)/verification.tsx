@@ -16,13 +16,10 @@ export default function SpendVerification() {
 
   const [loader, setLoader] = useState(false);
 
-
   // add side effect to check selected token type, on load
   const [tokenType, setTokenType] = useState<"native" | "tokens">("tokens");
 
-  useEffect(() => {
-
-  }, [params]);
+  useEffect(() => {}, [params]);
 
   async function callSendTransaction() {
     setLoader(true);
@@ -30,19 +27,21 @@ export default function SpendVerification() {
       user_token: session?.token,
       data: {
         transactions: [
-          (tokenType === "tokens" ? {
-            toAddress: params?.receipientAddress as string,
-            // walletAddress: session?.wallet_address,
-            amount: params?.amount as string,
-            transfer_type: tokenType,
-            token_address: params?.contract_symbols as string,
-          } : {
-            toAddress: params?.receipientAddress as string,
-            // walletAddress: session?.wallet_address,
-            amount: params?.amount as string,
-            transfer_type: tokenType,
-            // token_address: params?.contract_symbols as string,
-          }),
+          tokenType === "tokens"
+            ? {
+                toAddress: params?.receipientAddress as string,
+                // walletAddress: session?.wallet_address,
+                amount: params?.amount as string,
+                transfer_type: tokenType,
+                token_address: params?.contract_symbols as string,
+              }
+            : {
+                toAddress: params?.receipientAddress as string,
+                // walletAddress: session?.wallet_address,
+                amount: params?.amount as string,
+                transfer_type: tokenType,
+                // token_address: params?.contract_symbols as string,
+              },
         ],
       },
     });
@@ -51,11 +50,10 @@ export default function SpendVerification() {
       setLoader(false);
       throw result?.message;
     }
-
-    return result?.data;
-
     // If all good
     setLoader(false);
+
+    return result?.data;
   }
 
   return (

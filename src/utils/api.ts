@@ -539,14 +539,13 @@ export namespace Wallet {
     data: {
       transactions: {
         toAddress: string;
-        walletAddress: string;
         amount: string;
-        transfer_type?: string | undefined;
-        token_address?: string | undefined;
+        transfer_type?: "native" | "tokens";
+        token_address?: string;
       }[];
     };
   }
-  export const transactionInit: ApiFunction<
+  export const transferInit: ApiFunction<
     ITransactionInit,
     Promise<Record<string, any>>
   > = async (args) => {

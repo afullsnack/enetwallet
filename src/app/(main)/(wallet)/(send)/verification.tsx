@@ -7,7 +7,7 @@ import { authenticate } from "@/utils/localAuth";
 import { EvilIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacity, View, Text, Alert } from "react-native";
 
 export default function SpendVerification() {
@@ -16,19 +16,33 @@ export default function SpendVerification() {
 
   const [loader, setLoader] = useState(false);
 
+
+  // add side effect to check selected token type, on load
+  const [tokenType, setTokenType] = useState<"native" | "tokens">("tokens");
+
+  useEffect(() => {
+
+  }, [params]);
+
   async function callSendTransaction() {
     setLoader(true);
-    const result = await Wallet.transactionInit({
+    const result = await Wallet.transferInit({
       user_token: session?.token,
       data: {
         transactions: [
-          {
+          (tokenType === "tokens" ? {
             toAddress: params?.receipientAddress as string,
-            walletAddress: session?.wallet_address,
+            // walletAddress: session?.wallet_address,
             amount: params?.amount as string,
-            transfer_type: "tokens",
+            transfer_type: tokenType,
             token_address: params?.contract_symbols as string,
-          },
+          } : {
+            toAddress: params?.receipientAddress as string,
+            // walletAddress: session?.wallet_address,
+            amount: params?.amount as string,
+            transfer_type: tokenType,
+            // token_address: params?.contract_symbols as string,
+          }),
         ],
       },
     });

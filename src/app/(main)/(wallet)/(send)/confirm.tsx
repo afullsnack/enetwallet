@@ -7,6 +7,7 @@ import { TouchableOpacity, View, Text } from "react-native";
 
 export default function ConifrmSpend() {
   const params = useLocalSearchParams();
+  
   return (
     <Container>
       <Stack.Screen
